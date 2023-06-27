@@ -338,7 +338,7 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
     }
 
     //ボーン配列の参照
-    std::vector<FbxModel::Bone>& bones = fbxModel->bones;
+    std::vector<FbxModel::Bone>& bones = fbxModel->GetBones();
 
     int clusterCount = fbxSkin->GetClusterCount();
     bones.reserve(clusterCount);

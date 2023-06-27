@@ -54,13 +54,13 @@ public:
 	XMMATRIX GetmatViewProjection() { return (matProjection*matView); }
 
 private:
-	XMMATRIX matView;
+	XMMATRIX matView = {};
 	XMFLOAT3 eye = {};		//視点座標
 	XMFLOAT3 target = {};	//注視点座標
 	XMFLOAT3 up = {};		//上方向ベクトル
-	XMMATRIX matProjection;
+	XMMATRIX matProjection = {};
 
 	//キーボード
-	Input* input;
+	Input* input=nullptr;
 };
 

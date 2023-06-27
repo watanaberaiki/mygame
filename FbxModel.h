@@ -6,7 +6,14 @@
 #include<wrl.h>
 #include<d3d12.h>
 #include<d3dx12.h>
+#pragma warning(push)
+
+#pragma warning(disable:26495)
+#pragma warning(disable:26451)
+#pragma warning(disable:26813)
 #include<fbxsdk.h>
+#pragma warning(pop)
+
 
 
 struct Node

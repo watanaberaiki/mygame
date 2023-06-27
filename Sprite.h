@@ -100,8 +100,8 @@ private:
 
 	XMFLOAT4 color = { 1,0,0,0.5f };
 
-	float rotationZ;
-	XMFLOAT2 position_;
+	float rotationZ=0;
+	XMFLOAT2 position_ = {};
 
 	XMFLOAT2 size_ = { 200.0f,200.0f };
 
@@ -112,18 +112,18 @@ private:
 
 	bool isInvisible_ = false;
 
-	Vertex vertices[4];
+	Vertex vertices[4]= {};
 
 	XMFLOAT2 textureLeftTop_ = { 0.0f,0.0f };
 
 	XMFLOAT2 textureSize_ = { 100.0f,100.0f };
 
 	//ÉèÅ[ÉãÉhïœä∑çsóÒ
-	XMMATRIX matWorld;
-	XMMATRIX matRot;
-	XMMATRIX matTrans;
+	XMMATRIX matWorld = {};
+	XMMATRIX matRot = {};
+	XMMATRIX matTrans = {};
 
-	XMMATRIX matProjection;
+	XMMATRIX matProjection = {};
 
 
 

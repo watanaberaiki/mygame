@@ -59,10 +59,10 @@ private:
 	Camera* camera = nullptr;
 
 	//カメラ用
-	XMFLOAT3 eye;		//視点座標
-	XMFLOAT3 target;	//注視点座標
-	XMFLOAT3 up;		//上方向ベクトル
-	XMMATRIX matView;
+	XMFLOAT3 eye = {0,0,0};		//視点座標
+	XMFLOAT3 target = {0,0,0};	//注視点座標
+	XMFLOAT3 up = {0,0,0};		//上方向ベクトル
+	XMMATRIX matView = {};
 
 	//FBX
 	FbxModel* model1 = nullptr;
