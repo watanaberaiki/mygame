@@ -228,6 +228,8 @@ public: // メンバ関数
 
 	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
 
+	const XMMATRIX& GetMatWorld()const { return matWorld; }
+
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	//モデル
