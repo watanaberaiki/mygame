@@ -334,6 +334,12 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
         static_cast<FbxSkin*>(fbxMesh->GetDeformer(0, FbxDeformer::eSkin));
     //スキニング情報が無ければ終了
     if (fbxSkin == nullptr) {
+        //各頂点について処理
+        for (int i = 0; i < fbxModel->vertices.size(); i++) {
+            //最初のボーン(単位行列)の影響100%にする
+            fbxModel->vertices[i].boneIndex[0] = 0;
+            fbxModel->vertices[i].boneWeight[0] = 1.0;
+        }
         return;
     }
 
@@ -374,7 +380,8 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
     //二次元配列(ジャグ配列)
     //list:頂点が影響を受けるボーンの全リスト
     //vector:それを全頂点文
-    std::vector<std::list<WeightSet>> weightLists(fbxModel->vertices.size());
+    std::vector<std::list<WeightSet>>
+    weightLists(fbxModel->vertices.size());
 
     //全てのボーンについて
     for (int i = 0; i < clusterCount; i++) {
@@ -412,14 +419,16 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
         //降順ソート済みのウェイトリストから
         for (auto& weightSet : weightList) {
             //頂点データに書き込み
-            vertices[i].boneIndex[weightArrayIndex] = weightSet.index;
-            vertices[i].boneWeight[weightArrayIndex] = weightSet.weight;
+            vertices[i].boneIndex[weightArrayIndex] = 
+                weightSet.index;
+            vertices[i].boneWeight[weightArrayIndex] = 
+                weightSet.weight;
             //4つに達したら終了
             if (++weightArrayIndex >= FbxModel::MAX_BONE_INDICES) {
                 float weight = 0.0f;
                 //2番目以降のウェイトを合計
                 for (int j = 1; j < FbxModel::MAX_BONE_INDICES; j++) {
-                    weight += vertices[i].boneWeight[i];
+                    weight += vertices[i].boneWeight[j];
                 }
                 //合計で1.0f(100%)になるように調整
                 vertices[i].boneWeight[0] = 1.0f - weight;
