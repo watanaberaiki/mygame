@@ -14,7 +14,8 @@ GameScene::~GameScene()
 	delete spheremodel;
 	delete blockmodel;
 	delete particleManager;
-	FBX_SAFE_DELETE(model1);
+	FBX_SAFE_DELETE(boneTestModel);
+	FBX_SAFE_DELETE(cube);
 	FBX_SAFE_DELETE(object1);
 }
 
@@ -26,7 +27,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -200);	//視点座標
+	eye = XMFLOAT3(0, 0, -50);	//視点座標
 	target = XMFLOAT3(0, 0, 0);	//注視点座標
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
@@ -44,13 +45,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
-	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-
+	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	cube = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 	//3Dオブジェクト生成とモデルのセット
 	object1 = new FbxObject3D();
 	object1->Initialize();
-	object1->SetModel(model1);
-	object1->Update();
+	object1->SetModel(cube);
+	//object1->PlayAnimation();
 
 	//パーティクル
 	particleManager->Initialize("effect1.png");

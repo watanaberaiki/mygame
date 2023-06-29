@@ -64,8 +64,10 @@ private:
 	XMFLOAT3 up = {0,0,0};		//ã•ûŒüƒxƒNƒgƒ‹
 	XMMATRIX matView = {};
 
-	//FBX
-	FbxModel* model1 = nullptr;
+	//FBXModel
+	FbxModel* boneTestModel = nullptr;
+	FbxModel* cube = nullptr;
+
 	FbxObject3D* object1 = nullptr;
 };
 

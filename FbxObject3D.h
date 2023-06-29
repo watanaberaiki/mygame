@@ -62,7 +62,8 @@ public://メンバ関数
 	void Update();
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-
+	//アニメーション開始
+	void PlayAnimation();
 
 	///セッター
 	//モデルのセット
@@ -86,5 +87,14 @@ protected:	//メンバ変数
 	XMMATRIX matWorld = {};
 	//モデル
 	FbxModel* fbxModel = nullptr;
-
+	//1フレームの時間
+	FbxTime frameTime;
+	//アニメーション開始時間
+	FbxTime startTime;
+	//アニメーション終了時間
+	FbxTime endTime;
+	//現在時間
+	FbxTime currentTime;
+	//アニメーション再生中
+	bool isPlay = false;
 };
