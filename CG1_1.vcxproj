@@ -79,12 +79,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)Fbx;$(SolutionDir)DX;$(SolutionDir)2d;$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)Fbx;$(SolutionDir)DX;$(SolutionDir)2d;$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -151,20 +151,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2d\PostEffect.cpp" />
+    <ClCompile Include="2d\Sprite.cpp" />
+    <ClCompile Include="2d\SpriteCommon.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="DirectXCommon.cpp" />
-    <ClCompile Include="FbxLoader.cpp" />
-    <ClCompile Include="FbxModel.cpp" />
-    <ClCompile Include="FbxObject3D.cpp" />
+    <ClCompile Include="DX\DirectXCommon.cpp" />
+    <ClCompile Include="Fbx\FbxLoader.cpp" />
+    <ClCompile Include="Fbx\FbxModel.cpp" />
+    <ClCompile Include="Fbx\FbxObject3D.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="SpriteCommon.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
@@ -255,20 +256,21 @@
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="2d\PostEffect.h" />
+    <ClInclude Include="2d\Sprite.h" />
+    <ClInclude Include="2d\SpriteCommon.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionPrimitive.h" />
-    <ClInclude Include="DirectXCommon.h" />
-    <ClInclude Include="FbxLoader.h" />
-    <ClInclude Include="FbxModel.h" />
-    <ClInclude Include="FbxObject3D.h" />
+    <ClInclude Include="DX\DirectXCommon.h" />
+    <ClInclude Include="Fbx\FbxLoader.h" />
+    <ClInclude Include="Fbx\FbxModel.h" />
+    <ClInclude Include="Fbx\FbxObject3D.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteCommon.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>

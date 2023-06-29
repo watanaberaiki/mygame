@@ -27,7 +27,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -50);	//視点座標
+	eye = XMFLOAT3(0, 0, -20);	//視点座標
 	target = XMFLOAT3(0, 0, 0);	//注視点座標
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
@@ -44,14 +44,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxObject3D::SetCamera(camera);
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
-
+	//FBXモデル読み込み
 	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	cube = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	
 	//3Dオブジェクト生成とモデルのセット
 	object1 = new FbxObject3D();
 	object1->Initialize();
-	object1->SetModel(cube);
-	//object1->PlayAnimation();
+	object1->SetModel(boneTestModel);
+	object1->SetRoatation({ 0,90,0 });
+	object1->PlayAnimation();
 
 	//パーティクル
 	particleManager->Initialize("effect1.png");
