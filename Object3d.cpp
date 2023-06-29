@@ -651,6 +651,11 @@ void Object3d::Update(XMMATRIX &matView)
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
 	}
+	// 親オブジェクトがあれば
+	if (parentcamera != nullptr) {
+		// 親オブジェクトのワールド行列を掛ける
+		matWorld *= parentcamera->GetMatWorld();
+	}
 
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMap = nullptr;

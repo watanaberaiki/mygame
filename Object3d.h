@@ -7,7 +7,7 @@
 #include <d3dx12.h>
 #include<string.h>
 #include "Model.h"
-
+#include "Railcamera.h"
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
@@ -230,6 +230,8 @@ public: // メンバ関数
 
 	const XMMATRIX& GetMatWorld()const { return matWorld; }
 
+	void SetParentCamera(Railcamera* railcamera) { this->parentcamera = railcamera; }
+
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	//モデル
@@ -249,6 +251,7 @@ private: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+	Railcamera* parentcamera = nullptr;
 
 	//マテリアル
 	struct Material

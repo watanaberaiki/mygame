@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3d.h"
 #include "Camera.h"
+#include"Input.h"
 class Railcamera
 {
 private: // エイリアス
@@ -13,10 +14,12 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 public://メンバ関数
 	//初期化
-	void Initialize();
+	void Initialize(Camera*camera);
 	//更新
 	void Update();
 
+	//ゲッター
+	const XMMATRIX& GetMatWorld()const { return matWorld; }
 private://メンバ変数
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
@@ -26,9 +29,9 @@ private://メンバ変数
 	XMFLOAT3 position = { 0,0,0 };
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
-	// 親オブジェクト
-	Object3d* parent = nullptr;
+
+private://静的メンバ変数
 	//カメラ
-	Camera* camera = nullptr;
+	static Camera* camera;
 };
 

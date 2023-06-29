@@ -17,6 +17,7 @@
 #include"ParticleManager.h"
 #include"FbxLoader.h"
 #include"FbxObject3D.h"
+#include"Railcamera.h"
 
 class GameScene
 {
@@ -67,5 +68,8 @@ private:
 	//FBX
 	FbxModel* model1 = nullptr;
 	FbxObject3D* object1 = nullptr;
+
+	//ƒŒ[ƒ‹ƒJƒƒ‰
+	Railcamera* railCamera = nullptr;
 };
 
