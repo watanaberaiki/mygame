@@ -1,7 +1,7 @@
 #pragma once
 #include "SpriteCommon.h"
 #include <DirectXMath.h>
-
+#include"Winapp.h"
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -92,7 +92,7 @@ public:
 private:
 	void AdjustTextureSize();
 
-private:
+protected:
 
 	SpriteCommon* spriteCommon_ = nullptr;
 

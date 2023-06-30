@@ -16,26 +16,17 @@
     <Filter Include="シェーダー">
       <UniqueIdentifier>{053d8945-3445-4d7e-b2d6-edaf240ceeef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2D">
+    <Filter Include="ソース ファイル\2D">
       <UniqueIdentifier>{e87cd849-a055-44df-b756-f25564710263}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2D\ソースファイル">
-      <UniqueIdentifier>{e7e4c8c1-e650-4e8d-a91f-b51e59391b27}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\2D">
+      <UniqueIdentifier>{f4f61c78-4302-4d8d-8ce8-72f60fa4f37f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2D\ヘッダーファイル">
-      <UniqueIdentifier>{7987df43-256b-4b25-82ba-0aab711fbaea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fbx">
+    <Filter Include="ソース ファイル\Fbx">
       <UniqueIdentifier>{c089cce9-29a9-4227-a929-d6daed9b9e04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dx">
-      <UniqueIdentifier>{58d900b7-961d-4c0e-b70e-ea725f76670d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fbx\ヘッダーファイル">
-      <UniqueIdentifier>{7b2fe153-f358-465b-b1e3-2862accb6763}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fbx\ソースファイル">
-      <UniqueIdentifier>{b5e348b5-0ebb-474f-906d-d2b231e56f40}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\Fbx">
+      <UniqueIdentifier>{ab7f03ec-fe27-4e7c-8f9a-a37a47916066}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,9 +34,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="WinApp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Object3d.cpp">
@@ -69,26 +57,29 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="PostEffect.cpp">
+      <Filter>ソース ファイル\2D</Filter>
+    </ClCompile>
     <ClCompile Include="2d\Sprite.cpp">
-      <Filter>2D\ソースファイル</Filter>
+      <Filter>ソース ファイル\2D</Filter>
     </ClCompile>
     <ClCompile Include="2d\SpriteCommon.cpp">
-      <Filter>2D\ソースファイル</Filter>
+      <Filter>ソース ファイル\2D</Filter>
     </ClCompile>
     <ClCompile Include="Fbx\FbxLoader.cpp">
-      <Filter>Fbx\ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Fbx\FbxModel.cpp">
-      <Filter>Fbx\ソースファイル</Filter>
+      <Filter>ソース ファイル\Fbx</Filter>
     </ClCompile>
     <ClCompile Include="Fbx\FbxObject3D.cpp">
-      <Filter>Fbx\ソースファイル</Filter>
+      <Filter>ソース ファイル\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Fbx\FbxModel.cpp">
+      <Filter>ソース ファイル\Fbx</Filter>
     </ClCompile>
     <ClCompile Include="DX\DirectXCommon.cpp">
-      <Filter>Dx</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="2d\PostEffect.cpp">
-      <Filter>2D\ソースファイル</Filter>
+    <ClCompile Include="winapp\WinApp.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +138,6 @@
     <ClInclude Include="Input.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="WinApp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -174,26 +162,29 @@
     <ClInclude Include="Collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="2d\Sprite.h">
-      <Filter>2D\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="2d\SpriteCommon.h">
-      <Filter>2D\ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Fbx\FbxLoader.h">
-      <Filter>Fbx\ヘッダーファイル</Filter>
+      <Filter>ヘッダー ファイル\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="Fbx\FbxModel.h">
-      <Filter>Fbx\ヘッダーファイル</Filter>
+      <Filter>ヘッダー ファイル\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="Fbx\FbxObject3D.h">
-      <Filter>Fbx\ヘッダーファイル</Filter>
+      <Filter>ヘッダー ファイル\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="DX\DirectXCommon.h">
-      <Filter>Dx</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="2d\PostEffect.h">
-      <Filter>2D\ヘッダーファイル</Filter>
+      <Filter>ヘッダー ファイル\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Sprite.h">
+      <Filter>ヘッダー ファイル\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\SpriteCommon.h">
+      <Filter>ヘッダー ファイル\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="winapp\WinApp.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
