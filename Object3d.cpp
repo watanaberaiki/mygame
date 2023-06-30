@@ -43,6 +43,7 @@ std::vector<Object3d::VertexPosNormalUv>Object3d::vertices;
 std::vector<unsigned short>Object3d::indices;
 
 Object3d::Material Object3d::material;
+Railcamera* Object3d::parentcamera;
 
 void Object3d::StaticInitialize(ID3D12Device * device, int window_width, int window_height)
 {

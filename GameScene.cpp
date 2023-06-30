@@ -16,7 +16,9 @@ GameScene::~GameScene()
 	delete particleManager;
 	FBX_SAFE_DELETE(boneTestModel);
 	FBX_SAFE_DELETE(cube);
-	FBX_SAFE_DELETE(object1);
+	for (int i = 0; i < bonetestsize; i++) {
+		FBX_SAFE_DELETE(bonetest[i]);
+	}
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -46,13 +48,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxObject3D::CreateGraphicsPipeline();
 
 	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	cube = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	cube = FbxLoader::GetInstance()->LoadModelFromFile("whitebox");
 	//3Dオブジェクト生成とモデルのセット
-	object1 = new FbxObject3D();
-	object1->Initialize();
-	object1->SetModel(cube);
-	//object1->PlayAnimation();
-
+	for (int i = 0; i < bonetestsize; i++) {
+		bonetest[i] = new FbxObject3D();
+		bonetest[i]->Initialize();
+		bonetest[i]->SetModel(boneTestModel);
+		bonetest[i]->SetPosition(XMFLOAT3(0, (float)i, -5));
+		bonetest[i]->PlayAnimation();
+	}
 	//パーティクル
 	particleManager->Initialize("effect1.png");
 	//パーティクル
@@ -117,8 +121,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//ブロック
 	blockobj = Object3d::Create();
 	blockobj->SetModel(blockmodel);
-	blockobj->SetPosition({ 5,0,0 });
+	blockobj->SetPosition({ 0,5,0 });
 
+	/*railCamera->Initialize(camera);
+	railCamera->Update();
+	blockobj->SetParentCamera(railCamera);*/
 }
 
 void GameScene::Update()
@@ -128,9 +135,12 @@ void GameScene::Update()
 	//球
 	sphereobj->Update(matView);
 	//ブロック
+	
 	blockobj->Update(matView);
 
-	object1->Update();
+	for (int i = 0; i < bonetestsize; i++) {
+		bonetest[i]->Update();
+	}
 	hitsprite->Update();
 }
 
@@ -142,7 +152,9 @@ void GameScene::Draw()
 	////3Dオブジェクトの描画
 	sphereobj->Draw();
 	blockobj->Draw();
-	object1->Draw(dxCommon_->GetCommandlist());
+	for (int i = 0; i < bonetestsize; i++) {
+		bonetest[i]->Draw(dxCommon_->GetCommandlist());
+	}
 	Object3d::PostDraw();
 
 	

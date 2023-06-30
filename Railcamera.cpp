@@ -1,4 +1,5 @@
 #include "Railcamera.h"
+Camera* Railcamera::camera=nullptr;
 
 void Railcamera::Initialize(Camera*camera)
 {
@@ -7,11 +8,10 @@ void Railcamera::Initialize(Camera*camera)
 
 void Railcamera::Update()
 {
-	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 
-
-	position=camera->GetEye();
+	camera->GetEye();
+	//position=;
 
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);

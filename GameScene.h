@@ -69,7 +69,8 @@ private:
 	FbxModel* boneTestModel = nullptr;
 	FbxModel* cube = nullptr;
 
-	FbxObject3D* object1 = nullptr;
+	static const int bonetestsize = 5;
+	FbxObject3D* bonetest[bonetestsize] = {};
 
 	//ƒŒ[ƒ‹ƒJƒƒ‰
 	Railcamera* railCamera = nullptr;

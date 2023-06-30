@@ -1,5 +1,4 @@
 #pragma once
-#include "Object3d.h"
 #include "Camera.h"
 #include"Input.h"
 class Railcamera
@@ -22,11 +21,11 @@ public://メンバ関数
 	const XMMATRIX& GetMatWorld()const { return matWorld; }
 private://メンバ変数
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale = XMFLOAT3(1,1,1);
 	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
+	XMFLOAT3 rotation = XMFLOAT3( 0,0,0 );
 	// ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 position = XMFLOAT3(0,0,0 );
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 

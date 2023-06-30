@@ -78,9 +78,9 @@ protected:	//メンバ変数
 	//定数バッファ(スキン)
 	ComPtr<ID3D12Resource>constBuffSkin;
 	//ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale = { (float)1,(float)1,(float)1 };
 	//X,Y,Z軸周りのローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
+	XMFLOAT3 rotation = { 0,45,0 };
 	//ローカル座標
 	XMFLOAT3 position = { 0,0,0 };
 	//ローカルワールド変換行列
