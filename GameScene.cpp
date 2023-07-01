@@ -10,10 +10,16 @@ GameScene::~GameScene()
 	//3dオブジェクト解放
 	delete sphereobj;
 	delete blockobj;
+	for (Object3d*& object : objects) {
+		delete object;
+	}
 	//3Dモデル解放
 	delete spheremodel;
 	delete blockmodel;
 	delete particleManager;
+	//レベルデータ解放
+	delete leveldata;
+
 	FBX_SAFE_DELETE(boneTestModel);
 	FBX_SAFE_DELETE(cube);
 	for (int i = 0; i < bonetestsize; i++) {
@@ -109,6 +115,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//3Dモデル
 	spheremodel = Model::LoadFromObj("Skydome");
 	blockmodel = Model::LoadFromObj("redcube");
+	testmodel = Model::LoadFromObj("test");
+
+	//モデルデータをマップに入れる
+	models.insert(std::make_pair("redcube", blockmodel));
+	models.insert(std::make_pair("test", testmodel));
+
 	//当たり判定
 	minsphereModel = spheremodel->GetminModel();
 	maxsphereModel = spheremodel->GetmaxModel();
@@ -126,22 +138,64 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	/*railCamera->Initialize(camera);
 	railCamera->Update();
 	blockobj->SetParentCamera(railCamera);*/
+
+
+
+	// レベルデータの読み込み
+	leveldata = LoadFile::LoadFileData("test");
+
+	// レベルデータからオブジェクトを生成、配置
+	for (auto& objectData : leveldata->objects) {
+		// ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end()) {
+			model = it->second;
+		}
+
+		//3Dオブジェクトを生成
+		Object3d* newObject = Object3d::Create();
+		newObject->SetModel(model);
+
+		// 座標
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMStoreFloat3(&pos, objectData.translation);
+		newObject->SetPosition(pos);
+
+		// 回転角
+		DirectX::XMFLOAT3 rot;
+		DirectX::XMStoreFloat3(&rot, objectData.rotation);
+		newObject->SetRotation(rot);
+
+		// 座標
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMStoreFloat3(&scale, objectData.scaling);
+		newObject->SetScale(scale);
+
+		// 配列に登録
+		objects.push_back(newObject);
+	}
+
 }
 
 void GameScene::Update()
 {
 	camera->Update();
 	matView=camera->GetmatView();
-	//球
-	sphereobj->Update(matView);
-	//ブロック
-	
-	blockobj->Update(matView);
+	////球
+	//sphereobj->Update(matView);
+	////ブロック
+	//
+	//blockobj->Update(matView);
 
-	for (int i = 0; i < bonetestsize; i++) {
-		bonetest[i]->Update();
+	//for (int i = 0; i < bonetestsize; i++) {
+	//	bonetest[i]->Update();
+	//}
+	//hitsprite->Update();
+
+	for (auto& object : objects) {
+		object->Update(matView);
 	}
-	hitsprite->Update();
 }
 
 void GameScene::Draw()
@@ -149,21 +203,23 @@ void GameScene::Draw()
 	//オブジェクト描画
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
 
-	////3Dオブジェクトの描画
-	sphereobj->Draw();
-	blockobj->Draw();
-	for (int i = 0; i < bonetestsize; i++) {
-		bonetest[i]->Draw(dxCommon_->GetCommandlist());
-	}
-	Object3d::PostDraw();
+	//////3Dオブジェクトの描画
+	//sphereobj->Draw();
+	//blockobj->Draw();
+	//for (int i = 0; i < bonetestsize; i++) {
+	//	bonetest[i]->Draw(dxCommon_->GetCommandlist());
+	//}
 
-	
-	//object1->Draw(dxCommon_->GetCommandlist());
+	for (auto& object : objects) {
+		object->Draw();
+	}
+
+	Object3d::PostDraw();
 	
 
 	//スプライト描画
 	spriteCommon->PreDraw();
-	hitsprite->Draw();
+	/*hitsprite->Draw();*/
 
 	spriteCommon->PostDraw();
 }

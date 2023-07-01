@@ -18,6 +18,10 @@
 #include"FbxLoader.h"
 #include"FbxObject3D.h"
 #include"Railcamera.h"
+#include"LoadFile.h"
+#include<map>
+
+struct LevelData;
 
 class GameScene
 {
@@ -49,6 +53,7 @@ private:
 	//3Dモデル
 	Model* spheremodel=nullptr;
 	Model* blockmodel = nullptr;
+	Model* testmodel = nullptr;
 	//3Dモデルの当たり判定
 	XMFLOAT3 minsphereModel = {}, maxsphereModel = {};
 	
@@ -74,5 +79,11 @@ private:
 
 	//レールカメラ
 	Railcamera* railCamera = nullptr;
+
+	//ファイル読み込み
+	LevelData* leveldata = nullptr;
+	//配置オブジェクト情報
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
 };
 
