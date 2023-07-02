@@ -48,7 +48,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxObject3D::CreateGraphicsPipeline();
 
 	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	cube = FbxLoader::GetInstance()->LoadModelFromFile("fbxredcube");
+	cube = FbxLoader::GetInstance()->LoadModelFromFile("fbxcube");
 
 	/*bonetest[0]->Initialize();
 	bonetest[0]->SetModel(cube);

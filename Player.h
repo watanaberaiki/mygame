@@ -42,7 +42,7 @@ private://ƒƒ“ƒo•Ï”
 	float speed = 0.2f;
 
 	//’e
-	size_t bulletsize = 100;
+	size_t bulletsize = 50;
 	std::list<std::unique_ptr<PlayerBullet>>bullets;
 };
 

@@ -2,7 +2,7 @@
 Input* Player::input = nullptr;
 void Player::Initialize()
 {
-	playermodel = FbxLoader::GetInstance()->LoadModelFromFile("fbxredcube");
+	playermodel = FbxLoader::GetInstance()->LoadModelFromFile("bonetest");
 	playerobj = new FbxObject3D();
 	playerobj->Initialize();
 	playerobj->SetModel(playermodel);
