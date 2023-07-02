@@ -2,16 +2,23 @@
 Input* Player::input = nullptr;
 void Player::Initialize()
 {
-	playermodel = FbxLoader::GetInstance()->LoadModelFromFile("bonetest");
-	playerobj = new FbxObject3D();
-	playerobj->Initialize();
-	playerobj->SetModel(playermodel);
+	//fbx
+	playerfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("bonetest");
+	playerfbxobj = new FbxObject3D();
+	playerfbxobj->Initialize();
+	playerfbxobj->SetModel(playerfbxmodel);
 
+	//弾
 	for (int i = 0; i < bulletsize; i++) {
 		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
 		newObject->Initialize();
 		bullets.push_back(std::move(newObject));
 	}
+
+	//3dオブジェクト
+	playermodel= Model::LoadFromObj("block");
+	playerobj = Object3d::Create();
+	playerobj->SetModel(playermodel);
 
 }
 
@@ -22,11 +29,23 @@ void Player::Update()
 	}
 
 	Move();
+	////fbx
+	//playerfbxobj->SetPosition(position);
+	//playerfbxobj->SetScale(scale);
+	//playerfbxobj->SetRotation(rotation);
+	//playerfbxobj->Update();
+	
+
+	//オブジェクト
 	playerobj->SetPosition(position);
 	playerobj->SetScale(scale);
 	playerobj->SetRotation(rotation);
 	playerobj->Update();
 
+
+	
+
+	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
 	{
 		if (bullet->GetIsFIre() == false) 
@@ -39,7 +58,13 @@ void Player::Update()
 
 void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	playerobj->Draw(cmdList);
+	////fbx
+	//playerfbxobj->Draw(cmdList);
+
+	//オブジェクト
+	playerobj->Draw();
+
+	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
 	{
 		if (bullet->GetIsFIre())

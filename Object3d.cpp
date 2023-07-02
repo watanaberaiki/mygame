@@ -44,6 +44,8 @@ std::vector<unsigned short>Object3d::indices;
 
 Object3d::Material Object3d::material;
 Railcamera* Object3d::parentcamera;
+Camera* Object3d::camera;
+
 
 void Object3d::StaticInitialize(ID3D12Device * device, int window_width, int window_height)
 {
@@ -628,7 +630,7 @@ bool Object3d::Initialize()
 	return true;
 }
 
-void Object3d::Update(XMMATRIX &matView)
+void Object3d::Update()
 {
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
@@ -662,7 +664,7 @@ void Object3d::Update(XMMATRIX &matView)
 	ConstBufferDataB0* constMap = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	/*constMap->color = color;*/
-	constMap->mat = matWorld * matView * matProjection;	// 行列の合成
+	constMap->mat = matWorld *camera->GetmatView()* matProjection;	// 行列の合成
 	constBuffB0->Unmap(0, nullptr);
 
 

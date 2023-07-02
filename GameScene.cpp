@@ -40,6 +40,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	camera->SetUp(up);
 	camera->Update();
 
+	//オブジェクト3dカメラ
+	Object3d::SetCamera(camera);
+
 	//デバイスをセット
 	FbxObject3D::SetDevice(dxCommon_->GetDevice());
 	//カメラをセット

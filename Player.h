@@ -2,6 +2,8 @@
 #include"FbxObject3D.h"
 #include"FbxModel.h"
 #include"PlayerBullet.h"
+#include"Object3d.h"
+#include"Model.h"
 
 class Player
 {
@@ -29,14 +31,20 @@ private://静的メンバ変数
 private://メンバ変数
 	//位置、大きさ、回転
 	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 scale = { (float)0.2,(float)0.03,(float)0.1 };
+	XMFLOAT3 scale = { (float)0.1,(float)0.1,(float)0.1 };
 	XMFLOAT3 rotation = { 0,0,0 };
 
 
 	//FBXモデル
-	FbxModel* playermodel = nullptr;
+	FbxModel* playerfbxmodel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* playerobj = nullptr;
+	FbxObject3D* playerfbxobj = nullptr;
+
+	//3Dモデル
+	Model* playermodel = nullptr;
+	//3Dオブジェクト
+	Object3d* playerobj = nullptr;
+
 
 	//スピード
 	float speed = 0.2f;
