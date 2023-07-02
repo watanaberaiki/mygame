@@ -19,6 +19,8 @@
 #include"FbxObject3D.h"
 #include"Railcamera.h"
 
+#include"Enemy.h"
+#include"Player.h"
 class GameScene
 {
 //メンバ関数
@@ -74,5 +76,12 @@ private:
 
 	//レールカメラ
 	Railcamera* railCamera = nullptr;
+
+	//敵
+	size_t enemysize = 5;
+	std::list<std::unique_ptr<Enemy>>enemys;
+
+	//プレイヤー
+	Player* player;
 };
 

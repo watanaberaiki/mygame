@@ -48,15 +48,31 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxObject3D::CreateGraphicsPipeline();
 
 	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	cube = FbxLoader::GetInstance()->LoadModelFromFile("whitebox");
-	//3Dオブジェクト生成とモデルのセット
-	for (int i = 0; i < bonetestsize; i++) {
-		bonetest[i] = new FbxObject3D();
-		bonetest[i]->Initialize();
-		bonetest[i]->SetModel(boneTestModel);
-		bonetest[i]->SetPosition(XMFLOAT3(0, (float)i, -5));
-		bonetest[i]->PlayAnimation();
+	cube = FbxLoader::GetInstance()->LoadModelFromFile("fbxredcube");
+
+	/*bonetest[0]->Initialize();
+	bonetest[0]->SetModel(cube);
+	bonetest[0]->SetPosition(XMFLOAT3((float)0, (float)0, (float)0));*/
+
+
+	//プレイヤー
+	Player::SetInput(input);
+	player = new Player;
+	player->Initialize();
+	player->SetPosition(XMFLOAT3(0.0f,0.0f,eye.z+5.0f));
+
+
+	//敵
+	for (int i = 0; i < enemysize; i++) {
+		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		newObject->Initialize();
+		newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));
+		newObject->Update();
+		enemys.push_back(std::move(newObject));
 	}
+
+	
+
 	//パーティクル
 	particleManager->Initialize("effect1.png");
 	//パーティクル
@@ -106,22 +122,22 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();
 
-	//3Dモデル
-	spheremodel = Model::LoadFromObj("Skydome");
-	blockmodel = Model::LoadFromObj("redcube");
-	//当たり判定
-	minsphereModel = spheremodel->GetminModel();
-	maxsphereModel = spheremodel->GetmaxModel();
+	////3Dモデル
+	//spheremodel = Model::LoadFromObj("Skydome");
+	//blockmodel = Model::LoadFromObj("redcube");
+	////当たり判定
+	//minsphereModel = spheremodel->GetminModel();
+	//maxsphereModel = spheremodel->GetmaxModel();
 
-	//球
-	sphereobj = Object3d::Create();
-	sphereobj->SetModel(spheremodel);
-	sphereobj->SetPosition({ 0,0,0 });
+	////球
+	//sphereobj = Object3d::Create();
+	//sphereobj->SetModel(spheremodel);
+	//sphereobj->SetPosition({ 0,0,0 });
 
-	//ブロック
-	blockobj = Object3d::Create();
-	blockobj->SetModel(blockmodel);
-	blockobj->SetPosition({ 0,5,0 });
+	////ブロック
+	//blockobj = Object3d::Create();
+	//blockobj->SetModel(blockmodel);
+	//blockobj->SetPosition({ 0,5,0 });
 
 	/*railCamera->Initialize(camera);
 	railCamera->Update();
@@ -132,15 +148,15 @@ void GameScene::Update()
 {
 	camera->Update();
 	matView=camera->GetmatView();
-	//球
-	sphereobj->Update(matView);
-	//ブロック
+	//プレイヤー
+	player->Update();
 	
-	blockobj->Update(matView);
-
-	for (int i = 0; i < bonetestsize; i++) {
-		bonetest[i]->Update();
+	//敵
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		enemy->Update();
 	}
+	/*bonetest[0]->Update();*/
 	hitsprite->Update();
 }
 
@@ -148,17 +164,17 @@ void GameScene::Draw()
 {
 	//オブジェクト描画
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
-
-	////3Dオブジェクトの描画
-	sphereobj->Draw();
-	blockobj->Draw();
-	for (int i = 0; i < bonetestsize; i++) {
-		bonetest[i]->Draw(dxCommon_->GetCommandlist());
+	//プレイヤー
+	player->Draw(dxCommon_->GetCommandlist());
+	//敵
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		enemy->Draw(dxCommon_->GetCommandlist());
 	}
+	/*bonetest[0]->Draw(dxCommon_->GetCommandlist());*/
 	Object3d::PostDraw();
 
 	
-	//object1->Draw(dxCommon_->GetCommandlist());
 	
 
 	//スプライト描画
