@@ -79,12 +79,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)winapp;$(SolutionDir)Fbx;$(SolutionDir)DX;$(SolutionDir)2d;$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)Input;$(SolutionDir)Camera;$(SolutionDir)winapp;$(SolutionDir)Fbx;$(SolutionDir)DX;$(SolutionDir)2d;$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)winapp;$(SolutionDir)Fbx;$(SolutionDir)DX;$(SolutionDir)2d;$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)Input;$(SolutionDir)Camera;$(SolutionDir)winapp;$(SolutionDir)Fbx;$(SolutionDir)DX;$(SolutionDir)2d;$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -153,14 +153,14 @@
   <ItemGroup>
     <ClCompile Include="2d\Sprite.cpp" />
     <ClCompile Include="2d\SpriteCommon.cpp" />
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="DX\DirectXCommon.cpp" />
     <ClCompile Include="Fbx\FbxLoader.cpp" />
     <ClCompile Include="Fbx\FbxModel.cpp" />
     <ClCompile Include="Fbx\FbxObject3D.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Object3d.cpp" />
@@ -259,7 +259,7 @@
     <ClInclude Include="2d\PostEffect.h" />
     <ClInclude Include="2d\Sprite.h" />
     <ClInclude Include="2d\SpriteCommon.h" />
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionPrimitive.h" />
     <ClInclude Include="DX\DirectXCommon.h" />
@@ -267,7 +267,7 @@
     <ClInclude Include="Fbx\FbxModel.h" />
     <ClInclude Include="Fbx\FbxObject3D.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="ParticleManager.h" />

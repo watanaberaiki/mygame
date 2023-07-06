@@ -347,6 +347,7 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName) {
 
 }
 
+
 void SpriteCommon::SetTextureCommands(uint32_t index) {
 
 

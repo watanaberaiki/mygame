@@ -24,6 +24,8 @@ public:
 	void PostDraw();
 	void LoadTexture(uint32_t index, const std::string& fileName);
 
+	/*static void LoadTexture(uint32_t index, const std::string& fileName);*/
+
 	void SetTextureCommands(uint32_t index);
 
 	DirectXCommon* GetDirectXCommon() { return dxcommon_; }
@@ -31,13 +33,13 @@ public:
 	ID3D12Resource* GetTextureBuffer(uint32_t index) { return texBuff[index].Get(); }
 
 
-private:
+protected:
 	//SRVの最大個数
 	static const size_t kMaxSRVCount = 2056;
 
 	static std::string kDefaultTextureDirectoryPath;
 
-private:
+protected:
 	DirectXCommon* dxcommon_=nullptr;
 
 	// パイプランステートの生成

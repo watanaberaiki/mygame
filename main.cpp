@@ -5,8 +5,9 @@
 #include "Collision.h"
 #include"Camera.h"
 #include"FbxLoader.h"
-
 #include"GameScene.h"
+#include"2d/PostEffect.h"
+#include"2d/SpriteCommon.h"
 
 #pragma comment (lib,"d3dcompiler.lib")
 
@@ -24,7 +25,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	Input* input = nullptr;
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
-
+	PostEffect* postEffect = nullptr;
 
 	//WindowsAPIの初期化
 	winApp = new WinApp();
@@ -84,6 +85,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	gamescene = new GameScene();
 	gamescene->Initialize(dxCommon,input);
 
+	//ポストエフェクト用テクスチャの読み込み
+	SpriteCommon* spritecommon = nullptr;
+	spritecommon = new SpriteCommon();
+	spritecommon->Initialize(dxCommon);
+	spritecommon->LoadTexture(0, "hit.png");
+	/*SpriteCommon::LoadTexture(0, "hit.png");*/
+	//ポストエフェクトの初期化
+	postEffect = new PostEffect();
+	postEffect->Initialize(spritecommon,0);
 
 	//最初のシーンの初期化
 
@@ -104,7 +114,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//// 4.描画コマンドここから
 
 		dxCommon->PreDraw();
-		
+		//ポストエフェクトの描画
+		postEffect->Draw(dxCommon->GetCommandlist());
+
 		////ゲームシーン
 		//gamescene->Draw();
 
@@ -121,6 +133,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	delete dxCommon;
 	//GameScene解放
 	delete gamescene;
+	//ポストエフェクト解放
+	delete postEffect;
 	//カメラ解放
 	/*delete camera;*/
 	FbxLoader::GetInstance()->Finalize();
