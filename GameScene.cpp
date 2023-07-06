@@ -159,8 +159,6 @@ void GameScene::Update()
 	{
 		enemy->Update();
 	}
-	/*bonetest[0]->Update();*/
-	hitsprite->Update();
 }
 
 void GameScene::Draw()
@@ -182,7 +180,6 @@ void GameScene::Draw()
 
 	//スプライト描画
 	spriteCommon->PreDraw();
-	hitsprite->Draw();
 
 	spriteCommon->PostDraw();
 }

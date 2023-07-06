@@ -1,7 +1,8 @@
 #pragma once
 #include"FbxObject3D.h"
 #include"FbxModel.h"
-
+#include"Object3d.h"
+#include"Model.h"
 class Enemy
 {
 public://メンバ関数
@@ -23,14 +24,19 @@ private://静的メンバ変数
 private://メンバ変数
 	//位置、大きさ、回転
 	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 scale = { (float)0.1,(float)0.02,(float)0.1 };
+	XMFLOAT3 scale = { (float)0.1,(float)0.1,(float)0.1 };
 	XMFLOAT3 rotation = { 0,0,0 };
 
 
 	//FBXモデル
-	FbxModel* enemymodel = nullptr;
+	FbxModel* enemyfbxmodel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* enemyobj = nullptr;
+	FbxObject3D* enemyfbxobj = nullptr;
+
+	//3Dモデル
+	Model* enemymodel = nullptr;
+	//3Dオブジェクト
+	Object3d* enemyobj = nullptr;
 
 	//スピード
 	float speed = 0.2f;

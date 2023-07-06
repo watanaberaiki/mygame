@@ -1,6 +1,9 @@
 #pragma once
 #include"FbxObject3D.h"
 #include"FbxModel.h"
+#include"Object3d.h"
+#include"Model.h"
+
 class PlayerBullet
 {
 public://メンバ関数
@@ -27,14 +30,19 @@ private://静的メンバ変数
 private://メンバ変数
 	//位置、大きさ、回転
 	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 scale = { (float)0.05,(float)0.01,(float)0.05 };
+	XMFLOAT3 scale = { (float)0.1,(float)0.1,(float)0.1 };
 	XMFLOAT3 rotation = { 0,0,0 };
 
 
 	//FBXモデル
-	FbxModel* bulletmodel = nullptr;
+	FbxModel* bulletfbxmodel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* bulletobj = nullptr;
+	FbxObject3D* bulletfbxobj = nullptr;
+	//3Dモデル
+	Model* bulletmodel = nullptr;
+	//3Dオブジェクト
+	Object3d* bulletobj = nullptr;
+
 
 	//スピード
 	float speed = 0.2f;

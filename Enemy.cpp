@@ -2,24 +2,43 @@
 
 void Enemy::Initialize()
 {
-	enemymodel= FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	enemyobj = new FbxObject3D();
-	enemyobj->Initialize();
+	//fbx
+	enemyfbxmodel= FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	enemyfbxobj = new FbxObject3D();
+	enemyfbxobj->Initialize();
+	enemyfbxobj->SetModel(enemyfbxmodel);
+
+	//3dオブジェクト
+	enemymodel = Model::LoadFromObj("redcube");
+	enemyobj = Object3d::Create();
 	enemyobj->SetModel(enemymodel);
+
 }
 
 void Enemy::Update()
 {
 	Move();
+	////fbx
+	//enemyfbxobj->SetPosition(position);
+	//enemyfbxobj->SetScale(scale);
+	//enemyfbxobj->SetRotation(rotation);
+	//enemyfbxobj->Update();
+
+	//オブジェクト
 	enemyobj->SetPosition(position);
 	enemyobj->SetScale(scale);
 	enemyobj->SetRotation(rotation);
 	enemyobj->Update();
+
 }
 
 void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	enemyobj->Draw(cmdList);
+	////fbx
+	//enemyfbxobj->Draw(cmdList);
+	
+	//オブジェクト
+	enemyobj->Draw();
 }
 
 void Enemy::Move()

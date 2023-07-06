@@ -82,6 +82,6 @@ private:
 	std::list<std::unique_ptr<Enemy>>enemys;
 
 	//ƒvƒŒƒCƒ„[
-	Player* player;
+	Player* player = nullptr;
 };
 
