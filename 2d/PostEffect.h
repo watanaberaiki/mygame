@@ -7,7 +7,7 @@ class PostEffect :
 {
 public:
     //初期化
-    void Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex);
+    void Initialize(DirectXCommon* dxcommon, uint32_t textureIndex);
     //コンストラクタ
     PostEffect();
     //描画

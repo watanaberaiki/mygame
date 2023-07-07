@@ -81,19 +81,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 	ParticleManager::StaticInitialize(dxCommon, winApp->window_width, winApp->window_height);
 
-	GameScene* gamescene = nullptr;
+	/*GameScene* gamescene = nullptr;
 	gamescene = new GameScene();
-	gamescene->Initialize(dxCommon,input);
+	gamescene->Initialize(dxCommon,input);*/
 
 	//ポストエフェクト用テクスチャの読み込み
-	SpriteCommon* spritecommon = nullptr;
+	/*SpriteCommon* spritecommon = nullptr;
 	spritecommon = new SpriteCommon();
 	spritecommon->Initialize(dxCommon);
-	spritecommon->LoadTexture(0, "hit.png");
+	spritecommon->LoadTexture(0, "white1x1.png");
+	spritecommon->LoadTexture(1, "white1x1.png");*/
 	/*SpriteCommon::LoadTexture(0, "hit.png");*/
 	//ポストエフェクトの初期化
 	postEffect = new PostEffect();
-	postEffect->Initialize(spritecommon,0);
+	postEffect->Initialize(dxCommon,0);
 
 	//最初のシーンの初期化
 
@@ -109,8 +110,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		}
 		//入力の更新
 		input->Update();
-		//ゲームシーン
-		gamescene->Update();
+		////ゲームシーン
+		//gamescene->Update();
 		//// 4.描画コマンドここから
 
 		dxCommon->PreDraw();
@@ -131,8 +132,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	delete winApp;
 	//DirectX解放
 	delete dxCommon;
-	//GameScene解放
-	delete gamescene;
+	////GameScene解放
+	//delete gamescene;
 	//ポストエフェクト解放
 	delete postEffect;
 	//カメラ解放
