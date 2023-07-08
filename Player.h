@@ -4,6 +4,9 @@
 #include"PlayerBullet.h"
 #include"Object3d.h"
 #include"Model.h"
+#include"CubeModel.h"
+#include"CubeObject3D.h"
+#include"DirectXCommon.h"
 
 class Player
 {
@@ -23,11 +26,14 @@ public://メンバ関数
 	void SetScale(XMFLOAT3 scale) { this->position = scale; }
 	void SetRotation(XMFLOAT3 rotation) { this->position = rotation; }
 	static void SetInput(Input* input) { Player::input = input; }
-
+	static void SetDxCommon(DirectXCommon* dxcommon) { Player::dxcommon = dxcommon; }
+	//ゲッター
+	CubeObject3D* GetCubeObject() { return collisionBox; }
+	XMFLOAT3 GetPosition() { return position; }
 private://静的メンバ変数
 	//キーボード
 	static Input* input;
-
+	static DirectXCommon* dxcommon;
 private://メンバ変数
 	//位置、大きさ、回転
 	XMFLOAT3 position = { 0,0,0 };
@@ -45,9 +51,12 @@ private://メンバ変数
 	//3Dオブジェクト
 	Object3d* playerobj = nullptr;
 
+	//判定用
+	CubeModel* cubeModel = nullptr;
+	CubeObject3D* collisionBox = nullptr;
 
 	//スピード
-	float speed = 0.2f;
+	float speed = 0.1f;
 
 	//弾
 	size_t bulletsize = 50;

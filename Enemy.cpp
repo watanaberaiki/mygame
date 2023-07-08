@@ -1,4 +1,5 @@
 #include "Enemy.h"
+DirectXCommon* Enemy::dxcommon = nullptr;
 
 void Enemy::Initialize()
 {
@@ -13,11 +14,24 @@ void Enemy::Initialize()
 	enemyobj = Object3d::Create();
 	enemyobj->SetModel(enemymodel);
 
+	//当たり判定キューブモデル
+	cubeModel = new CubeModel();
+	cubeModel->CreateBuffers(dxcommon->GetDevice());
+	cubeModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
+
+	collisionBox = new CubeObject3D();
+	collisionBox->Initialize();
+	collisionBox->SetModel(cubeModel);
+	collisionBox->SetPosition(position);
+	collisionBox->SetScale(scale);
+	collisionBox->SetRotation(rotation);
+	collisionBox->Update();
+
 }
 
 void Enemy::Update()
 {
-	Move();
+	/*Move();*/
 	////fbx
 	//enemyfbxobj->SetPosition(position);
 	//enemyfbxobj->SetScale(scale);
@@ -30,6 +44,11 @@ void Enemy::Update()
 	enemyobj->SetRotation(rotation);
 	enemyobj->Update();
 
+	//判定
+	collisionBox->SetPosition(position);
+	collisionBox->SetScale(scale);
+	collisionBox->SetRotation(rotation);
+	collisionBox->Update();
 }
 
 void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)

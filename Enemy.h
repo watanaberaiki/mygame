@@ -3,6 +3,10 @@
 #include"FbxModel.h"
 #include"Object3d.h"
 #include"Model.h"
+#include"CubeModel.h"
+#include"CubeObject3D.h"
+#include"DirectXCommon.h"
+
 class Enemy
 {
 public://メンバ関数
@@ -18,8 +22,12 @@ public://メンバ関数
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 	void SetScale(XMFLOAT3 scale) { this->position = scale; }
 	void SetRotation(XMFLOAT3 rotation) { this->position = rotation; }
-private://静的メンバ変数
+	static void SetDxCommon(DirectXCommon* dxcommon) { Enemy::dxcommon = dxcommon; }
+	//ゲッター
+	CubeObject3D* GetCubeObject() { return collisionBox; }
 
+private://静的メンバ変数
+	static DirectXCommon* dxcommon;
 
 private://メンバ変数
 	//位置、大きさ、回転
@@ -37,6 +45,10 @@ private://メンバ変数
 	Model* enemymodel = nullptr;
 	//3Dオブジェクト
 	Object3d* enemyobj = nullptr;
+
+	//判定用
+	CubeModel* cubeModel = nullptr;
+	CubeObject3D* collisionBox = nullptr;
 
 	//スピード
 	float speed = 0.2f;

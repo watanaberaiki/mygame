@@ -19,8 +19,17 @@
 #include"FbxObject3D.h"
 #include"Railcamera.h"
 
+
 #include"Enemy.h"
 #include"Player.h"
+#include"CubeModel.h"
+#include"CubeObject3D.h"
+#pragma warning(push)
+#pragma warning(disable:4267)
+#include<map>
+//#include<utility>
+#pragma warning(pop)
+
 class GameScene
 {
 //メンバ関数
@@ -83,5 +92,12 @@ private:
 
 	//プレイヤー
 	Player* player = nullptr;
+
+	//マップ用
+	std::map<int, CubeObject3D*>enemyCollision;
+	int enemycount = 0;
+
+	//ヒット確認
+	bool isHit = false;
 };
 

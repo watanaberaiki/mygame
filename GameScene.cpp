@@ -42,6 +42,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//オブジェクト3dカメラ
 	Object3d::SetCamera(camera);
+	//当たり判定キューブオブジェクト
+	CubeObject3D::SetCamera(camera);
+	CubeObject3D::SetDevice(dxCommon_->GetDevice());
+	CubeObject3D::CreateGraphicsPipeline();
 
 	//デバイスをセット
 	FbxObject3D::SetDevice(dxCommon_->GetDevice());
@@ -60,20 +64,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//プレイヤー
 	Player::SetInput(input);
+	Player::SetDxCommon(dxCommon);
 	player = new Player;
 	player->Initialize();
 	player->SetPosition(XMFLOAT3(0.0f,0.0f,eye.z+5.0f));
-
+	//マップに追加
+	enemyCollision.insert(std::make_pair(enemyCollision.size(), player->GetCubeObject()));
 
 	//敵
+	Enemy::SetDxCommon(dxCommon);
 	for (int i = 0; i < enemysize; i++) {
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
 		newObject->Initialize();
-		newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));
+		newObject->SetPosition(player->GetPosition());
+		/*newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));*/
 		newObject->Update();
+		//マップに追加
+		enemyCollision.insert(std::make_pair(enemyCollision.size(), newObject->GetCubeObject()));
 		enemys.push_back(std::move(newObject));
 	}
-
+	
 	
 
 	//パーティクル
@@ -157,8 +167,17 @@ void GameScene::Update()
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
+		enemycount++;
 		enemy->Update();
+		//敵とプレイヤーの判定
+		if (enemyCollision.at(0)->CheakCollision(enemyCollision.at(enemycount))) {
+			isHit = true;
+		}
+		else {
+			isHit = false;
+		}
 	}
+	enemycount = 0;
 }
 
 void GameScene::Draw()
@@ -172,6 +191,11 @@ void GameScene::Draw()
 	{
 		enemy->Draw(dxCommon_->GetCommandlist());
 	}
+
+	//判定描画
+	for (int i = 0;i<enemyCollision.size();i++){
+		enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
+	}
 	/*bonetest[0]->Draw(dxCommon_->GetCommandlist());*/
 	Object3d::PostDraw();
 
@@ -180,6 +204,9 @@ void GameScene::Draw()
 
 	//スプライト描画
 	spriteCommon->PreDraw();
+	if (isHit) {
+		hitsprite->Draw();
+	}
 
 	spriteCommon->PostDraw();
 }

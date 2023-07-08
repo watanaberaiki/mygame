@@ -1,5 +1,7 @@
 #include "Player.h"
 Input* Player::input = nullptr;
+DirectXCommon* Player::dxcommon = nullptr;
+
 void Player::Initialize()
 {
 	//fbx
@@ -20,6 +22,18 @@ void Player::Initialize()
 	playerobj = Object3d::Create();
 	playerobj->SetModel(playermodel);
 
+	//当たり判定キューブモデル
+	cubeModel = new CubeModel();
+	cubeModel->CreateBuffers(dxcommon->GetDevice());
+	cubeModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
+
+	collisionBox = new CubeObject3D();
+	collisionBox->Initialize();
+	collisionBox->SetModel(cubeModel);
+	collisionBox->SetPosition(position);
+	collisionBox->SetScale(scale);
+	collisionBox->SetRotation(rotation);
+	collisionBox->Update();
 }
 
 void Player::Update()
@@ -42,8 +56,11 @@ void Player::Update()
 	playerobj->SetRotation(rotation);
 	playerobj->Update();
 
-
-	
+	//判定
+	collisionBox->SetPosition(position);
+	collisionBox->SetScale(scale);
+	collisionBox->SetRotation(rotation);
+	collisionBox->Update();
 
 	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
