@@ -19,7 +19,8 @@
 #include"FbxObject3D.h"
 #include"Railcamera.h"
 
-
+#include"LineModel.h"
+#include"LineObject.h"
 #include"Enemy.h"
 #include"Player.h"
 #include"CubeModel.h"
@@ -99,5 +100,9 @@ private:
 
 	//ヒット確認
 	bool isHit = false;
+
+	//ライン
+	LineModel* linemodel = nullptr;
+	LineObject* lineobject = nullptr;
 };
 

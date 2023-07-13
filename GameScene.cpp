@@ -155,6 +155,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	/*railCamera->Initialize(camera);
 	railCamera->Update();
 	blockobj->SetParentCamera(railCamera);*/
+
+
+	//ƒ‰ƒCƒ“
+	linemodel = new LineModel();
+	linemodel->CreateBuffers(dxCommon->GetDevice());
+	linemodel->SetImageData(XMFLOAT4(0, 0, 0, 1));
+	LineObject::SetCamera(camera);
+	LineObject::SetDevice(dxCommon->GetDevice());
+	LineObject::CreateGraphicsPipeline();
+	lineobject = new LineObject();
+	lineobject->Initialize();
+	lineobject->SetModel(linemodel);
+	lineobject->SetPosition(XMFLOAT3(-3, 1, 0));
+	lineobject->SetScale(XMFLOAT3(3, 1, 1));
 }
 
 void GameScene::Update()
@@ -178,6 +192,8 @@ void GameScene::Update()
 		}
 	}
 	enemycount = 0;
+
+	lineobject->Update();
 }
 
 void GameScene::Draw()
@@ -197,6 +213,8 @@ void GameScene::Draw()
 		enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
 	}
 	/*bonetest[0]->Draw(dxCommon_->GetCommandlist());*/
+	//•`‰æ
+	lineobject->Draw(dxCommon_->GetCommandlist());
 	Object3d::PostDraw();
 
 	

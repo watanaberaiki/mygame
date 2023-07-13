@@ -1,23 +1,29 @@
-// マテリアル
-cbuffer ConstBufferDataMaterial : register(b0)
+cbuffer cbuff0 : register(b0)
 {
-    // 色(RGBA)
-    float4 color;
+    matrix viewproj; //ビュープロジェクション行列
+    matrix world; //ワールド行列
+    float3 cameraPos; //カメラ座標
+}
+
+//バーテックスバッファの入力
+struct VSInput
+{
+    float4 pos : POSITION; //位置
+    float3 normal : NORMAL; //頂点法線
+    float2 uv : TEXCOORD; //テクスチャー座標
 };
 
-
-cbuffer ConstBufferDataTransform : register(b1)
-{
-    matrix mat;//3D変換行列
-};
-
-// 頂点シェーダーの出力構造体
-// （頂点シェーダーからピクセルシェーダーへのやり取りに使用する）
+//頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {
-    // システム用頂点座標
-    float4 svpos : SV_POSITION;
-    float3 normal:NORMAL;//法線ベクトル
-    // uv値
-    float2 uv  :TEXCOORD;
+    float4 svpos : SV_POSITION; //システム用頂点座標
+    float3 normal : NORMAL; //法線
+    float2 uv : TEXCOORD; //uv値
+};
+//ジオメトリシェーダからピクセルシェーダへの出力
+struct GSOutput
+{
+    float4 svpos : SV_POSITION;//システム用頂点座標
+    float3 normal : NORMAL;//法線ベクトル
+    float2 uv : TEXCOORD;//uv値
 };

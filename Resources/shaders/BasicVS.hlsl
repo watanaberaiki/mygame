@@ -1,18 +1,18 @@
 #include "Basic.hlsli"
 
-//float4 main(float4 pos : POSITION) : SV_POSITION
-//{
-//	return pos;
-//}
-
-
-
-VSOutput main(float4 pos : POSITION,float3 normal:NORMAL, float2 uv : TEXCOORD)
+//エントリーポイント
+VSOutput main(VSInput input)
 {
-    VSOutput output; // ピクセルシェーダーに渡す値
-    /*output.svpos = pos;*/
-    output.svpos = mul(mat, pos);
-    output.uv = uv;
-    output.normal = normal;
-    return output;
+	//法線にワールド行列によるスケーリング 回転を適用
+	float4 wnormal = normalize(mul(world, float4(input.normal, 0)));
+	//ピクセルシェーダに渡す値
+	VSOutput output;
+	//行列による座標返還
+	output.svpos = mul(mul(viewproj, world), input.pos);
+	//ワールド法線を次のステージに渡す
+	output.normal = wnormal.xyz;
+	//入力値をそのまま次のステージ渡す
+	output.uv = input.uv;
+
+	return output;
 }
