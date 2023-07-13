@@ -86,15 +86,23 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	gamescene->Initialize(dxCommon,input);*/
 
 	//ポストエフェクト用テクスチャの読み込み
-	/*SpriteCommon* spritecommon = nullptr;
+	SpriteCommon* spritecommon = nullptr;
 	spritecommon = new SpriteCommon();
 	spritecommon->Initialize(dxCommon);
 	spritecommon->LoadTexture(0, "white1x1.png");
-	spritecommon->LoadTexture(1, "white1x1.png");*/
+	spritecommon->LoadTexture(1, "white1x1.png");
 	/*SpriteCommon::LoadTexture(0, "hit.png");*/
 	//ポストエフェクトの初期化
 	postEffect = new PostEffect();
-	postEffect->Initialize(dxCommon,0);
+	postEffect->SetSpriteCommon(spritecommon);
+	postEffect->SetTexture(spritecommon,0);
+	postEffect->Initialize();
+	postEffect->SetSize(XMFLOAT2(200.0f, 200.0f));
+	postEffect->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	postEffect->SetPosition(XMFLOAT2((float)winApp->window_width / 2, (float)winApp->window_height / 2));
+	/*postEffect->SetSize(XMFLOAT2(200.0f, 200.0f));
+	postEffect->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	postEffect->SetPosition(XMFLOAT2((float)winApp->window_width / 2,(float)winApp->window_height/2));*/
 
 	//最初のシーンの初期化
 

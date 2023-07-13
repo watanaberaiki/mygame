@@ -32,7 +32,10 @@ public:
 
 	ID3D12Resource* GetTextureBuffer(uint32_t index) { return texBuff[index].Get(); }
 
-
+	//ƒQƒbƒ^[
+	ComPtr<ID3D12PipelineState> GetPipeLineState() { return pipelineState; }
+	ComPtr<ID3D12RootSignature> GetRootSignature() { return rootSignature; }
+	ComPtr<ID3D12DescriptorHeap>Getsrv() { return srvHeap; }
 protected:
 	//SRV‚ÌÅ‘åŒÂ”
 	static const size_t kMaxSRVCount = 2056;

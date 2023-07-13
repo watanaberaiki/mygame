@@ -355,11 +355,10 @@ void SpriteCommon::SetTextureCommands(uint32_t index) {
 	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	dxcommon_->GetCommandlist()->SetGraphicsRootDescriptorTable
 	(1,
-	CD3DX12_GPU_DESCRIPTOR_HANDLE(srvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
-	index,
-	descriptorHandleIncrementSize)
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
+			index,
+			descriptorHandleIncrementSize)
 	);
-
 }
 void SpriteCommon::PreDraw()
 {

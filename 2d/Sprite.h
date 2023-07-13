@@ -35,7 +35,9 @@ public:
 public:
 
 	//初期化
-	void Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex = UINT32_MAX);
+	void Initialize();
+	//テクスチャセット
+	void SetTexture(SpriteCommon* spriteCommon, uint32_t textureIndex = UINT32_MAX);
 
 	void Update();
 
@@ -66,7 +68,7 @@ public:
 
 
 
-
+	//セッター
 	void SetColor(XMFLOAT4 color) { this->color = color; }
 
 	void SetPosition(const XMFLOAT2& position) { this->position_ = position; }
@@ -88,6 +90,8 @@ public:
 	void SetTextureLeftTop(const XMFLOAT2& textureLeftTop) { this->textureLeftTop_ = textureLeftTop; }
 
 	void SetTextureSize(const XMFLOAT2& textureSize) { this->textureSize_ = textureSize; }
+
+	void SetSpriteCommon(SpriteCommon* spritecommon) { this->spriteCommon_ = spritecommon; }
 
 private:
 	void AdjustTextureSize();

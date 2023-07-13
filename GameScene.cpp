@@ -97,9 +97,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteCommon->LoadTexture(0, "hit.png");
 	spriteCommon->LoadTexture(1, "mario.jpg");
 
-	//スプライトにテクスチャ割り当て
-	hitsprite->Initialize(spriteCommon, 0);
-	mariosprite->Initialize(spriteCommon, 1);
+	////スプライトにテクスチャ割り当て
+	//hitsprite->Initialize(spriteCommon, 0);
+	//mariosprite->Initialize(spriteCommon, 1);
 	//スプライト初期位置
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();

@@ -1,6 +1,12 @@
 #include "Sprite.h"
 
-void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
+void Sprite::Initialize()
+{
+	/*rotationZ = 0.0f;*/
+	position_ = { 0.0f,0.0f };
+}
+
+void Sprite::SetTexture(SpriteCommon* spriteCommon, uint32_t textureIndex)
 {
 	HRESULT result{};
 	assert(spriteCommon);
@@ -55,6 +61,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
 
+	UINT size= _countof(vertices);
 #pragma endregion 
 
 #pragma region 頂点バッファの確保
@@ -166,13 +173,6 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 		result = constBufferTransform->Map(0, nullptr, (void**)&constMapTransform);
 		assert(SUCCEEDED(result));
 
-
-
-		rotationZ = 0.0f;
-		position_ = { 0.0f,0.0f };
-
-
-
 		//透視投影行列の計算
 		matProjection =
 			XMMatrixOrthographicOffCenterLH(
@@ -193,7 +193,6 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 	}
 
 #pragma endregion
-
 }
 
 void Sprite::Update() {
