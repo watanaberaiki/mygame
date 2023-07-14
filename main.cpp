@@ -81,28 +81,25 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 	ParticleManager::StaticInitialize(dxCommon, winApp->window_width, winApp->window_height);
 
-	/*GameScene* gamescene = nullptr;
+	GameScene* gamescene = nullptr;
 	gamescene = new GameScene();
-	gamescene->Initialize(dxCommon,input);*/
+	gamescene->Initialize(dxCommon,input);
 
 	//ポストエフェクト用テクスチャの読み込み
 	SpriteCommon* spritecommon = nullptr;
 	spritecommon = new SpriteCommon();
 	spritecommon->Initialize(dxCommon);
-	spritecommon->LoadTexture(0, "white1x1.png");
-	spritecommon->LoadTexture(1, "white1x1.png");
+	spritecommon->LoadTexture(0, "hit.png");
+	spritecommon->LoadTexture(1, "white1280x720.png");
 	/*SpriteCommon::LoadTexture(0, "hit.png");*/
 	//ポストエフェクトの初期化
 	postEffect = new PostEffect();
 	postEffect->SetSpriteCommon(spritecommon);
-	postEffect->SetTexture(spritecommon,0);
+	postEffect->SetTexture(spritecommon, 1);
 	postEffect->Initialize();
-	postEffect->SetSize(XMFLOAT2(200.0f, 200.0f));
+	//postEffect->SetSize(XMFLOAT2(200.0f, 200.0f));
 	postEffect->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	postEffect->SetPosition(XMFLOAT2((float)winApp->window_width / 2, (float)winApp->window_height / 2));
-	/*postEffect->SetSize(XMFLOAT2(200.0f, 200.0f));
-	postEffect->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	postEffect->SetPosition(XMFLOAT2((float)winApp->window_width / 2,(float)winApp->window_height/2));*/
+	postEffect->SetPosition(XMFLOAT2(500.0f,200.0f));
 
 	//最初のシーンの初期化
 
@@ -118,16 +115,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		}
 		//入力の更新
 		input->Update();
-		////ゲームシーン
-		//gamescene->Update();
+		//ゲームシーン
+		gamescene->Update();
 		//// 4.描画コマンドここから
 
+		//レンダーテクスチャへの描画
+		postEffect->PreDrawScene(dxCommon->GetCommandlist());
+		//ゲームシーン
+		gamescene->Draw();
+		postEffect->PostDrawScene(dxCommon->GetCommandlist());
 		dxCommon->PreDraw();
+
 		//ポストエフェクトの描画
 		postEffect->Draw(dxCommon->GetCommandlist());
-
-		////ゲームシーン
-		//gamescene->Draw();
+		
 
 		dxCommon->PostDraw();
 		// 4.描画コマンドここまで
@@ -144,6 +145,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//delete gamescene;
 	//ポストエフェクト解放
 	delete postEffect;
+	//スプライトコモン解放
+	delete spritecommon;
 	//カメラ解放
 	/*delete camera;*/
 	FbxLoader::GetInstance()->Finalize();

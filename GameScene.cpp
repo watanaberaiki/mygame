@@ -27,7 +27,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -20);	//視点座標
+	eye = XMFLOAT3(0, 0, -50);	//視点座標
 	target = XMFLOAT3(0, 0, 0);	//注視点座標
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
@@ -101,8 +101,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//hitsprite->Initialize(spriteCommon, 0);
 	//mariosprite->Initialize(spriteCommon, 1);
 	//スプライト初期位置
-	mariosprite->SetPosition({ 800,0 });
-	mariosprite->Update();
+	/*mariosprite->SetPosition({ 800,0 });
+	mariosprite->Update();*/
 
 	//3Dモデル
 	spheremodel = Model::LoadFromObj("Skydome");
@@ -133,7 +133,8 @@ void GameScene::Update()
 	blockobj->Update(matView);
 
 	object1->Update();
-	hitsprite->Update();
+
+	/*hitsprite->Update();*/
 }
 
 void GameScene::Draw()
@@ -153,7 +154,7 @@ void GameScene::Draw()
 
 	//スプライト描画
 	spriteCommon->PreDraw();
-	hitsprite->Draw();
+	//hitsprite->Draw();
 
 	spriteCommon->PostDraw();
 }

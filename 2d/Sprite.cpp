@@ -2,7 +2,7 @@
 
 void Sprite::Initialize()
 {
-	/*rotationZ = 0.0f;*/
+	rotationZ = 0.0f;
 	position_ = { 0.0f,0.0f };
 }
 
@@ -229,8 +229,7 @@ void Sprite::Update() {
 		bottom = -bottom;
 	}
 
-	//頂点データ
-					  //   x      y      z
+	//頂点データ		  //   x      y      z
 	vertices[LB].pos = { left,bottom, 0.0f };
 	vertices[LT].pos = { left,   top, 0.0f };
 	vertices[RB].pos = { right,bottom, 0.0f };
