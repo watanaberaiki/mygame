@@ -29,6 +29,7 @@ class LineObject
 			XMMATRIX viewproj;
 			XMMATRIX world;
 			XMFLOAT3 cameraPos;
+			XMFLOAT2 scale;
 		};
 	public:	//静的メンバ関数
 		//セッター
@@ -72,7 +73,7 @@ class LineObject
 
 	private:
 		//ローカルスケール
-		XMFLOAT3 scale = { 1,1,1 };
+		XMFLOAT3 scale = { 1.0,1.0,1.0 };
 		//X,Y,Z軸回りのローカル行列
 		XMFLOAT3 rotation = { 0,0,0 };
 		//ローカル座標
@@ -83,6 +84,8 @@ class LineObject
 		LineModel* model = nullptr;
 		//判定用
 		XMFLOAT3 playerPos = { 0,0,0 };
+		//定数バッファ用
+		XMFLOAT2 scale2 = { 1.0,1.0 };
 
 };
 

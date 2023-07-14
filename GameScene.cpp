@@ -168,7 +168,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	lineobject->Initialize();
 	lineobject->SetModel(linemodel);
 	lineobject->SetPosition(XMFLOAT3(-3, 1, 0));
-	lineobject->SetScale(XMFLOAT3(3, 1, 1));
+	lineobject->SetScale(XMFLOAT3(10.0,1.0,1.0));
 }
 
 void GameScene::Update()

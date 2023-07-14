@@ -51,6 +51,8 @@ void LineObject::Update()
 	//カメラ座標
 	const XMFLOAT3& cameraPos = camera->GetEye();
 
+	scale2 = { scale.x,scale.y };
+
 	HRESULT result;
 	//定数バッファへデータ転送
 	ConstBufferDataTransform* constMap = nullptr;
@@ -60,6 +62,7 @@ void LineObject::Update()
 		constMap->viewproj = matViewProjection;
 		constMap->world = matWorld;
 		constMap->cameraPos = cameraPos;
+		constMap->scale = scale2;
 		constBuffTransform->Unmap(0, nullptr);
 	}
 }
@@ -119,7 +122,7 @@ void LineObject::CreateGraphicsPipeline()
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;    // ピクセルシェーダオブジェクト
-	//ComPtr<ID3DBlob> gsBlob;    // ジオメトリシェーダオブジェクト
+	ComPtr<ID3DBlob> gsBlob;    // ジオメトリシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 	assert(device);
@@ -133,6 +136,29 @@ void LineObject::CreateGraphicsPipeline()
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
 		0,
 		&vsBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
+
+	// ジオメトリシェーダ読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicGS.hlsl",   // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "gs_5_0",    // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&gsBlob, &errorBlob);
 	if (FAILED(result)) {
 		// errorBlobからエラー内容をstring型にコピー
 		std::string errstr;
@@ -170,28 +196,7 @@ void LineObject::CreateGraphicsPipeline()
 		exit(1);
 	}
 
-	//// ジオメトリシェーダ読み込みとコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Resources/shaders/BasicGS.hlsl",   // シェーダファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-	//	"main", "gs_5_0",    // エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-	//	0,
-	//	&gsBlob, &errorBlob);
-	//if (FAILED(result)) {
-	//	// errorBlobからエラー内容をstring型にコピー
-	//	std::string errstr;
-	//	errstr.resize(errorBlob->GetBufferSize());
-
-	//	std::copy_n((char*)errorBlob->GetBufferPointer(),
-	//		errorBlob->GetBufferSize(),
-	//		errstr.begin());
-	//	errstr += "\n";
-	//	// エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(errstr.c_str());
-	//	exit(1);
-	//}
+	
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
@@ -215,7 +220,7 @@ void LineObject::CreateGraphicsPipeline()
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	/*gpipeline.GS= CD3DX12_SHADER_BYTECODE(gsBlob.Get());*/
+	gpipeline.GS= CD3DX12_SHADER_BYTECODE(gsBlob.Get());
 	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
 
 	// サンプルマスク
