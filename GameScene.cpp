@@ -159,15 +159,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//ƒ‰ƒCƒ“
 	linemodel = new LineModel();
-	linemodel->CreateBuffers(dxCommon->GetDevice());
-	linemodel->SetImageData(XMFLOAT4(0, 0, 0, 1));
+	linemodel->Initialize(dxCommon->GetDevice(), 1.5,-1.5);
+	linemodel->SetImageData(XMFLOAT4(255,255,255, 1));
 	LineObject::SetCamera(camera);
 	LineObject::SetDevice(dxCommon->GetDevice());
 	LineObject::CreateGraphicsPipeline();
 	lineobject = new LineObject();
 	lineobject->Initialize();
 	lineobject->SetModel(linemodel);
-	lineobject->SetPosition(XMFLOAT3(-3, 1, 0));
+	lineobject->SetPosition(XMFLOAT3(0, 0, 0));
 	lineobject->SetScale(XMFLOAT3(10.0,1.0,1.0));
 }
 
@@ -205,12 +205,12 @@ void GameScene::Draw()
 	//“G
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		enemy->Draw(dxCommon_->GetCommandlist());
+		//enemy->Draw(dxCommon_->GetCommandlist());
 	}
 
 	//”»’è•`‰æ
 	for (int i = 0;i<enemyCollision.size();i++){
-		enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
+		//enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
 	}
 	/*bonetest[0]->Draw(dxCommon_->GetCommandlist());*/
 	//•`‰æ

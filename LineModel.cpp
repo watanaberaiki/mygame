@@ -1,6 +1,11 @@
 #include "LineModel.h"
 
-void LineModel::CreateBuffers(ID3D12Device* device)
+void LineModel::Initialize(ID3D12Device* device, float upY, float downY)
+{
+	CreateBuffers(device,upY,downY);
+}
+
+void LineModel::CreateBuffers(ID3D12Device* device, float upY, float downY)
 {
 	HRESULT result;
 
@@ -9,7 +14,7 @@ void LineModel::CreateBuffers(ID3D12Device* device)
 	indices.resize(2);
 
 	//頂点データ生成
-	CreateVertex();
+	CreateVertex(upY,downY);
 
 	//頂点データ全体のサイズ
 	size_t sizeVB = static_cast<size_t>(sizeof(VertexPosNormalUv)) * vertices.size();
@@ -183,66 +188,21 @@ void LineModel::CreateBuffers(ID3D12Device* device)
 	);
 }
 
-void LineModel::CreateVertex()
+void LineModel::CreateVertex(float upY, float downY)
 {
 	//球体一つの基礎サイズ
 	XMFLOAT3 size = { 1.0f,1.0f,1.0f };
 	//頂点データ
 	VertexPosNormalUv v[] = {
 		//前
-		{{-size.x / 2,-size.y / 2,-size.z / 2},{},{0.0f,1.0f} },	//0
-		{{-size.x / 2, size.y / 2,-size.z / 2},{},{0.0f,0.0f} },	//1 
-		//{{ size.x / 2,-size.y / 2,-size.z / 2},{},{1.0f,1.0f} },	//2 
-		//{{ size.x / 2, size.y / 2,-size.z / 2},{},{1.0f,0.0f} },	//3
-		////後				 	   
-		//{{ size.x / 2,-size.y / 2, size.z / 2},{},{0.0f,1.0f} },	//4
-		//{{ size.x / 2, size.y / 2, size.z / 2},{},{0.0f,0.0f} },	//5
-		//{{-size.x / 2,-size.y / 2, size.z / 2},{},{1.0f,1.0f} },	//6
-		//{{-size.x / 2, size.y / 2, size.z / 2},{},{1.0f,0.0f} },	//7
-		////左				 	    
-		//{{-size.x / 2,-size.y / 2,-size.z / 2},{},{0.0f,1.0f} },	//8
-		//{{-size.x / 2,-size.y / 2, size.z / 2},{},{0.0f,0.0f} },	//9
-		//{{-size.x / 2, size.y / 2,-size.z / 2},{},{1.0f,1.0f} },	//10
-		//{{-size.x / 2, size.y / 2, size.z / 2},{},{1.0f,0.0f} },	//11
-		////右				 	    
-		//{{ size.x / 2,-size.y / 2,-size.z / 2},{},{0.0f,1.0f} },	//12
-		//{{ size.x / 2,-size.y / 2, size.z / 2},{},{0.0f,0.0f} },	//13
-		//{{ size.x / 2, size.y / 2,-size.z / 2},{},{1.0f,1.0f} },	//14
-		//{{ size.x / 2, size.y / 2, size.z / 2},{},{1.0f,0.0f} },	//15
-		////下					  	
-		//{{-size.x / 2,-size.y / 2, size.z / 2},{},{0.0f,1.0f} },	//16
-		//{{-size.x / 2,-size.y / 2,-size.z / 2},{},{0.0f,0.0f} },	//17
-		//{{ size.x / 2,-size.y / 2, size.z / 2},{},{1.0f,1.0f} },	//18
-		//{{ size.x / 2,-size.y / 2,-size.z / 2},{},{1.0f,0.0f} },	//19
-		////上				 	    
-		//{{-size.x / 2, size.y / 2,-size.z / 2},{},{0.0f,1.0f} },	//20
-		//{{-size.x / 2, size.y / 2, size.z / 2},{},{0.0f,0.0f} },	//21
-		//{{ size.x / 2, size.y / 2,-size.z / 2},{},{1.0f,1.0f} },	//22
-		//{{ size.x / 2, size.y / 2, size.z / 2},{},{1.0f,0.0f} },	//23
+		{{0,upY,0},{},{0.0f,0.0f} },	//0
+		{{0,downY,0},{},{0.0f,0.0f} },	//1 
 	};
 	//インデックスデータ
 	unsigned short in[] =
 	{
-
 		//前
 		0,1,
-		//2,	//三角形1つ目
-		//2,1,3,	//三角形2つ目
-		////後
-		//4,5,6,
-		//6,5,7,
-		////左
-		//8,9,10,
-		//10,9,11,
-		////右
-		//12,13,14,
-		//14,13,15,
-		////下
-		//16,17,18,
-		//18,17,19,
-		////上
-		//20,21,22,
-		//22,21,23,
 	};
 
 	//頂点座標、uv座標、インデックスデータを代入

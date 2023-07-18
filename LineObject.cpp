@@ -109,7 +109,7 @@ void LineObject::Draw(ID3D12GraphicsCommandList* cmdList)
 	//ルートシグネチャの設定
 	cmdList->SetGraphicsRootSignature(rootsignature.Get());
 	//プリミティブ形状の設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
 	//定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffTransform->GetGPUVirtualAddress());
 
@@ -150,28 +150,28 @@ void LineObject::CreateGraphicsPipeline()
 		exit(1);
 	}
 
-	// ジオメトリシェーダ読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicGS.hlsl",   // シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "gs_5_0",    // エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&gsBlob, &errorBlob);
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
+	//// ジオメトリシェーダ読み込みとコンパイル
+	//result = D3DCompileFromFile(
+	//	L"Resources/shaders/BasicGS.hlsl",   // シェーダファイル名
+	//	nullptr,
+	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+	//	"main", "gs_5_0",    // エントリーポイント名、シェーダーモデル指定
+	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+	//	0,
+	//	&gsBlob, &errorBlob);
+	//if (FAILED(result)) {
+	//	// errorBlobからエラー内容をstring型にコピー
+	//	std::string errstr;
+	//	errstr.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
+	//	std::copy_n((char*)errorBlob->GetBufferPointer(),
+	//		errorBlob->GetBufferSize(),
+	//		errstr.begin());
+	//	errstr += "\n";
+	//	// エラー内容を出力ウィンドウに表示
+	//	OutputDebugStringA(errstr.c_str());
+	//	exit(1);
+	//}
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -220,7 +220,7 @@ void LineObject::CreateGraphicsPipeline()
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.GS= CD3DX12_SHADER_BYTECODE(gsBlob.Get());
+	/*gpipeline.GS= CD3DX12_SHADER_BYTECODE(gsBlob.Get());*/
 	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
 
 	// サンプルマスク
@@ -228,7 +228,7 @@ void LineObject::CreateGraphicsPipeline()
 	// ラスタライザステート
 	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 	// デプスステンシルステート
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 

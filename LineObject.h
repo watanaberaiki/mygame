@@ -73,7 +73,7 @@ class LineObject
 
 	private:
 		//ローカルスケール
-		XMFLOAT3 scale = { 1.0,1.0,1.0 };
+		XMFLOAT3 scale = { 0.01f,1.0f,1.0f };
 		//X,Y,Z軸回りのローカル行列
 		XMFLOAT3 rotation = { 0,0,0 };
 		//ローカル座標
