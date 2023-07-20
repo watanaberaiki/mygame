@@ -116,7 +116,8 @@ protected:
 
 	bool isInvisible_ = false;
 
-	Vertex vertices[4]= {};
+	static const int vertNum = 4;
+	Vertex vertices[vertNum]= {};
 
 	XMFLOAT2 textureLeftTop_ = { 0.0f,0.0f };
 

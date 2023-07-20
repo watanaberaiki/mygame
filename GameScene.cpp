@@ -27,7 +27,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -50);	//視点座標
+	eye = XMFLOAT3(0, 0, -30);	//視点座標
 	target = XMFLOAT3(0, 0, 0);	//注視点座標
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
@@ -143,8 +143,8 @@ void GameScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
 
 	////3Dオブジェクトの描画
-	sphereobj->Draw();
-	blockobj->Draw();
+	/*sphereobj->Draw();
+	blockobj->Draw();*/
 	object1->Draw(dxCommon_->GetCommandlist());
 	Object3d::PostDraw();
 
