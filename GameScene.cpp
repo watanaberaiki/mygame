@@ -54,12 +54,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
-	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	cube = FbxLoader::GetInstance()->LoadModelFromFile("fbxcube");
+	//読み込み
+	resorcemanager = ResourceManager::Getinstance();
+	boneTestModel= resorcemanager->LoadFbx("boneTest");
+	cube = resorcemanager->LoadFbx("fbxcube");
+	resorcemanager->LoadObj("blackcube");
 
-	/*bonetest[0]->Initialize();
-	bonetest[0]->SetModel(cube);
-	bonetest[0]->SetPosition(XMFLOAT3((float)0, (float)0, (float)0));*/
+
+	//bonetest[0] = new FbxObject3D();
+	//bonetest[0]->Initialize();
+	//bonetest[0]->SetModel(boneTestModel);
+	//bonetest[0]->SetPosition(XMFLOAT3((float)0, (float)0, (float)0));
 
 
 	//プレイヤー
@@ -68,21 +73,21 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	player = new Player;
 	player->Initialize();
 	//マップに追加
-	enemyCollision.insert(std::make_pair(enemyCollision.size(), player->GetCubeObject()));
+	//enemyCollision.insert(std::make_pair(0, player->GetCubeObject()));
 
 	//敵
 	Enemy::SetDxCommon(dxCommon);
-	for (int i = 0; i < enemysize; i++) {
-		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize();
-		newObject->SetPosition(player->GetPosition());
-		/*newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));*/
-		newObject->Update();
-		//マップに追加
-		enemyCollision.insert(std::make_pair(enemyCollision.size(), newObject->GetCubeObject()));
-		enemys.push_back(std::move(newObject));
-	}
-	
+	//for (int i = 0; i < enemysize; i++) {
+	//	std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+	//	newObject->Initialize();
+	//	newObject->SetPosition(player->GetPosition());
+	//	/*newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));*/
+	//	newObject->Update();
+	//	//マップに追加
+	//	enemyCollision.insert(std::make_pair(enemyCollision.size(), newObject->GetCubeObject()));
+	//	enemys.push_back(std::move(newObject));
+	//}
+	//
 	
 
 	//パーティクル
@@ -182,17 +187,18 @@ void GameScene::Update()
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
 		enemycount++;
-		enemy->Update();
-		//敵とプレイヤーの判定
-		if (enemyCollision.at(0)->CheakCollision(enemyCollision.at(enemycount))) {
-			isHit = true;
-		}
-		else {
-			isHit = false;
-		}
+		//enemy->Update();
+		////敵とプレイヤーの判定
+		//if (enemyCollision.at(0)->CheakCollision(enemyCollision.at(enemycount))) {
+		//	isHit = true;
+		//}
+		//else {
+		//	isHit = false;
+		//}
 	}
 	enemycount = 0;
 
+	//bonetest[0]->Update();
 	lineobject->Update();
 }
 
@@ -208,11 +214,11 @@ void GameScene::Draw()
 		//enemy->Draw(dxCommon_->GetCommandlist());
 	}
 
-	//判定描画
-	for (int i = 0;i<enemyCollision.size();i++){
-		//enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
-	}
-	/*bonetest[0]->Draw(dxCommon_->GetCommandlist());*/
+	////判定描画
+	//for (int i = 0;i<enemyCollision.size();i++){
+	//	//enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
+	//}
+	//bonetest[0]->Draw(dxCommon_->GetCommandlist());
 	//描画
 	lineobject->Draw(dxCommon_->GetCommandlist());
 	Object3d::PostDraw();

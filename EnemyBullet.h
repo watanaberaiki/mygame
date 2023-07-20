@@ -5,32 +5,30 @@
 #include"Model.h"
 #include"CubeModel.h"
 #include"CubeObject3D.h"
-#include"DirectXCommon.h"
-#include"EnemyBullet.h"
 
-class Enemy
+class EnemyBullet
 {
 public://メンバ関数
 	//初期化
-	void Initialize();
+	void Initialize(DirectXCommon* dxcommon);
 	//更新処理
 	void Update();
 	//描画処理
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//動き
 	void Move();
-	//発射
-	void Fire();
+	//判定
+	void OnCollision();
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 	void SetScale(XMFLOAT3 scale) { this->position = scale; }
 	void SetRotation(XMFLOAT3 rotation) { this->position = rotation; }
-	static void SetDxCommon(DirectXCommon* dxcommon) { Enemy::dxcommon = dxcommon; }
-	//ゲッター
-	CubeObject3D* GetCubeObject() { return collisionBox; }
+	void SetIsFire(bool isfire) { this->isfire = isfire; }
 
+	//ゲッター
+	bool GetIsFIre() { return isfire; }
+	bool GetIsDeath()const { return isdeath; }
 private://静的メンバ変数
-	static DirectXCommon* dxcommon;
 
 private://メンバ変数
 	//位置、大きさ、回転
@@ -40,26 +38,29 @@ private://メンバ変数
 
 
 	//FBXモデル
-	FbxModel* enemyfbxmodel = nullptr;
+	FbxModel* bulletfbxmodel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* enemyfbxobj = nullptr;
-
+	FbxObject3D* bulletfbxobj = nullptr;
 	//3Dモデル
-	Model* enemymodel = nullptr;
+	Model* bulletmodel = nullptr;
 	//3Dオブジェクト
-	Object3d* enemyobj = nullptr;
+	Object3d* bulletobj = nullptr;
+
+
+	//スピード
+	float speed = 0.2f;
+	//フラグ
+	bool isfire = false;
+	bool isdeath = false;
+
+	//寿命
+	static const int32_t kLifeTime = 60 * 5;
+	//デスタイマー
+	int32_t deathTimer_ = kLifeTime;
 
 	//判定用
 	CubeModel* cubeModel = nullptr;
 	CubeObject3D* collisionBox = nullptr;
 
-	//スピード
-	float speed = 0.2f;
-
-	int time = 0;
-	const int MaxTime = 60;
-
-	//弾
-	std::list<std::unique_ptr<EnemyBullet>>bullets;
 };
 

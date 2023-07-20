@@ -5,12 +5,12 @@
 #include"Model.h"
 #include"CubeModel.h"
 #include"CubeObject3D.h"
-
+#include"ResourceManager.h"
 class PlayerBullet
 {
 public://メンバ関数
 	//初期化
-	void Initialize(DirectXCommon* dxcommon);
+	void Initialize(DirectXCommon* dxcommon,ResourceManager* resource);
 	//更新処理
 	void Update();
 	//描画処理
@@ -55,9 +55,13 @@ private://メンバ変数
 	bool isfire = false;
 	bool isdeath = false;
 
+	//寿命
+	static const int32_t kLifeTime = 60 * 5;
+	//デスタイマー
+	int32_t deathTimer_ = kLifeTime;
+
 	//判定用
 	CubeModel* cubeModel = nullptr;
 	CubeObject3D* collisionBox = nullptr;
-	
 };
 

@@ -79,7 +79,7 @@ private:
 	const UINT imageDataCount = textureWidth * textureHeight;
 	XMFLOAT4* imageData = new XMFLOAT4[imageDataCount];
 	//テクスチャーのGPUのハンドル
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = {};
 
 	//y座標
 	float upY = 0.0f;

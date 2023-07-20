@@ -4,7 +4,7 @@ DirectXCommon* Enemy::dxcommon = nullptr;
 void Enemy::Initialize()
 {
 	//fbx
-	enemyfbxmodel= FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	enemyfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	enemyfbxobj = new FbxObject3D();
 	enemyfbxobj->Initialize();
 	enemyfbxobj->SetModel(enemyfbxmodel);
@@ -38,6 +38,23 @@ void Enemy::Update()
 	//enemyfbxobj->SetRotation(rotation);
 	//enemyfbxobj->Update();
 
+	//デスフラグの立った球を削除
+	bullets.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+		return bullet->GetIsDeath();
+		});
+
+	//弾の発射
+	time++;
+	if (time >= MaxTime) {
+		Fire();
+		time = 0;
+	}
+	//弾
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
+	{
+		bullet->Update();
+	}
+
 	//オブジェクト
 	enemyobj->SetPosition(position);
 	enemyobj->SetScale(scale);
@@ -55,12 +72,27 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	////fbx
 	//enemyfbxobj->Draw(cmdList);
-	
+
 	//オブジェクト
 	enemyobj->Draw();
+
+	//弾
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
+	{
+		bullet->Draw(cmdList);
+	}
+
 }
 
 void Enemy::Move()
 {
 	position.z -= speed;
+}
+
+void Enemy::Fire()
+{
+	std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
+	newObject->Initialize(dxcommon);
+	newObject->SetPosition(position);
+	bullets.push_back(std::move(newObject));
 }

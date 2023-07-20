@@ -1,15 +1,14 @@
-#include "PlayerBullet.h"
+#include "EnemyBullet.h"
 
-void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
+void EnemyBullet::Initialize(DirectXCommon* dxcommon)
 {
-
-	bulletfbxmodel = resource->LoadFbx("boneTest");
+	bulletfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	bulletfbxobj = new FbxObject3D();
 	bulletfbxobj->Initialize();
 	bulletfbxobj->SetModel(bulletfbxmodel);
 
 	//3dオブジェクト
-	bulletmodel = resource->LoadObj("blackcube");
+	bulletmodel = Model::LoadFromObj("blackcube");
 	bulletobj = Object3d::Create();
 	bulletobj->SetModel(bulletmodel);
 
@@ -29,7 +28,7 @@ void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource
 
 }
 
-void PlayerBullet::Update()
+void EnemyBullet::Update()
 {
 	Move();
 	////fbx
@@ -56,7 +55,7 @@ void PlayerBullet::Update()
 	collisionBox->Update();
 }
 
-void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
+void EnemyBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	////fbx
 	//bulletfbxobj->Draw(cmdList);
@@ -65,15 +64,12 @@ void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 	bulletobj->Draw();
 }
 
-void PlayerBullet::Move()
+void EnemyBullet::Move()
 {
-	position.z += speed;
-	if (position.z>=20) {
-		OnCollision();
-	}
+	position.z -= speed;
 }
 
-void PlayerBullet::OnCollision()
+void EnemyBullet::OnCollision()
 {
 	isdeath = true;
 }

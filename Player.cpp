@@ -4,6 +4,7 @@ DirectXCommon* Player::dxcommon = nullptr;
 
 void Player::Initialize()
 {
+	resource = ResourceManager::Getinstance();
 	//fbx
 	playerfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("bonetest");
 	playerfbxobj = new FbxObject3D();
@@ -111,7 +112,7 @@ void Player::Fire()
 {
 	if (input->TriggerKey(DIK_SPACE)) {
 		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
-		newObject->Initialize(dxcommon);
+		newObject->Initialize(dxcommon,resource);
 		newObject->SetPosition(position);
 		bullets.push_back(std::move(newObject));
 	}

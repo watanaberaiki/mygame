@@ -25,12 +25,12 @@
 #include"Player.h"
 #include"CubeModel.h"
 #include"CubeObject3D.h"
+#include"ResourceManager.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
-//#include<utility>
+#include<utility>
 #pragma warning(pop)
-
 class GameScene
 {
 //メンバ関数
@@ -94,8 +94,8 @@ private:
 	//プレイヤー
 	Player* player = nullptr;
 
-	//マップ用
-	std::map<int, CubeObject3D*>enemyCollision;
+	////マップ用
+	//std::map<int, CubeObject3D*>enemyCollision;
 	int enemycount = 0;
 
 	//ヒット確認
@@ -104,5 +104,7 @@ private:
 	//ライン
 	LineModel* linemodel = nullptr;
 	LineObject* lineobject = nullptr;
+
+	ResourceManager* resorcemanager = nullptr;
 };
 

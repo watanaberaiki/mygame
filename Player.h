@@ -8,6 +8,7 @@
 #include"CubeObject3D.h"
 #include"DirectXCommon.h"
 #include <memory>
+#include"ResourceManager.h"
 
 class Player
 {
@@ -62,5 +63,8 @@ private://メンバ変数
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>>bullets;
+
+	//リソース
+	ResourceManager* resource = nullptr;
 };
 
