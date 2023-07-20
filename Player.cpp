@@ -10,15 +10,9 @@ void Player::Initialize()
 	playerfbxobj->Initialize();
 	playerfbxobj->SetModel(playerfbxmodel);
 
-	//弾
-	for (int i = 0; i < bulletsize; i++) {
-		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
-		newObject->Initialize();
-		bullets.push_back(std::move(newObject));
-	}
 
 	//3dオブジェクト
-	playermodel= Model::LoadFromObj("block");
+	playermodel = Model::LoadFromObj("block");
 	playerobj = Object3d::Create();
 	playerobj->SetModel(playermodel);
 
@@ -38,17 +32,27 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	if (input->TriggerKey(DIK_SPACE)) {
-		Fire();
-	}
+	//デスフラグの立った球を削除
+	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
+		return bullet->GetIsDeath();
+		});
 
 	Move();
+
+	Fire();
+
+	//弾
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
+	{
+		bullet->Update();
+	}
+	
 	////fbx
 	//playerfbxobj->SetPosition(position);
 	//playerfbxobj->SetScale(scale);
 	//playerfbxobj->SetRotation(rotation);
 	//playerfbxobj->Update();
-	
+
 
 	//オブジェクト
 	playerobj->SetPosition(position);
@@ -62,15 +66,7 @@ void Player::Update()
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
-	//弾
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
-	{
-		if (bullet->GetIsFIre() == false) 
-		{
-			bullet->SetPosition(position);
-		}
-		bullet->Update();
-	}
+	
 }
 
 void Player::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -84,10 +80,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
 	{
-		if (bullet->GetIsFIre())
-		{
-			bullet->Draw(cmdList);
-		}
+		bullet->Draw(cmdList);
 	}
 
 }
@@ -116,11 +109,10 @@ void Player::Move()
 
 void Player::Fire()
 {
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
-	{
-		if (bullet->GetIsFIre()==false) {
-			bullet->SetIsFire(true);
-			break;
-		}
+	if (input->TriggerKey(DIK_SPACE)) {
+		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
+		newObject->Initialize(dxcommon);
+		newObject->SetPosition(position);
+		bullets.push_back(std::move(newObject));
 	}
 }

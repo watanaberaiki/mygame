@@ -7,6 +7,7 @@
 #include"CubeModel.h"
 #include"CubeObject3D.h"
 #include"DirectXCommon.h"
+#include <memory>
 
 class Player
 {
@@ -23,6 +24,7 @@ public://メンバ関数
 	void Fire();
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
+	void SetPositionZ(float positionz) { this->position.z = positionz; }
 	void SetScale(XMFLOAT3 scale) { this->position = scale; }
 	void SetRotation(XMFLOAT3 rotation) { this->position = rotation; }
 	static void SetInput(Input* input) { Player::input = input; }
@@ -59,7 +61,6 @@ private://メンバ変数
 	float speed = 0.1f;
 
 	//弾
-	size_t bulletsize = 50;
 	std::list<std::unique_ptr<PlayerBullet>>bullets;
 };
 

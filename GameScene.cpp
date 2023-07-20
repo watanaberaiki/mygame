@@ -67,7 +67,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Player::SetDxCommon(dxCommon);
 	player = new Player;
 	player->Initialize();
-	player->SetPosition(XMFLOAT3(0.0f,0.0f,eye.z+5.0f));
 	//マップに追加
 	enemyCollision.insert(std::make_pair(enemyCollision.size(), player->GetCubeObject()));
 
@@ -158,12 +157,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 
 	//ライン
-	linemodel = new LineModel();
-	linemodel->Initialize(dxCommon->GetDevice(), 1.5,-1.5);
-	linemodel->SetImageData(XMFLOAT4(255,255,255, 1));
 	LineObject::SetCamera(camera);
 	LineObject::SetDevice(dxCommon->GetDevice());
 	LineObject::CreateGraphicsPipeline();
+	linemodel = new LineModel();
+	linemodel->Initialize(dxCommon->GetDevice(), 1.5,-1.5);
+	linemodel->SetImageData(XMFLOAT4(255,255,255, 1));
 	lineobject = new LineObject();
 	lineobject->Initialize();
 	lineobject->SetModel(linemodel);
@@ -176,6 +175,7 @@ void GameScene::Update()
 	camera->Update();
 	matView=camera->GetmatView();
 	//プレイヤー
+	player->SetPositionZ(eye.z + 5.0f);
 	player->Update();
 	
 	//敵

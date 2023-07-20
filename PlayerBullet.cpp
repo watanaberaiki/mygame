@@ -1,6 +1,6 @@
 #include "PlayerBullet.h"
 
-void PlayerBullet::Initialize()
+void PlayerBullet::Initialize(DirectXCommon* dxcommon)
 {
 	bulletfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	bulletfbxobj = new FbxObject3D();
@@ -12,13 +12,25 @@ void PlayerBullet::Initialize()
 	bulletobj = Object3d::Create();
 	bulletobj->SetModel(bulletmodel);
 
+
+	//当たり判定キューブモデル
+	cubeModel = new CubeModel();
+	cubeModel->CreateBuffers(dxcommon->GetDevice());
+	cubeModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
+
+	collisionBox = new CubeObject3D();
+	collisionBox->Initialize();
+	collisionBox->SetModel(cubeModel);
+	collisionBox->SetPosition(position);
+	collisionBox->SetScale(scale);
+	collisionBox->SetRotation(rotation);
+	collisionBox->Update();
+
 }
 
 void PlayerBullet::Update()
 {
-	if (isfire) {
-		Move();
-	}
+	Move();
 	////fbx
 	//bulletfbxobj->SetPosition(position);
 	//bulletfbxobj->SetScale(scale);
@@ -30,6 +42,12 @@ void PlayerBullet::Update()
 	bulletobj->SetScale(scale);
 	bulletobj->SetRotation(rotation);
 	bulletobj->Update();
+
+	//判定
+	collisionBox->SetPosition(position);
+	collisionBox->SetScale(scale);
+	collisionBox->SetRotation(rotation);
+	collisionBox->Update();
 }
 
 void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -45,6 +63,11 @@ void PlayerBullet::Move()
 {
 	position.z += speed;
 	if (position.z>=20) {
-		isfire = false;
+		OnCollision();
 	}
+}
+
+void PlayerBullet::OnCollision()
+{
+	isdeath = true;
 }
