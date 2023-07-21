@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2d\PostEffect.cpp" />
     <ClCompile Include="2d\Sprite.cpp" />
     <ClCompile Include="2d\SpriteCommon.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
@@ -165,7 +166,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="winapp\WinApp.cpp" />
   </ItemGroup>

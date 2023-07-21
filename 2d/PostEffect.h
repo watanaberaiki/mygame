@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include"SpriteCommon.h"
+#include"Input.h"
 class PostEffect :
    public Sprite
     
@@ -11,7 +12,7 @@ public:
     //コンストラクタ
     PostEffect();
     //描画
-    void Draw(ID3D12GraphicsCommandList*cmdList);
+    void Draw(ID3D12GraphicsCommandList*cmdList,Input*input);
     //シーン描画前処理
     void PreDrawScene(ID3D12GraphicsCommandList* cmdList);
     //シーン描画後処理
@@ -23,7 +24,7 @@ private://静的メンバ変数
 
 private://メンバ変数
     //テクスチャバッファ
-    ComPtr<ID3D12Resource>texBuff;
+    ComPtr<ID3D12Resource>texBuff[2];
     //SRV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap>descHeapSRV;
     //深度バッファ
@@ -36,5 +37,4 @@ private://メンバ変数
     ComPtr<ID3D12PipelineState>pipelineState;
     //ルートシグネチャ
     ComPtr<ID3D12RootSignature>rootSignature;
-
 };
