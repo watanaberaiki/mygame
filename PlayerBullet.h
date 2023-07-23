@@ -28,6 +28,7 @@ public://メンバ関数
 	//ゲッター
 	bool GetIsFIre() { return isfire; }
 	bool GetIsDeath()const { return isdeath; }
+	CubeObject3D* GetCubeObject() { return collisionBox; }
 private://静的メンバ変数
 	//キーボード
 	static Input* input;

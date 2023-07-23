@@ -83,6 +83,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		bullet->Draw(cmdList);
 	}
+	collisionBox->Draw(cmdList);
 
 }
 
@@ -116,4 +117,8 @@ void Player::Fire()
 		newObject->SetPosition(position);
 		bullets.push_back(std::move(newObject));
 	}
+}
+
+void Player::OnCollision()
+{
 }

@@ -26,6 +26,7 @@
 #include"CubeModel.h"
 #include"CubeObject3D.h"
 #include"ResourceManager.h"
+#include"EnemyBullet.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
@@ -43,6 +44,8 @@ public:
 	void Update();
 	//描画
 	void Draw();
+	//判定一覧
+	void AllCollision();
 private:
 	//ポインタ
 	Input* input_ = nullptr;
@@ -88,14 +91,12 @@ private:
 	Railcamera* railCamera = nullptr;
 
 	//敵
-	size_t enemysize = 5;
+	static const int enemysize = 5;
 	std::list<std::unique_ptr<Enemy>>enemys;
-
+	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
 	Player* player = nullptr;
-
 	////マップ用
-	//std::map<int, CubeObject3D*>enemyCollision;
 	int enemycount = 0;
 
 	//ヒット確認
@@ -106,5 +107,8 @@ private:
 	LineObject* lineobject = nullptr;
 
 	ResourceManager* resorcemanager = nullptr;
+
+	//判定をまとめて管理
+	std::list<std::unique_ptr<CubeObject3D>>collisionBoxs;
 };
 

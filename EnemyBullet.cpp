@@ -1,14 +1,14 @@
 #include "EnemyBullet.h"
 
-void EnemyBullet::Initialize(DirectXCommon* dxcommon)
+void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
 {
-	bulletfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	bulletfbxmodel = resource->LoadFbx("boneTest");
 	bulletfbxobj = new FbxObject3D();
 	bulletfbxobj->Initialize();
 	bulletfbxobj->SetModel(bulletfbxmodel);
 
 	//3dオブジェクト
-	bulletmodel = Model::LoadFromObj("blackcube");
+	bulletmodel = resource->LoadObj("blackcube");
 	bulletobj = Object3d::Create();
 	bulletobj->SetModel(bulletmodel);
 
@@ -31,6 +31,7 @@ void EnemyBullet::Initialize(DirectXCommon* dxcommon)
 void EnemyBullet::Update()
 {
 	Move();
+
 	////fbx
 	//bulletfbxobj->SetPosition(position);
 	//bulletfbxobj->SetScale(scale);
@@ -62,6 +63,7 @@ void EnemyBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	//オブジェクト
 	bulletobj->Draw();
+	collisionBox->Draw(cmdList);
 }
 
 void EnemyBullet::Move()

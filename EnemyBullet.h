@@ -5,12 +5,13 @@
 #include"Model.h"
 #include"CubeModel.h"
 #include"CubeObject3D.h"
+#include"ResourceManager.h"
 
 class EnemyBullet
 {
 public://メンバ関数
 	//初期化
-	void Initialize(DirectXCommon* dxcommon);
+	void Initialize(DirectXCommon* dxcommon, ResourceManager*resource);
 	//更新処理
 	void Update();
 	//描画処理
@@ -28,6 +29,7 @@ public://メンバ関数
 	//ゲッター
 	bool GetIsFIre() { return isfire; }
 	bool GetIsDeath()const { return isdeath; }
+	CubeObject3D* GetCubeObject() { return collisionBox; }
 private://静的メンバ変数
 
 private://メンバ変数

@@ -63,6 +63,8 @@ void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	//オブジェクト
 	bulletobj->Draw();
+
+	collisionBox->Draw(cmdList);
 }
 
 void PlayerBullet::Move()

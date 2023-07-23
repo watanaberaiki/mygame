@@ -429,9 +429,10 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(rootParamIndexMaterial, constBuffB1->GetGPUVirtualAddress());
-	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
-
+	if (material.textureFilename.size() > 0) {
+		// シェーダリソースビューをセット
+		cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
+	}
 	//// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }

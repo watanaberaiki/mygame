@@ -7,6 +7,7 @@
 #include"CubeObject3D.h"
 #include"DirectXCommon.h"
 #include"EnemyBullet.h"
+#include"ResourceManager.h"
 
 class Enemy
 {
@@ -21,6 +22,9 @@ public://メンバ関数
 	void Move();
 	//発射
 	void Fire();
+	//コールバック関数
+	void OnCollision();
+	
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 	void SetScale(XMFLOAT3 scale) { this->position = scale; }
@@ -28,6 +32,8 @@ public://メンバ関数
 	static void SetDxCommon(DirectXCommon* dxcommon) { Enemy::dxcommon = dxcommon; }
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets; }
+
 
 private://静的メンバ変数
 	static DirectXCommon* dxcommon;
@@ -61,5 +67,6 @@ private://メンバ変数
 
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>>bullets;
+	ResourceManager* resource = nullptr;
 };
 

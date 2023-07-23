@@ -56,9 +56,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//“Ç‚Ýž‚Ý
 	resorcemanager = ResourceManager::Getinstance();
-	boneTestModel= resorcemanager->LoadFbx("boneTest");
+	boneTestModel = resorcemanager->LoadFbx("boneTest");
 	cube = resorcemanager->LoadFbx("fbxcube");
 	resorcemanager->LoadObj("blackcube");
+	resorcemanager->LoadObj("redcube");
 
 
 	//bonetest[0] = new FbxObject3D();
@@ -72,23 +73,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Player::SetDxCommon(dxCommon);
 	player = new Player;
 	player->Initialize();
-	//ƒ}ƒbƒv‚É’Ç‰Á
-	//enemyCollision.insert(std::make_pair(0, player->GetCubeObject()));
 
 	//“G
 	Enemy::SetDxCommon(dxCommon);
-	//for (int i = 0; i < enemysize; i++) {
-	//	std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-	//	newObject->Initialize();
-	//	newObject->SetPosition(player->GetPosition());
-	//	/*newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));*/
-	//	newObject->Update();
-	//	//ƒ}ƒbƒv‚É’Ç‰Á
-	//	enemyCollision.insert(std::make_pair(enemyCollision.size(), newObject->GetCubeObject()));
-	//	enemys.push_back(std::move(newObject));
-	//}
-	//
+	for (int i = 0; i < enemysize; i++) {
+		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		newObject->Initialize();
+		newObject->SetPosition(player->GetPosition());
+		//newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));
+		newObject->Update();
+		enemys.push_back(std::move(newObject));
+	}
 	
+
 
 	//ƒp[ƒeƒBƒNƒ‹
 	particleManager->Initialize("effect1.png");
@@ -161,45 +158,40 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	blockobj->SetParentCamera(railCamera);*/
 
 
-	//ƒ‰ƒCƒ“
-	LineObject::SetCamera(camera);
-	LineObject::SetDevice(dxCommon->GetDevice());
-	LineObject::CreateGraphicsPipeline();
-	linemodel = new LineModel();
-	linemodel->Initialize(dxCommon->GetDevice(), 1.5,-1.5);
-	linemodel->SetImageData(XMFLOAT4(255,255,255, 1));
-	lineobject = new LineObject();
-	lineobject->Initialize();
-	lineobject->SetModel(linemodel);
-	lineobject->SetPosition(XMFLOAT3(0, 0, 0));
-	lineobject->SetScale(XMFLOAT3(10.0,1.0,1.0));
+	////ƒ‰ƒCƒ“
+	//LineObject::SetCamera(camera);
+	//LineObject::SetDevice(dxCommon->GetDevice());
+	//LineObject::CreateGraphicsPipeline();
+	//linemodel = new LineModel();
+	//linemodel->Initialize(dxCommon->GetDevice(), 1.5, -1.5);
+	//linemodel->SetImageData(XMFLOAT4(255, 255, 255, 1));
+	//lineobject = new LineObject();
+	//lineobject->Initialize();
+	//lineobject->SetModel(linemodel);
+	//lineobject->SetPosition(XMFLOAT3(0, 0, 0));
+	//lineobject->SetScale(XMFLOAT3(10.0, 1.0, 1.0));
 }
 
 void GameScene::Update()
 {
 	camera->Update();
-	matView=camera->GetmatView();
+	matView = camera->GetmatView();
 	//ƒvƒŒƒCƒ„[
 	player->SetPositionZ(eye.z + 5.0f);
 	player->Update();
-	
+
 	//“G
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
 		enemycount++;
-		//enemy->Update();
-		////“G‚ÆƒvƒŒƒCƒ„[‚Ì”»’è
-		//if (enemyCollision.at(0)->CheakCollision(enemyCollision.at(enemycount))) {
-		//	isHit = true;
-		//}
-		//else {
-		//	isHit = false;
-		//}
+		enemy->Update();
 	}
 	enemycount = 0;
 
 	//bonetest[0]->Update();
-	lineobject->Update();
+	//lineobject->Update();
+
+	AllCollision();
 }
 
 void GameScene::Draw()
@@ -211,20 +203,17 @@ void GameScene::Draw()
 	//“G
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		//enemy->Draw(dxCommon_->GetCommandlist());
+		enemy->Draw(dxCommon_->GetCommandlist());
 	}
 
-	////”»’è•`‰æ
-	//for (int i = 0;i<enemyCollision.size();i++){
-	//	//enemyCollision.at(i)->Draw(dxCommon_->GetCommandlist());
-	//}
 	//bonetest[0]->Draw(dxCommon_->GetCommandlist());
+	
 	//•`‰æ
-	lineobject->Draw(dxCommon_->GetCommandlist());
+	//lineobject->Draw(dxCommon_->GetCommandlist());
 	Object3d::PostDraw();
 
-	
-	
+
+
 
 	//ƒXƒvƒ‰ƒCƒg•`‰æ
 	spriteCommon->PreDraw();
@@ -233,4 +222,59 @@ void GameScene::Draw()
 	}
 
 	spriteCommon->PostDraw();
+}
+
+void GameScene::AllCollision()
+{
+	//Ž©’eƒŠƒXƒg‚ÌŽæ“¾
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player->GetBullet();
+	//“G’eƒŠƒXƒg‚ÌŽæ“¾
+	int i = 0;
+	
+	/*for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		enemyBullets=enemy->GetBullet();
+		i++;
+	}*/
+
+	////Ž©ƒLƒƒƒ‰‚Æ“G’e‚Ì”»’è
+	//for (int i = 0; i < enemysize; i++) {
+	//	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+	//		if (player->GetCubeObject()->CheakCollision(bullet->GetCubeObject())) {
+	//			bullet->OnCollision();
+	//			player->OnCollision();
+	//		}
+	//	}
+	//}
+
+	//Ž©ƒLƒƒƒ‰‚Æ“G‚Ì”»’è
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		if (player->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
+			player->OnCollision();
+		}
+	}
+
+	////Ž©’e‚Æ“G’e‚Ì”»’è
+	//for (int i = 0; i < enemysize; i++) {
+	//	for (const std::unique_ptr<EnemyBullet>& enemybullet : enemyBullets[i]) {
+	//		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+	//			if (playerbullet->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
+	//				playerbullet->OnCollision();
+	//				enemybullet->OnCollision();
+	//			}
+	//		}
+	//	}
+	//}
+
+	//Ž©’e‚Æ“G‚Ì”»’è
+	for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+		for (std::unique_ptr<Enemy>& enemy : enemys) {
+			if (playerbullet->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
+				playerbullet->OnCollision();
+				enemy->OnCollision();
+			}
+		}
+	}
+
 }

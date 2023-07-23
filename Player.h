@@ -23,6 +23,8 @@ public://メンバ関数
 	void Move();
 	//発射
 	void Fire();
+	//コールバック関数
+	void OnCollision();
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 	void SetPositionZ(float positionz) { this->position.z = positionz; }
@@ -33,6 +35,7 @@ public://メンバ関数
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
 	XMFLOAT3 GetPosition() { return position; }
+	const std::list<std::unique_ptr<PlayerBullet>>& GetBullet() { return bullets; }
 private://静的メンバ変数
 	//キーボード
 	static Input* input;
