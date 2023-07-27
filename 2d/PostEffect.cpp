@@ -8,7 +8,7 @@
 using namespace DirectX;
 
 //静的メンバ変数の実体
-const float PostEffect::clearColor[4] = { 0.25f,0.5f,0.1f,0.0f };//緑っぽい色
+const float PostEffect::clearColor[4] = { 0.25f,0.6f,0.1f,0.0f };//緑っぽい色
 
 void PostEffect::Initialize()
 {
@@ -132,7 +132,7 @@ void PostEffect::Initialize()
 		D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
 		srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		srvDescHeapDesc.NumDescriptors = 1;
+		srvDescHeapDesc.NumDescriptors = 2;
 		//SRV用デスクリプタヒープを生成
 		result = spriteCommon_->GetDirectXCommon()->GetDevice()->CreateDescriptorHeap(&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV));
 		assert(SUCCEEDED(result));
@@ -142,13 +142,18 @@ void PostEffect::Initialize()
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
 		srvDesc.Texture2D.MipLevels = 1;
-		//デスクリプタヒープにSRV作成
-		spriteCommon_->GetDirectXCommon()->GetDevice()->CreateShaderResourceView
-		(
-			texBuff[0].Get(),
-			&srvDesc,
-			descHeapSRV->GetCPUDescriptorHandleForHeapStart()
-		);
+		for (int i = 0; i < 2; i++) {
+			//デスクリプタヒープにSRV作成
+			spriteCommon_->GetDirectXCommon()->GetDevice()->CreateShaderResourceView
+			(
+				texBuff[i].Get(),
+				&srvDesc,
+				CD3DX12_CPU_DESCRIPTOR_HANDLE(
+					descHeapSRV->GetCPUDescriptorHandleForHeapStart(), i,
+					spriteCommon_->GetDirectXCommon()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+				)
+			);
+		}
 		//RTV用デスクリプタヒープ設定
 		D3D12_DESCRIPTOR_HEAP_DESC rtvDescHeapDesc{};
 		rtvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
@@ -228,23 +233,23 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, Input* input)
 	if (isInvisible_) {
 		return;
 	}
-	if (input->TriggerKey(DIK_0)) {
-		//デスクリプタヒープにSRV作成
-		static int tex = 0;
-		//テクスチャ番号を0と1で切り替え
-		tex = (tex + 1) % 2;
+	//if (input->TriggerKey(DIK_0)) {
+	//	//デスクリプタヒープにSRV作成
+	//	static int tex = 0;
+	//	//テクスチャ番号を0と1で切り替え
+	//	tex = (tex + 1) % 2;
 
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-		srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
-		spriteCommon_->GetDirectXCommon()->GetDevice()->CreateShaderResourceView(texBuff[tex].Get(),
-			&srvDesc,
-			descHeapSRV->GetCPUDescriptorHandleForHeapStart());
+	//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	//	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	//	srvDesc.Texture2D.MipLevels = 1;
+	//	spriteCommon_->GetDirectXCommon()->GetDevice()->CreateShaderResourceView(texBuff[tex].Get(),
+	//		&srvDesc,
+	//		descHeapSRV->GetCPUDescriptorHandleForHeapStart());
 
 
-	}
+	//}
 	/*constMapMaterial->color = color;*/
 
 	//定数バッファにデータ転送
@@ -275,12 +280,19 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, Input* input)
 
 	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootDescriptorTable
-	(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
+	(1,CD3DX12_GPU_DESCRIPTOR_HANDLE(
+		descHeapSRV->GetGPUDescriptorHandleForHeapStart(),0, spriteCommon_->GetDirectXCommon()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))
+	);
 
+	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootDescriptorTable
+	(2, CD3DX12_GPU_DESCRIPTOR_HANDLE(
+		descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 1, spriteCommon_->GetDirectXCommon()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))
+	);
 
 	/*spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial.Get()->GetGPUVirtualAddress());*/
 
-	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(2, constBufferTransform.Get()->GetGPUVirtualAddress());
+	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(0, constBufferTransform.Get()->GetGPUVirtualAddress());
 
 	//描画
 	spriteCommon_->GetDirectXCommon()->GetCommandlist()->DrawInstanced(4, 1, 0, 0);
@@ -488,13 +500,18 @@ void PostEffect::CreateGraphicsPipelineState()
 	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
 	pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
-	//デスクリプタレンジの設定
-	D3D12_DESCRIPTOR_RANGE descriptorRange{};
-	descriptorRange.NumDescriptors = 1; //一度の描画に使うテクスチャが1枚なので1
-	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange.BaseShaderRegister = 0;
-	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	////デスクリプタレンジの設定
+	//D3D12_DESCRIPTOR_RANGE descriptorRange{};
+	//descriptorRange.NumDescriptors = 1; //一度の描画に使うテクスチャが1枚なので1
+	//descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//descriptorRange.BaseShaderRegister = 0;
+	//descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
+	descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);	//t0レジスタ
+
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);	//t1レジスタ
 
 	////テクスチャサンプラーの設定
 	//D3D12_STATIC_SAMPLER_DESC samplerDesc{};
@@ -508,28 +525,33 @@ void PostEffect::CreateGraphicsPipelineState()
 	//samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 	//samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
+	//ルートパラメータ
+	CD3DX12_ROOT_PARAMETER rootParams[3] = {};
+	rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[2].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
 
-	//ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParams[3] = {};
+	////ルートパラメータの設定
+	//D3D12_ROOT_PARAMETER rootParams[3] = {};
 
-	//定数バッファ0番
-	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //種類
-	rootParams[0].Descriptor.ShaderRegister = 0; //定数バッファ番号
-	rootParams[0].Descriptor.RegisterSpace = 0; //デフォルト値
-	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //全てのシェーダから見える
+	////定数バッファ0番
+	//rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //種類
+	//rootParams[0].Descriptor.ShaderRegister = 0; //定数バッファ番号
+	//rootParams[0].Descriptor.RegisterSpace = 0; //デフォルト値
+	//rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //全てのシェーダから見える
 
-	//テクスチャレジスタ0番
-	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //種類
-	rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange; //デスクリプタレンジ
-	rootParams[1].DescriptorTable.NumDescriptorRanges = 1; //デスクリプタレンジ数
-	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //全てのシェーダから見える
+	////テクスチャレジスタ0番
+	//rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //種類
+	//rootParams[1].DescriptorTable.pDescriptorRanges = &descRangeSRV0; //デスクリプタレンジ
+	//rootParams[1].DescriptorTable.NumDescriptorRanges = 1; //デスクリプタレンジ数
+	//rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //全てのシェーダから見える
 
 
-	//定数バッファ1番
-	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //種類
-	rootParams[2].Descriptor.ShaderRegister = 1; //定数バッファ番号
-	rootParams[2].Descriptor.RegisterSpace = 0; //デフォルト値
-	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //全てのシェーダから見える
+	////定数バッファ1番
+	//rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //種類
+	//rootParams[2].Descriptor.ShaderRegister = 1; //定数バッファ番号
+	//rootParams[2].Descriptor.RegisterSpace = 0; //デフォルト値
+	//rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; //全てのシェーダから見える
 
 	//スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0,
