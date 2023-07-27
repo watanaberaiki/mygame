@@ -29,6 +29,24 @@ void Player::Initialize()
 	collisionBox->SetScale(scale);
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
+
+	//ライン初期化
+	linemodel = new LineModel();
+	linemodel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	linemodel->SetImageData(XMFLOAT4(255, 255, 255, 1));
+	for (int i = 0; i < 4; i++) {
+		lineobject[i] = new LineObject();
+		lineobject[i]->Initialize();
+		lineobject[i]->SetModel(linemodel);
+	}
+	//XMConvertToDegrees
+	lineobject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+	lineobject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+
+	//レティクルの位置
+	frontdepth = 5;
+	backdepth = 8;
+
 }
 
 void Player::Update()
@@ -67,7 +85,22 @@ void Player::Update()
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
-	
+	//レティクル
+	frontReticlepos = position;
+	frontReticlepos.z += frontdepth;
+
+	backReticlepos = position;
+	backReticlepos.z += backdepth;
+
+	for (int i = 0; i < 4; i++) {
+		if (i < 2) {
+			lineobject[i]->SetPosition(frontReticlepos);
+		}
+		else {
+			lineobject[i]->SetPosition(backReticlepos);
+		}
+		lineobject[i]->Update();
+	}
 }
 
 void Player::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -85,6 +118,9 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	}
 	collisionBox->Draw(cmdList);
 
+	for (int i = 0; i < 4; i++) {
+		lineobject[i]->Draw(cmdList);
+	}
 }
 
 void Player::Move()

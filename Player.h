@@ -9,7 +9,9 @@
 #include"DirectXCommon.h"
 #include <memory>
 #include"ResourceManager.h"
-
+#include"LineModel.h"
+#include"LineObject.h"
+#include<DirectXMath.h>
 class Player
 {
 public://メンバ関数
@@ -46,6 +48,12 @@ private://メンバ変数
 	XMFLOAT3 scale = { (float)0.1,(float)0.1,(float)0.1 };
 	XMFLOAT3 rotation = { 0,0,0 };
 
+	//レティクルの位置
+	XMFLOAT3 frontReticlepos = { 0,0,0 };
+	XMFLOAT3 backReticlepos = { 0,0,0 };
+	float frontdepth = 0.0f;
+	float backdepth = 0.0f;
+
 
 	//FBXモデル
 	FbxModel* playerfbxmodel = nullptr;
@@ -69,5 +77,9 @@ private://メンバ変数
 
 	//リソース
 	ResourceManager* resource = nullptr;
+
+	//ライン
+	LineModel* linemodel = nullptr;
+	LineObject* lineobject[4] = {};
 };
 

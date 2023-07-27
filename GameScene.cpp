@@ -54,6 +54,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//グラフィックスパイプライン生成
 	FbxObject3D::CreateGraphicsPipeline();
 
+	//ライン初期化
+	LineObject::SetCamera(camera);
+	LineObject::SetDevice(dxCommon->GetDevice());
+	LineObject::CreateGraphicsPipeline();
+
 	//読み込み
 	resorcemanager = ResourceManager::Getinstance();
 	boneTestModel = resorcemanager->LoadFbx("boneTest");
@@ -159,9 +164,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 
 	////ライン
-	//LineObject::SetCamera(camera);
-	//LineObject::SetDevice(dxCommon->GetDevice());
-	//LineObject::CreateGraphicsPipeline();
 	//linemodel = new LineModel();
 	//linemodel->Initialize(dxCommon->GetDevice(), 1.5, -1.5);
 	//linemodel->SetImageData(XMFLOAT4(255, 255, 255, 1));
@@ -200,11 +202,12 @@ void GameScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
 	//プレイヤー
 	player->Draw(dxCommon_->GetCommandlist());
-	//敵
-	for (std::unique_ptr<Enemy>& enemy : enemys)
-	{
-		enemy->Draw(dxCommon_->GetCommandlist());
-	}
+
+	////敵
+	//for (std::unique_ptr<Enemy>& enemy : enemys)
+	//{
+	//	enemy->Draw(dxCommon_->GetCommandlist());
+	//}
 
 	//bonetest[0]->Draw(dxCommon_->GetCommandlist());
 	
