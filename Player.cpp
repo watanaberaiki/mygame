@@ -25,9 +25,6 @@ void Player::Initialize()
 	collisionBox = new CubeObject3D();
 	collisionBox->Initialize();
 	collisionBox->SetModel(cubeModel);
-	collisionBox->SetPosition(position);
-	collisionBox->SetScale(scale);
-	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
 	//ライン初期化
@@ -44,8 +41,8 @@ void Player::Initialize()
 	lineobject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 
 	//レティクルの位置
-	frontdepth = 5;
-	backdepth = 8;
+	frontdepth = 10;
+	backdepth = 20;
 
 }
 
@@ -81,7 +78,7 @@ void Player::Update()
 
 	//判定
 	collisionBox->SetPosition(position);
-	collisionBox->SetScale(scale);
+	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
@@ -116,7 +113,19 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		bullet->Draw(cmdList);
 	}
-	collisionBox->Draw(cmdList);
+
+	
+}
+
+void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	//弾
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
+	{
+		//bullet->DebugDraw(cmdList);
+	}
+
+	//collisionBox->Draw(cmdList);
 
 	for (int i = 0; i < 4; i++) {
 		lineobject[i]->Draw(cmdList);

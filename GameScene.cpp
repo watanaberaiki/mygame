@@ -19,6 +19,7 @@ GameScene::~GameScene()
 	for (int i = 0; i < bonetestsize; i++) {
 		FBX_SAFE_DELETE(bonetest[i]);
 	}
+	delete enemycsv;
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -29,7 +30,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -50);	//視点座標
+	eye = XMFLOAT3(0, 0, -10);	//視点座標
 	target = XMFLOAT3(0, 0, 0);	//注視点座標
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
@@ -67,11 +68,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	resorcemanager->LoadObj("redcube");
 
 
-	//bonetest[0] = new FbxObject3D();
-	//bonetest[0]->Initialize();
-	//bonetest[0]->SetModel(boneTestModel);
-	//bonetest[0]->SetPosition(XMFLOAT3((float)0, (float)0, (float)0));
-
 
 	//プレイヤー
 	Player::SetInput(input);
@@ -79,12 +75,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	player = new Player;
 	player->Initialize();
 
+
+
 	//敵
+	enemycsv = new CSVLoader();
+	enemycsv->LoadCSV("Resources/csv/enemy.csv");
 	Enemy::SetDxCommon(dxCommon);
 	for (int i = 0; i < enemysize; i++) {
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
 		newObject->Initialize();
-		newObject->SetPosition(player->GetPosition());
+		newObject->SetPosition(enemycsv->GetPosition(i));
+		newObject->SetRotation(enemycsv->GetRotation(i));
+		newObject->SetScale(enemycsv->GetScale(i));
+
 		//newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));
 		newObject->Update();
 		enemys.push_back(std::move(newObject));
@@ -179,7 +182,7 @@ void GameScene::Update()
 	camera->Update();
 	matView = camera->GetmatView();
 	//プレイヤー
-	player->SetPositionZ(eye.z + 5.0f);
+	player->SetPositionZ(eye.z + 2.0f);
 	player->Update();
 
 	//敵
@@ -203,19 +206,22 @@ void GameScene::Draw()
 	//プレイヤー
 	player->Draw(dxCommon_->GetCommandlist());
 
+	//敵
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		enemy->Draw(dxCommon_->GetCommandlist());
+	}
+	Object3d::PostDraw();
+
+	//デバッグ表示
+	//プレイヤー
+	player->DebugDraw(dxCommon_->GetCommandlist());
+
 	////敵
 	//for (std::unique_ptr<Enemy>& enemy : enemys)
 	//{
-	//	enemy->Draw(dxCommon_->GetCommandlist());
+	//	enemy->DebugDraw(dxCommon_->GetCommandlist());
 	//}
-
-	//bonetest[0]->Draw(dxCommon_->GetCommandlist());
-	
-	//描画
-	//lineobject->Draw(dxCommon_->GetCommandlist());
-	Object3d::PostDraw();
-
-
 
 
 	//スプライト描画
@@ -256,6 +262,16 @@ void GameScene::AllCollision()
 		if (player->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
 			player->OnCollision();
 		}
+	}
+
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		for (const std::unique_ptr<EnemyBullet>& enemybullet : enemy->GetBullet()) {
+			if (player->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
+				enemybullet->OnCollision();
+				player->OnCollision();
+			}
+		}
+
 	}
 
 	////自弾と敵弾の判定

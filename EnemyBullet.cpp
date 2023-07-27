@@ -8,7 +8,7 @@ void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
 	bulletfbxobj->SetModel(bulletfbxmodel);
 
 	//3dオブジェクト
-	bulletmodel = resource->LoadObj("blackcube");
+	bulletmodel = resource->LoadObj("block");
 	bulletobj = Object3d::Create();
 	bulletobj->SetModel(bulletmodel);
 
@@ -51,7 +51,7 @@ void EnemyBullet::Update()
 
 	//判定
 	collisionBox->SetPosition(position);
-	collisionBox->SetScale(scale);
+	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 }
@@ -63,6 +63,11 @@ void EnemyBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	//オブジェクト
 	bulletobj->Draw();
+
+}
+
+void EnemyBullet::DebugDraw(ID3D12GraphicsCommandList* cmdList)
+{
 	collisionBox->Draw(cmdList);
 }
 

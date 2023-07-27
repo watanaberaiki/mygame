@@ -27,6 +27,7 @@
 #include"CubeObject3D.h"
 #include"ResourceManager.h"
 #include"EnemyBullet.h"
+#include"CSVLoader.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
@@ -110,5 +111,7 @@ private:
 
 	//”»’è‚ğ‚Ü‚Æ‚ß‚ÄŠÇ—
 	std::list<std::unique_ptr<CubeObject3D>>collisionBoxs;
+
+	CSVLoader* enemycsv = nullptr;
 };
 

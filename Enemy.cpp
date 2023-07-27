@@ -12,7 +12,7 @@ void Enemy::Initialize()
 	enemyfbxobj->SetModel(enemyfbxmodel);
 
 	//3dオブジェクト
-	enemymodel = resource->LoadObj("block");
+	enemymodel = resource->LoadObj("redcube");
 	enemyobj = Object3d::Create();
 	enemyobj->SetModel(enemymodel);
 
@@ -24,16 +24,13 @@ void Enemy::Initialize()
 	collisionBox = new CubeObject3D();
 	collisionBox->Initialize();
 	collisionBox->SetModel(cubeModel);
-	collisionBox->SetPosition(position);
-	collisionBox->SetScale(scale);
-	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
 }
 
 void Enemy::Update()
 {
-	/*Move();*/
+	Move();
 
 	//デスフラグの立った球を削除
 	bullets.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
@@ -67,7 +64,7 @@ void Enemy::Update()
 
 	//判定
 	collisionBox->SetPosition(position);
-	collisionBox->SetScale(scale);
+	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 }
@@ -85,6 +82,17 @@ void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		bullet->Draw(cmdList);
 	}
+
+}
+
+void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	//弾
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
+	{
+		bullet->DebugDraw(cmdList);
+	}
+
 	collisionBox->Draw(cmdList);
 }
 

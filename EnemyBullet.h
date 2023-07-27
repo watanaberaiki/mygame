@@ -16,6 +16,8 @@ public://メンバ関数
 	void Update();
 	//描画処理
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//当たり判定
+	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
 	//動き
 	void Move();
 	//判定
@@ -50,7 +52,7 @@ private://メンバ変数
 
 
 	//スピード
-	float speed = 0.2f;
+	float speed = 0.5f;
 	//フラグ
 	bool isfire = false;
 	bool isdeath = false;

@@ -15,6 +15,8 @@ public://ƒƒ“ƒoŠÖ”
 	void Update();
 	//•`‰æˆ—
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//“–‚½‚è”»’è
+	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
 	//“®‚«
 	void Move();
 	//”»’è

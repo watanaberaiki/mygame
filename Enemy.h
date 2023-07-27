@@ -18,6 +18,8 @@ public://メンバ関数
 	void Update();
 	//描画処理
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//当たり判定
+	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
 	//動き
 	void Move();
 	//発射
@@ -27,8 +29,8 @@ public://メンバ関数
 	
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
-	void SetScale(XMFLOAT3 scale) { this->position = scale; }
-	void SetRotation(XMFLOAT3 rotation) { this->position = rotation; }
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 	static void SetDxCommon(DirectXCommon* dxcommon) { Enemy::dxcommon = dxcommon; }
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }

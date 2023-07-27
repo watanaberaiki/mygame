@@ -21,6 +21,8 @@ public://メンバ関数
 	void Update();
 	//描画処理
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//当たり判定
+	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
 	//動き
 	void Move();
 	//発射
@@ -70,7 +72,7 @@ private://メンバ変数
 	CubeObject3D* collisionBox = nullptr;
 
 	//スピード
-	float speed = 0.1f;
+	float speed = 0.05f;
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>>bullets;
