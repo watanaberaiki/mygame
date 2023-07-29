@@ -89,18 +89,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	SpriteCommon* spritecommon = nullptr;
 	spritecommon = new SpriteCommon();
 	spritecommon->Initialize(dxCommon);
-	spritecommon->LoadTexture(0, "hit.png");
-	spritecommon->LoadTexture(1, "white1280x720.png");
 	/*SpriteCommon::LoadTexture(0, "hit.png");*/
 	//ポストエフェクトの初期化
 	postEffect = new PostEffect();
 	postEffect->SetSpriteCommon(spritecommon);
-	/*postEffect->SetTexture(spritecommon, 1);*/
 	postEffect->Initialize();
-	//postEffect->SetSize(XMFLOAT2(200.0f, 200.0f));
-	/*postEffect->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	postEffect->SetPosition(XMFLOAT2(500.0f,200.0f));*/
-
 	//最初のシーンの初期化
 
 #ifdef _DEBUG

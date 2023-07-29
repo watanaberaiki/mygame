@@ -284,13 +284,11 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList, Input* input)
 		descHeapSRV->GetGPUDescriptorHandleForHeapStart(),0, spriteCommon_->GetDirectXCommon()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))
 	);
 
-	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	//SRVヒープの先頭にあるSRVをルートパラメータ2番に設定
 	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootDescriptorTable
 	(2, CD3DX12_GPU_DESCRIPTOR_HANDLE(
 		descHeapSRV->GetGPUDescriptorHandleForHeapStart(), 1, spriteCommon_->GetDirectXCommon()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))
 	);
-
-	/*spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial.Get()->GetGPUVirtualAddress());*/
 
 	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(0, constBufferTransform.Get()->GetGPUVirtualAddress());
 

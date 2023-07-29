@@ -20,27 +20,53 @@ float4 main(VSOutput input) : SV_TARGET
 	//return float4(texcolor.rgb*2.0f,1);
 
 	//色反転
-	//colortex0=(1-tex0.Sample(smp,input.uv).xyz,1);
+	colortex0=(1-tex0.Sample(smp,input.uv));
 
 
-	////平均ぼかし
-	//float2 uv={input.uv.x+1280/1,input.uv.y+720/1};
-	////float v=(input.uv.y+720/1);
-	//float4 blur={0,0,0,0};
-	////縦移動
-	//for(int i=0;i<1280;i++){
-	////横移動
-	//	for(int i=0;i<720;i++){
-	//		blur=tex1.Sample(smp,uv);
-	//	}
-	//}
-	//colortex1=blur/(10*10);
-	//マルチテクスチャ
-	float4 color=colortex0;
-	if(fmod(input.uv.y,0.1)<0.05f){
-		color =colortex1;
+	//平均ぼかし
+	float u=(input.uv.x+1/(1280/2));
+	float v=(input.uv.y+1/(720/2));
+	float4 blur={0,0,0,0};
+
+	////左上
+	//blur+=tex1.Sample(smp,input.uv+float2(-u,-v));
+	////中上
+	//blur+=tex1.Sample(smp,input.uv+float2(0,-v));
+	////右上ピクセル
+	//blur+=tex1.Sample(smp,input.uv+float2(+u,-v));
+	////左中
+	//blur+=tex1.Sample(smp,input.uv+float2(-u,0));
+	////中中
+	//blur+=tex1.Sample(smp,input.uv+float2(0,0));
+	////右中
+	//blur+=tex1.Sample(smp,input.uv+float2(+u,0));
+	////左下
+	//blur+=tex1.Sample(smp,input.uv+float2(-u,+v));
+	////中下
+	//blur+=tex1.Sample(smp,input.uv+float2(0,+v));
+	////右下
+	//blur+=tex1.Sample(smp,input.uv+float2(+u,+v));
+
+
+
+	//const int vertical=5:
+	//const int beside=5;
+
+	//縦移動
+	for(int i=0;i<11;i++){
+	//横移動
+		for(int j=0;j<11;j++){
+			blur+=tex1.Sample(smp,input.uv)+tex1.Sample(smp,float2(u+j,v+i));
+		}
 	}
+	colortex1=blur/(11*11);
 
-	return float4(color.rgb,1);
+	////マルチテクスチャ
+	//float4 color=colortex0;
+	//if(fmod(input.uv.y,0.1)<0.05f){
+	//	color =colortex1;
+	//}
+
+	return float4(colortex1.rgb,1);
 
 }
