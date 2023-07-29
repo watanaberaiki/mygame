@@ -47,13 +47,16 @@ public:
 	void Draw();
 	//判定一覧
 	void AllCollision();
+	//パーティクル処理
+	void Particle(XMFLOAT3 pos);
+	
 private:
 	//ポインタ
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 
 	//パーティクル
-	ParticleManager* particleManager = new ParticleManager();
+	std::list<std::unique_ptr<ParticleManager>> particles;
 
 	//スプライト共通部
 	SpriteCommon* spriteCommon = nullptr;

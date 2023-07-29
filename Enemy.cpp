@@ -111,5 +111,5 @@ void Enemy::Fire()
 
 void Enemy::OnCollision()
 {
-
+	isdead = true;
 }

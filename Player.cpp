@@ -41,8 +41,8 @@ void Player::Initialize()
 	lineobject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 
 	//レティクルの位置
-	frontdepth = 10;
-	backdepth = 20;
+	frontdepth = 15;
+	backdepth = 25;
 
 }
 
@@ -62,7 +62,7 @@ void Player::Update()
 	{
 		bullet->Update();
 	}
-	
+
 	////fbx
 	//playerfbxobj->SetPosition(position);
 	//playerfbxobj->SetScale(scale);
@@ -114,7 +114,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 		bullet->Draw(cmdList);
 	}
 
-	
+
 }
 
 void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
@@ -137,19 +137,27 @@ void Player::Move()
 	//キーボードでの移動
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
 		if (input->PushKey(DIK_W)) {
-			position.y += 0.1f;
+			if (position.y < 1.0) {
+				position.y += 0.1f;
+			}
 		}
 		else if (input->PushKey(DIK_S)) {
-			position.y -= 0.1f;
+			if (position.y > -1.0) {
+				position.y -= 0.1f;
+			}
 		}
 	}
 
 	if (input->PushKey(DIK_A) || input->PushKey(DIK_D)) {
 		if (input->PushKey(DIK_A)) {
-			position.x -= 0.1f;
+			if (position.x > -2.0) {
+				position.x -= 0.1f;
+			}
 		}
 		else if (input->PushKey(DIK_D)) {
-			position.x += 0.1f;
+			if (position.x < 2.0) {
+				position.x += 0.1f;
+			}
 		}
 	}
 }
@@ -158,7 +166,7 @@ void Player::Fire()
 {
 	if (input->TriggerKey(DIK_SPACE)) {
 		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
-		newObject->Initialize(dxcommon,resource);
+		newObject->Initialize(dxcommon, resource);
 		newObject->SetPosition(position);
 		bullets.push_back(std::move(newObject));
 	}

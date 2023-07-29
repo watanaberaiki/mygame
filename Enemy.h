@@ -35,6 +35,8 @@ public://メンバ関数
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets; }
+	bool GetisDead() { return isdead; }
+	XMFLOAT3 GetPos() { return position; }
 
 
 private://静的メンバ変数
@@ -70,5 +72,8 @@ private://メンバ変数
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>>bullets;
 	ResourceManager* resource = nullptr;
+
+	//死亡判定
+	bool isdead = false;
 };
 

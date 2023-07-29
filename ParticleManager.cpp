@@ -732,11 +732,12 @@ void ParticleManager::Draw()
 	this->cmdList = dxcommon->GetCommandlist();
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestate.Get());
+ 	cmdList->SetPipelineState(pipelinestate.Get());
 	//// ルートシグネチャの設定
 	cmdList->SetGraphicsRootSignature(rootsignature.Get());
 	//// プリミティブ形状を設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 
 
 	// 頂点バッファの設定
@@ -765,7 +766,7 @@ void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT
 	//追加した要素の参照
 	Particle& p = particles.front();
 	//値のセット
-	p.position = position;
+	p.position = position+emitterpos;
 	p.velocity = velociy;
 	p.accel = accel;
 	p.num_frame = life;

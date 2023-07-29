@@ -135,6 +135,9 @@ public: // 静的メンバ関数
 
 	void CameraMoveEyeVector(XMFLOAT3 move);
 
+	//エミッターのセット
+	void SetEmitterPos(XMFLOAT3 pos) { emitterpos = pos; }
+
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
@@ -241,4 +244,7 @@ private: // メンバ変数
 	ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
+
+	//エミッター用座標
+	XMFLOAT3 emitterpos = {};
 };

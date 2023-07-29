@@ -13,7 +13,6 @@ GameScene::~GameScene()
 	//3Dモデル解放
 	delete spheremodel;
 	delete blockmodel;
-	delete particleManager;
 	FBX_SAFE_DELETE(boneTestModel);
 	FBX_SAFE_DELETE(cube);
 	for (int i = 0; i < bonetestsize; i++) {
@@ -93,41 +92,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		enemys.push_back(std::move(newObject));
 	}
 	
-
-
 	//パーティクル
-	particleManager->Initialize("effect1.png");
-	//パーティクル
-	for (int i = 0; i < 50; i++) {
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 10.0f;
-		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel = 0.1f;
-		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc = 0.001f;
-		XMFLOAT3 acc{};
-		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-		//色
-		const float rnd_color = 1.0f;
-		XMFLOAT4 color{  };
-		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		//追加
-		particleManager->Add(600, pos, vel, acc, 1.0f, 0.0f, color);
-	}
-	particleManager->Update();
 
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
@@ -182,19 +148,28 @@ void GameScene::Update()
 	camera->Update();
 	matView = camera->GetmatView();
 	//プレイヤー
-	player->SetPositionZ(eye.z + 2.0f);
+	player->SetPositionZ(eye.z + 3.0f);
 	player->Update();
 
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		enemycount++;
 		enemy->Update();
+		//死んだ際のパーティクル
+		if (enemy->GetisDead()) {
+			Particle(enemy->GetPos());
+		}
 	}
-	enemycount = 0;
+	//敵の死んだ処理
+	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+		return enemy->GetisDead();
+		});
 
-	//bonetest[0]->Update();
-	//lineobject->Update();
+	//パーティクル
+	for (std::unique_ptr<ParticleManager>& particle : particles)
+	{
+		particle->Update();
+	}
 
 	AllCollision();
 }
@@ -213,6 +188,12 @@ void GameScene::Draw()
 	}
 	Object3d::PostDraw();
 
+	//パーティクル
+	for (std::unique_ptr<ParticleManager>& particle : particles)
+	{
+		particle->Draw();
+	}
+
 	//デバッグ表示
 	//プレイヤー
 	player->DebugDraw(dxCommon_->GetCommandlist());
@@ -223,12 +204,13 @@ void GameScene::Draw()
 	//	enemy->DebugDraw(dxCommon_->GetCommandlist());
 	//}
 
-
 	//スプライト描画
 	spriteCommon->PreDraw();
 	if (isHit) {
 		hitsprite->Draw();
 	}
+
+	
 
 	spriteCommon->PostDraw();
 }
@@ -296,4 +278,43 @@ void GameScene::AllCollision()
 		}
 	}
 
+}
+
+void GameScene::Particle(XMFLOAT3 pos)
+{
+	//パーティクル
+	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");
+	//newparticle->SetEmitterPos(pos);
+	for (int i = 0; i < 50; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 10.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc = 0.001f;
+		XMFLOAT3 acc{};
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		//色
+		const float rnd_color = 1.0f;
+		XMFLOAT4 color{  };
+		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		//追加
+		newparticle->Add(600, pos, vel, acc, 1.0f, 0.0f, color);
+	}
+	newparticle->Update();
+	particles.push_back(std::move(newparticle));
 }
