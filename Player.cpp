@@ -41,7 +41,7 @@ void Player::Initialize()
 	lineobject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 
 	//レティクルの位置
-	frontdepth = 15;
+	frontdepth = 10;
 	backdepth = 25;
 
 }

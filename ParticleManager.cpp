@@ -736,7 +736,7 @@ void ParticleManager::Draw()
 	//// ルートシグネチャの設定
 	cmdList->SetGraphicsRootSignature(rootsignature.Get());
 	//// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 
 
@@ -751,6 +751,7 @@ void ParticleManager::Draw()
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+
 
 	// シェーダリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);

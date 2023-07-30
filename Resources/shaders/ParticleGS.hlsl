@@ -38,25 +38,24 @@ static const float2 uv_array[vnum] =
 //点の入力から四角形を出力
 [maxvertexcount(vnum)]
 void main(
-	point VSOutput input[1]:SV_POSITION,
-	inout TriangleStream< GSOutput > output
+    point VSOutput input[1] : SV_POSITION,
+    inout TriangleStream<GSOutput> output
 )
 {
-	GSOutput element;
-	//4点分まわす
-	for (uint i = 0; i < vnum; i++) {
-		//中心からのオフセットをスケーリング
-		/*float4 offset = mul(matBillboard, offset_array[i]);*/
-		float4 offset;
-		offset = offset_array[i] * input[0].scale;
-		//中心からのオフセットをビルボード回転(モデル座標)
-		offset = mul(matBillboard, offset);
+    GSOutput element;
+    //4点分まわす
+    for (uint i = 0; i < vnum; i++) {
+        //中心からのオフセットをスケーリング
+        float4 offset;
+        offset = offset_array[i] * input[0].scale;
+        //中心からのオフセットをビルボード回転(モデル座標)
+        offset = mul(matBillboard, offset);
 
-		//オフセット分ずらす
-		element.svpos = input[0].pos + offset;
-		//ビュー変換、射影変換
-		element.svpos = mul(mat, element.svpos);
-		element.uv = uv_array[i];
-		output.Append(element);
-	}
+        //オフセット分ずらす
+        element.svpos = input[0].pos + offset;
+        //ビュー変換、射影変換
+        element.svpos = mul(mat, element.svpos);
+        element.uv = uv_array[i];
+        output.Append(element);
+    }
 }

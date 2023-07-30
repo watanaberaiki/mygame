@@ -285,10 +285,10 @@ void GameScene::Particle(XMFLOAT3 pos)
 	//パーティクル
 	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	newparticle->Initialize("line.png");
-	//newparticle->SetEmitterPos(pos);
+	newparticle->SetEmitterPos(pos);
 	for (int i = 0; i < 50; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 10.0f;
+		const float rnd_pos = 1.0f;
 		XMFLOAT3 pos{};
 		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
@@ -313,7 +313,7 @@ void GameScene::Particle(XMFLOAT3 pos)
 		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		//追加
-		newparticle->Add(600, pos, vel, acc, 1.0f, 0.0f, color);
+		newparticle->Add(20, pos, vel, acc, 1.0f, 0.0f, color);
 	}
 	newparticle->Update();
 	particles.push_back(std::move(newparticle));
