@@ -43,7 +43,6 @@ std::vector<Object3d::VertexPosNormalUv>Object3d::vertices;
 std::vector<unsigned short>Object3d::indices;
 
 Object3d::Material Object3d::material;
-Railcamera* Object3d::parentcamera;
 Camera* Object3d::camera;
 
 
@@ -653,11 +652,6 @@ void Object3d::Update()
 	if (parent != nullptr) {
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
-	}
-	// 親オブジェクトがあれば
-	if (parentcamera != nullptr) {
-		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= parentcamera->GetMatWorld();
 	}
 
 	// 定数バッファへデータ転送

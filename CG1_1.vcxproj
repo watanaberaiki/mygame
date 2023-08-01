@@ -79,12 +79,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)app\cpp\2D;$(ProjectDir)app\cpp\3D;$(ProjectDir)app\cpp\Base;$(ProjectDir)app\cpp\Game;$(ProjectDir)app\ヘッダー\2D;$(ProjectDir)app\ヘッダー\3D;$(ProjectDir)app\ヘッダー\Base;$(ProjectDir)app\ヘッダー\Game</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)app\cpp\2D;$(ProjectDir)app\cpp\3D;$(ProjectDir)app\cpp\Base;$(ProjectDir)app\cpp\Game;$(ProjectDir)app\ヘッダー\2D;$(ProjectDir)app\ヘッダー\3D;$(ProjectDir)app\ヘッダー\Base;$(ProjectDir)app\ヘッダー\Game</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -151,34 +151,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CSVLoader.cpp" />
-    <ClCompile Include="CubeModel.cpp" />
-    <ClCompile Include="CubeObject3D.cpp" />
-    <ClCompile Include="DirectXCommon.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyBullet.cpp" />
-    <ClCompile Include="FbxLoader.cpp" />
-    <ClCompile Include="FbxModel.cpp" />
-    <ClCompile Include="FbxObject3D.cpp" />
-    <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="LoadFile.cpp" />
-    <ClCompile Include="LineModel.cpp" />
-    <ClCompile Include="LineObject.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Object3d.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerBullet.cpp" />
-    <ClCompile Include="Railcamera.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="SpriteCommon.cpp" />
-    <ClCompile Include="Vector3.cpp" />
-    <ClCompile Include="WinApp.cpp" />
+    <ClCompile Include="app\cpp\Base\Camera.cpp" />
+    <ClCompile Include="app\cpp\Base\CSVLoader.cpp" />
+    <ClCompile Include="app\cpp\3D\CubeModel.cpp" />
+    <ClCompile Include="app\cpp\3D\CubeObject3D.cpp" />
+    <ClCompile Include="app\cpp\Base\DirectXCommon.cpp" />
+    <ClCompile Include="app\cpp\Game\Enemy.cpp" />
+    <ClCompile Include="app\cpp\Game\EnemyBullet.cpp" />
+    <ClCompile Include="app\cpp\3D\FbxLoader.cpp" />
+    <ClCompile Include="app\cpp\3D\FbxModel.cpp" />
+    <ClCompile Include="app\cpp\3D\FbxObject3D.cpp" />
+    <ClCompile Include="app\cpp\Game\GameScene.cpp" />
+    <ClCompile Include="app\cpp\Base\Input.cpp" />
+    <ClCompile Include="app\cpp\Base\LoadFile.cpp" />
+    <ClCompile Include="app\cpp\3D\LineModel.cpp" />
+    <ClCompile Include="app\cpp\3D\LineObject.cpp" />
+    <ClCompile Include="app\cpp\Game\main.cpp" />
+    <ClCompile Include="app\cpp\3D\Model.cpp" />
+    <ClCompile Include="app\cpp\3D\Object3d.cpp" />
+    <ClCompile Include="app\cpp\2D\ParticleManager.cpp" />
+    <ClCompile Include="app\cpp\Game\Player.cpp" />
+    <ClCompile Include="app\cpp\Game\PlayerBullet.cpp" />
+    <ClCompile Include="app\cpp\Base\ResourceManager.cpp" />
+    <ClCompile Include="app\cpp\2D\Sprite.cpp" />
+    <ClCompile Include="app\cpp\2D\SpriteCommon.cpp" />
+    <ClCompile Include="app\cpp\Base\Vector3.cpp" />
+    <ClCompile Include="app\cpp\Base\WinApp.cpp" />
+    <ClCompile Include="app\cpp\3D\WireObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -286,35 +285,33 @@
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionPrimitive.h" />
-    <ClInclude Include="CSVLoader.h" />
-    <ClInclude Include="CubeModel.h" />
-    <ClInclude Include="CubeObject3D.h" />
-    <ClInclude Include="DirectXCommon.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyBullet.h" />
-    <ClInclude Include="FbxLoader.h" />
-    <ClInclude Include="FbxModel.h" />
-    <ClInclude Include="FbxObject3D.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="LoadFile.h" />
-    <ClInclude Include="LineModel.h" />
-    <ClInclude Include="LineObject.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Object3d.h" />
-    <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerBullet.h" />
-    <ClInclude Include="Railcamera.h" />
-    <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteCommon.h" />
-    <ClInclude Include="Vector3.h" />
-    <ClInclude Include="WinApp.h" />
+    <ClInclude Include="app\ヘッダー\Base\Camera.h" />
+    <ClInclude Include="app\ヘッダー\Base\CSVLoader.h" />
+    <ClInclude Include="app\ヘッダー\3D\CubeModel.h" />
+    <ClInclude Include="app\ヘッダー\3D\CubeObject3D.h" />
+    <ClInclude Include="app\ヘッダー\Base\DirectXCommon.h" />
+    <ClInclude Include="app\ヘッダー\Game\Enemy.h" />
+    <ClInclude Include="app\ヘッダー\Game\EnemyBullet.h" />
+    <ClInclude Include="app\ヘッダー\3D\FbxLoader.h" />
+    <ClInclude Include="app\ヘッダー\3D\FbxModel.h" />
+    <ClInclude Include="app\ヘッダー\3D\FbxObject3D.h" />
+    <ClInclude Include="app\ヘッダー\Game\GameScene.h" />
+    <ClInclude Include="app\ヘッダー\Base\Input.h" />
+    <ClInclude Include="app\ヘッダー\Base\json.hpp" />
+    <ClInclude Include="app\ヘッダー\Base\LoadFile.h" />
+    <ClInclude Include="app\ヘッダー\3D\LineModel.h" />
+    <ClInclude Include="app\ヘッダー\3D\LineObject.h" />
+    <ClInclude Include="app\ヘッダー\3D\Model.h" />
+    <ClInclude Include="app\ヘッダー\3D\Object3d.h" />
+    <ClInclude Include="app\ヘッダー\2D\ParticleManager.h" />
+    <ClInclude Include="app\ヘッダー\Game\Player.h" />
+    <ClInclude Include="app\ヘッダー\Game\PlayerBullet.h" />
+    <ClInclude Include="app\ヘッダー\Base\ResourceManager.h" />
+    <ClInclude Include="app\ヘッダー\2D\Sprite.h" />
+    <ClInclude Include="app\ヘッダー\2D\SpriteCommon.h" />
+    <ClInclude Include="app\ヘッダー\Base\Vector3.h" />
+    <ClInclude Include="app\ヘッダー\Base\WinApp.h" />
+    <ClInclude Include="app\ヘッダー\3D\WireObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

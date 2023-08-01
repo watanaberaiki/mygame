@@ -1,4 +1,4 @@
-#include "GameScene.h"
+﻿#include "GameScene.h"
 
 GameScene::GameScene()
 {
@@ -13,14 +13,9 @@ GameScene::~GameScene()
 	for (Object3d*& object : objects) {
 		delete object;
 	}
-	//3Dモデル解放
-	delete spheremodel;
-	delete blockmodel;
-	delete particleManager;
-	//レベルデータ解放
-	delete leveldata;
-
-	delete floorobj;
+	////レベルデータ解放
+	//delete leveldata;
+	//delete floorobj;
 	//3Dモデル解放
 	delete spheremodel;
 	delete blockmodel;
@@ -124,38 +119,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	mariosprite->Update();
 
 	//3Dモデル
-	spheremodel = Model::LoadFromObj("Skydome");
-	blockmodel = Model::LoadFromObj("redcube");
-	testmodel = Model::LoadFromObj("test");
 
 	//モデルデータをマップに入れる
-	models.insert(std::make_pair("redcube", blockmodel));
-	models.insert(std::make_pair("test", testmodel));
+	models.insert(std::make_pair("floor", resorcemanager->LoadObj("floor")));
 
-	//当たり判定
-	minsphereModel = spheremodel->GetminModel();
-	maxsphereModel = spheremodel->GetmaxModel();
-
-	//球
-	sphereobj = Object3d::Create();
-	sphereobj->SetModel(spheremodel);
-	sphereobj->SetPosition({ 0,0,0 });
-
-	//ブロック
-	blockobj = Object3d::Create();
-	blockobj->SetModel(blockmodel);
-	blockobj->SetPosition({ 0,5,0 });
 	menu->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 
-	/*railCamera->Initialize(camera);
-	railCamera->Update();
-	blockobj->SetParentCamera(railCamera);*/
-
-
 
 	// レベルデータの読み込み
-	leveldata = LoadFile::LoadFileData("test");
+	leveldata = LoadFile::LoadFileData("floor");
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : leveldata->objects) {
@@ -237,7 +210,8 @@ void GameScene::Update()
 	matView=camera->GetmatView();
 
 	for (auto& object : objects) {
-		object->Update(matView);
+		object->SetScale(XMFLOAT3(0.1f, 0.1f, 0.1f));
+		object->Update();
 	}
 		//プレイヤー
 		player->SetPositionZ(eye.z + 3.0f);
@@ -276,14 +250,6 @@ void GameScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
 	//プレイヤー
 	player->Draw(dxCommon_->GetCommandlist());
-
-
-	Object3d::PostDraw();
-	
-
-	//スプライト描画
-	spriteCommon->PreDraw();
-	/*hitsprite->Draw();*/
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
@@ -364,17 +330,6 @@ void GameScene::AllCollision()
 		}
 	}
 
-	////自弾と敵弾の判定
-	//for (int i = 0; i < enemysize; i++) {
-	//	for (const std::unique_ptr<EnemyBullet>& enemybullet : enemyBullets[i]) {
-	//		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-	//			if (playerbullet->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
-	//				playerbullet->OnCollision();
-	//				enemybullet->OnCollision();
-	//			}
-	//		}
-	//	}
-	//}
 
 	//自弾と敵の判定
 	for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {

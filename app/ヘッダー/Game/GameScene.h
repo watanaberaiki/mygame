@@ -1,5 +1,4 @@
-#pragma once
-#include"Vector3.h"
+﻿#include"Vector3.h"
 #include "Input.h"
 #include"WinApp.h"
 #include"DirectXCommon.h"
@@ -10,19 +9,13 @@
 #include<math.h>
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
-#include "CollisionPrimitive.h"
-#include "Collision.h"
 #include"Camera.h"
 #include <math.h>
 #include"ParticleManager.h"
 #include"FbxLoader.h"
 #include"FbxObject3D.h"
-#include"Railcamera.h"
 #include"LoadFile.h"
 #include<map>
-
-struct LevelData;
-
 #include"LineModel.h"
 #include"LineObject.h"
 #include"Enemy.h"
@@ -37,6 +30,7 @@ struct LevelData;
 #include<map>
 #include<utility>
 #pragma warning(pop)
+struct LevelData;
 class GameScene
 {
 //メンバ関数
@@ -97,9 +91,6 @@ private:
 
 	static const int bonetestsize = 5;
 	FbxObject3D* bonetest[bonetestsize] = {};
-
-	//レールカメラ
-	Railcamera* railCamera = nullptr;
 
 	//ファイル読み込み
 	LevelData* leveldata = nullptr;

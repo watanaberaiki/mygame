@@ -1,8 +1,6 @@
 #include "Input.h"
 #include"WinApp.h"
 #include"DirectXCommon.h"
-#include "CollisionPrimitive.h"
-#include "Collision.h"
 #include"Camera.h"
 #include"FbxLoader.h"
 

@@ -7,7 +7,7 @@
 #include <d3dx12.h>
 #include<string.h>
 #include "Model.h"
-#include "Railcamera.h"
+#include"Camera.h"
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
@@ -159,8 +159,6 @@ private: // 静的メンバ変数
 	/*static unsigned short indices[planeCount * 3];*/
 	static std::vector<unsigned short>indices;
 
-	static Railcamera* parentcamera;
-
 	static Camera* camera;
 
 private:// 静的メンバ関数
@@ -233,8 +231,6 @@ public: // メンバ関数
 	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
 
 	const XMMATRIX& GetMatWorld()const { return matWorld; }
-
-	void SetParentCamera(Railcamera* railcamera) { this->parentcamera = railcamera; }
 
 	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
 
