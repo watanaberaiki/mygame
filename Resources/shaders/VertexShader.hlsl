@@ -1,4 +1,4 @@
-#include "Basic.hlsli"
+#include "ShaderHeader.hlsli"
 
 //エントリーポイント
 VSOutput main(VSInput input)

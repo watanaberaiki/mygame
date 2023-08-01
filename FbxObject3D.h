@@ -69,6 +69,9 @@ public://メンバ関数
 	//モデルのセット
 	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+
 
 	//ゲッター
 

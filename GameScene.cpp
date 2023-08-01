@@ -7,24 +7,29 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete spriteCommon;
-	//3dƒIƒuƒWƒFƒNƒg‰ğ•ú
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆè§£æ”¾
 	delete sphereobj;
 	delete blockobj;
 	for (Object3d*& object : objects) {
 		delete object;
 	}
-	//3Dƒ‚ƒfƒ‹‰ğ•ú
+	//3Dãƒ¢ãƒ‡ãƒ«è§£æ”¾
 	delete spheremodel;
 	delete blockmodel;
 	delete particleManager;
-	//ƒŒƒxƒ‹ƒf[ƒ^‰ğ•ú
+	//ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿è§£æ”¾
 	delete leveldata;
 
+	delete floorobj;
+	//3Dãƒ¢ãƒ‡ãƒ«è§£æ”¾
+	delete spheremodel;
+	delete blockmodel;
 	FBX_SAFE_DELETE(boneTestModel);
 	FBX_SAFE_DELETE(cube);
 	for (int i = 0; i < bonetestsize; i++) {
 		FBX_SAFE_DELETE(bonetest[i]);
 	}
+	delete enemycsv;
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -32,13 +37,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	this->dxCommon_ = dxCommon;
 	this->input_ = input;
 
-	//ƒ‚ƒfƒ‹–¼‚ğw’è‚µ‚Äƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«åã‚’æŒ‡å®šã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -50);	//‹“_À•W
-	target = XMFLOAT3(0, 0, 0);	//’‹“_À•W
-	up = XMFLOAT3(0, 1, 0);		//ã•ûŒüƒxƒNƒgƒ‹
-	//ƒJƒƒ‰
+	eye = XMFLOAT3(0, 0, -10);	//è¦–ç‚¹åº§æ¨™
+	target = XMFLOAT3(0, 0, 0);	//æ³¨è¦–ç‚¹åº§æ¨™
+	up = XMFLOAT3(0, 1, 0);		//ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	//ã‚«ãƒ¡ãƒ©
 	camera = new Camera();
 	camera->Initialize(input_);
 	camera->SetEye(eye);
@@ -46,94 +51,102 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	camera->SetUp(up);
 	camera->Update();
 
-	//ƒfƒoƒCƒX‚ğƒZƒbƒg
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ3dã‚«ãƒ¡ãƒ©
+	Object3d::SetCamera(camera);
+	//å½“ãŸã‚Šåˆ¤å®šã‚­ãƒ¥ãƒ¼ãƒ–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	CubeObject3D::SetCamera(camera);
+	CubeObject3D::SetDevice(dxCommon_->GetDevice());
+	CubeObject3D::CreateGraphicsPipeline();
+
+	//ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚»ãƒƒãƒˆ
 	FbxObject3D::SetDevice(dxCommon_->GetDevice());
-	//ƒJƒƒ‰‚ğƒZƒbƒg
+	//ã‚«ãƒ¡ãƒ©ã‚’ã‚»ãƒƒãƒˆ
 	FbxObject3D::SetCamera(camera);
-	//ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“¶¬
+	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	FbxObject3D::CreateGraphicsPipeline();
 
-	boneTestModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	cube = FbxLoader::GetInstance()->LoadModelFromFile("whitebox");
-	//3DƒIƒuƒWƒFƒNƒg¶¬‚Æƒ‚ƒfƒ‹‚ÌƒZƒbƒg
-	for (int i = 0; i < bonetestsize; i++) {
-		bonetest[i] = new FbxObject3D();
-		bonetest[i]->Initialize();
-		bonetest[i]->SetModel(boneTestModel);
-		bonetest[i]->SetPosition(XMFLOAT3(0, (float)i, -5));
-		bonetest[i]->PlayAnimation();
+	//ãƒ©ã‚¤ãƒ³åˆæœŸåŒ–
+	LineObject::SetCamera(camera);
+	LineObject::SetDevice(dxCommon->GetDevice());
+	LineObject::CreateGraphicsPipeline();
+
+	//èª­ã¿è¾¼ã¿
+	resorcemanager = ResourceManager::Getinstance();
+	resorcemanager->LoadObj("blackcube");
+	resorcemanager->LoadObj("redcube");
+	resorcemanager->LoadObj("floor");
+
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+	Player::SetInput(input);
+	Player::SetDxCommon(dxCommon);
+	player = new Player;
+	player->Initialize();
+
+
+
+	//æ•µ
+	enemycsv = new CSVLoader();
+	enemycsv->LoadCSV("Resources/csv/enemy.csv");
+	Enemy::SetDxCommon(dxCommon);
+	for (int i = 0; i < enemysize; i++) {
+		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+		newObject->Initialize();
+		newObject->SetPosition(enemycsv->GetPosition(i));
+		newObject->SetRotation(enemycsv->GetRotation(i));
+		newObject->SetScale(enemycsv->GetScale(i));
+
+		//newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));
+		newObject->Update();
+		enemys.push_back(std::move(newObject));
 	}
-	//ƒp[ƒeƒBƒNƒ‹
-	particleManager->Initialize("effect1.png");
-	//ƒp[ƒeƒBƒNƒ‹
-	for (int i = 0; i < 50; i++) {
-		//X,Y,Z‘S‚Ä[-5.0f,+5.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
-		const float rnd_pos = 10.0f;
-		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 
-		//X,Y,Z‘S‚Ä[-0.05f,+0.05f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
-		const float rnd_vel = 0.1f;
-		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		//d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ[-0.001f,0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
-		const float rnd_acc = 0.001f;
-		XMFLOAT3 acc{};
-		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+	//åœ°é¢
+	floorobj= Object3d::Create();
+	floorobj->SetModel(resorcemanager->LoadObj("floor"));
+	floorobj->SetPosition(XMFLOAT3(0,-1,10));
+	floorobj->SetRotation(XMFLOAT3(0, 90, 0));
+	floorobj->SetScale(XMFLOAT3(1.0f, 1.0f, 10.0f));
 
-		//F
-		const float rnd_color = 1.0f;
-		XMFLOAT4 color{  };
-		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
-		//’Ç‰Á
-		particleManager->Add(600, pos, vel, acc, 1.0f, 0.0f, color);
-	}
-	particleManager->Update();
-
-	//ƒXƒvƒ‰ƒCƒg‹¤’Ê•”‚Ì‰Šú‰»
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå…±é€šéƒ¨ã®åˆæœŸåŒ–
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
-	//ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	spriteCommon->LoadTexture(0, "hit.png");
 	spriteCommon->LoadTexture(1, "mario.jpg");
-
-	//ƒXƒvƒ‰ƒCƒg‚ÉƒeƒNƒXƒ`ƒƒŠ„‚è“–‚Ä
+	spriteCommon->LoadTexture(2, "menu.png");
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã«ãƒ†ã‚¯ã‚¹ãƒãƒ£å‰²ã‚Šå½“ã¦
 	hitsprite->Initialize(spriteCommon, 0);
 	mariosprite->Initialize(spriteCommon, 1);
-	//ƒXƒvƒ‰ƒCƒg‰ŠúˆÊ’u
+	menu->Initialize(spriteCommon, 2);
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåˆæœŸä½ç½®
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();
 
-	//3Dƒ‚ƒfƒ‹
+	//3Dãƒ¢ãƒ‡ãƒ«
 	spheremodel = Model::LoadFromObj("Skydome");
 	blockmodel = Model::LoadFromObj("redcube");
 	testmodel = Model::LoadFromObj("test");
 
-	//ƒ‚ƒfƒ‹ƒf[ƒ^‚ğƒ}ƒbƒv‚É“ü‚ê‚é
+	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒãƒ—ã«å…¥ã‚Œã‚‹
 	models.insert(std::make_pair("redcube", blockmodel));
 	models.insert(std::make_pair("test", testmodel));
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	minsphereModel = spheremodel->GetminModel();
 	maxsphereModel = spheremodel->GetmaxModel();
 
-	//‹…
+	//çƒ
 	sphereobj = Object3d::Create();
 	sphereobj->SetModel(spheremodel);
 	sphereobj->SetPosition({ 0,0,0 });
 
-	//ƒuƒƒbƒN
+	//ãƒ–ãƒ­ãƒƒã‚¯
 	blockobj = Object3d::Create();
 	blockobj->SetModel(blockmodel);
 	blockobj->SetPosition({ 0,5,0 });
+	menu->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 
 	/*railCamera->Initialize(camera);
 	railCamera->Update();
@@ -141,85 +154,283 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 
 
-	// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	leveldata = LoadFile::LoadFileData("test");
 
-	// ƒŒƒxƒ‹ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğ¶¬A”z’u
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€é…ç½®
 	for (auto& objectData : leveldata->objects) {
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
 		if (it != models.end()) {
 			model = it->second;
 		}
 
-		//3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+		//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 		Object3d* newObject = Object3d::Create();
 		newObject->SetModel(model);
 
-		// À•W
+		// åº§æ¨™
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMStoreFloat3(&pos, objectData.translation);
 		newObject->SetPosition(pos);
 
-		// ‰ñ“]Šp
+		// å›è»¢è§’
 		DirectX::XMFLOAT3 rot;
 		DirectX::XMStoreFloat3(&rot, objectData.rotation);
 		newObject->SetRotation(rot);
 
-		// À•W
+		// åº§æ¨™
 		DirectX::XMFLOAT3 scale;
 		DirectX::XMStoreFloat3(&scale, objectData.scaling);
 		newObject->SetScale(scale);
 
-		// ”z—ñ‚É“o˜^
+		// é…åˆ—ã«ç™»éŒ²
 		objects.push_back(newObject);
 	}
-
 }
 
 void GameScene::Update()
 {
-	camera->Update();
-	matView=camera->GetmatView();
-	////‹…
-	//sphereobj->Update(matView);
-	////ƒuƒƒbƒN
-	//
-	//blockobj->Update(matView);
+	if (isMenu) {
+		menu->Update();
 
-	//for (int i = 0; i < bonetestsize; i++) {
-	//	bonetest[i]->Update();
-	//}
-	//hitsprite->Update();
+
+		//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‹ã‚‰æˆ»ã‚‹ã¨ã
+		if (backMenu) {
+			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
+			if (backtime < maxTime) {
+				backtime++;
+			}
+		}
+		else {
+			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+			if (time < maxTime) {
+				time++;
+			}
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+			if (time == maxTime) {
+				time = 0;
+				backMenu = true;
+			} 
+		}
+		if (backMenu) {
+			if (backtime == maxTime) {
+				isMenu = false;
+				backMenu = false;
+				backtime = 0;
+			}
+		}
+
+	}
+	else {
+		if (input_->TriggerKey(DIK_M)) {
+			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+			isMenu = true;
+			time = 0;
+		}
+
+		/*eye.z += 1.0f;
+		camera->SetEye(eye);*/
+			camera->Update();
+	matView=camera->GetmatView();
 
 	for (auto& object : objects) {
 		object->Update(matView);
+	}
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+		player->SetPositionZ(eye.z + 3.0f);
+		player->Update();
+
+		//æ•µ
+		for (std::unique_ptr<Enemy>& enemy : enemys)
+		{
+			enemy->Update();
+			//æ­»ã‚“ã éš›ã®ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+			if (enemy->GetisDead()) {
+				Particle(enemy->GetPos());
+			}
+		}
+		//æ•µã®æ­»ã‚“ã å‡¦ç†
+		enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+			return enemy->GetisDead();
+			});
+
+		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Update();
+		}
+
+		//åœ°é¢
+		floorobj->Update();
+
+		AllCollision();
 	}
 }
 
 void GameScene::Draw()
 {
-	//ƒIƒuƒWƒFƒNƒg•`‰æ
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+	player->Draw(dxCommon_->GetCommandlist());
 
-	//////3DƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
-	//sphereobj->Draw();
-	//blockobj->Draw();
-	//for (int i = 0; i < bonetestsize; i++) {
-	//	bonetest[i]->Draw(dxCommon_->GetCommandlist());
-	//}
-
-	for (auto& object : objects) {
-		object->Draw();
-	}
 
 	Object3d::PostDraw();
 	
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	spriteCommon->PreDraw();
 	/*hitsprite->Draw();*/
+	//æ•µ
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		enemy->Draw(dxCommon_->GetCommandlist());
+	}
+	//åœ°é¢
+	floorobj->Draw();
+  	for (auto& object : objects) {
+		object->Draw();
+	}
+
+	Object3d::PostDraw();
+
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	for (std::unique_ptr<ParticleManager>& particle : particles)
+	{
+		particle->Draw();
+	}
+
+	//ãƒ‡ãƒãƒƒã‚°è¡¨ç¤º
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+	player->DebugDraw(dxCommon_->GetCommandlist());
+
+	////æ•µ
+	//for (std::unique_ptr<Enemy>& enemy : enemys)
+	//{
+	//	enemy->DebugDraw(dxCommon_->GetCommandlist());
+	//}
+
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
+	spriteCommon->PreDraw();
+	if (isMenu) {
+		menu->Draw();
+	}
+
+	if (isHit) {
+		hitsprite->Draw();
+	}
 
 	spriteCommon->PostDraw();
+}
+
+void GameScene::AllCollision()
+{
+	//è‡ªå¼¾ãƒªã‚¹ãƒˆã®å–å¾—
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player->GetBullet();
+	//æ•µå¼¾ãƒªã‚¹ãƒˆã®å–å¾—
+	int i = 0;
+
+	//è‡ªã‚­ãƒ£ãƒ©ã¨æ•µã®åˆ¤å®š
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		if (player->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
+			player->OnCollision();
+		}
+	}
+
+	//è‡ªã‚­ãƒ£ãƒ©ã¨æ•µã®å¼¾
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		for (const std::unique_ptr<EnemyBullet>& enemybullet : enemy->GetBullet()) {
+			if (player->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
+				enemybullet->OnCollision();
+				player->OnCollision();
+			}
+		}
+
+	}
+
+	//è‡ªå¼¾ã¨æ•µå¼¾ã®åˆ¤å®š
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		for (const std::unique_ptr<EnemyBullet>& enemybullet : enemy->GetBullet()) {
+			for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+				if (playerbullet->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
+					playerbullet->OnCollision();
+					enemybullet->OnCollision();
+				}
+			}
+		}
+	}
+
+	////è‡ªå¼¾ã¨æ•µå¼¾ã®åˆ¤å®š
+	//for (int i = 0; i < enemysize; i++) {
+	//	for (const std::unique_ptr<EnemyBullet>& enemybullet : enemyBullets[i]) {
+	//		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+	//			if (playerbullet->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
+	//				playerbullet->OnCollision();
+	//				enemybullet->OnCollision();
+	//			}
+	//		}
+	//	}
+	//}
+
+	//è‡ªå¼¾ã¨æ•µã®åˆ¤å®š
+	for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+		for (std::unique_ptr<Enemy>& enemy : enemys) {
+			if (playerbullet->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
+				playerbullet->OnCollision();
+				enemy->OnCollision();
+			}
+		}
+	}
+
+}
+
+void GameScene::Particle(XMFLOAT3 pos)
+{
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");
+	newparticle->SetEmitterPos(pos);
+	for (int i = 0; i < 50; i++) {
+		//X,Y,Zå…¨ã¦[-5.0f,+5.0f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
+		const float rnd_pos = 1.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		//X,Y,Zå…¨ã¦[-0.05f,+0.05f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		//é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿[-0.001f,0]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
+		const float rnd_acc = 0.001f;
+		XMFLOAT3 acc{};
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		//è‰²
+		const float rnd_color = 1.0f;
+		XMFLOAT4 color{  };
+		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		//è¿½åŠ 
+		newparticle->Add(20, pos, vel, acc, 1.0f, 0.0f, color);
+	}
+	newparticle->Update();
+	particles.push_back(std::move(newparticle));
+}
+
+double GameScene::easeOutQuad(double time, double start, double difference, double totaltime)
+{
+	double x = totaltime / time;
+	double v = 1 - (1 - x) * (1 - x);
+	double ret = difference * v + start;
+	return ret;
 }

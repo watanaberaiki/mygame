@@ -13,7 +13,7 @@ Model* Model::LoadFromObj(const std::string& modelname)
 {
 
 	//新たなModel型のインスタンスのメモリを確保
-	Model* model= new Model();
+	Model* model = new Model();
 	//デスクリプタヒープの生成
 	model->InitializeDescriptorHeap();
 
@@ -73,13 +73,13 @@ void Model::LoadFromOBJInternal(const std::string& modelname)
 				minModel.x = position.x;
 			}
 			//最大のX座標を記録
-			else if (position.x>maxModel.x) {
+			else if (position.x > maxModel.x) {
 				maxModel.x = position.x;
 			}
 			else {
 
 			}
-			
+
 			//最小のy座標を記録
 			if (position.y < minModel.y) {
 				minModel.y = position.y;
@@ -431,7 +431,6 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 	cmdList->SetGraphicsRootConstantBufferView(rootParamIndexMaterial, constBuffB1->GetGPUVirtualAddress());
 	// シェーダリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
-
 	//// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }

@@ -161,6 +161,8 @@ private: // 静的メンバ変数
 
 	static Railcamera* parentcamera;
 
+	static Camera* camera;
+
 private:// 静的メンバ関数
 	/// <summary>
 	/// デスクリプタヒープの初期化
@@ -200,7 +202,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update(XMMATRIX &matView);
+	void Update();
 
 	/// <summary>
 	/// 描画
@@ -233,6 +235,8 @@ public: // メンバ関数
 	const XMMATRIX& GetMatWorld()const { return matWorld; }
 
 	void SetParentCamera(Railcamera* railcamera) { this->parentcamera = railcamera; }
+
+	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
 
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ

@@ -11,6 +11,6 @@ cbuffer ConstBufferDataMaterial :register(b0)
 float4 main(GSOutput input) : SV_TARGET
 {
 
-	return float4(tex.Sample(smp,input.uv))*color;
+	return float4(tex.Sample(smp,input.uv));
 //return float4(1, 1, 1, 1);
 }
