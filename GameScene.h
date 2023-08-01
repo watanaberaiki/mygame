@@ -127,5 +127,9 @@ private:
 	double maxTime = 50.0;
 	double start = -WinApp::window_width/2;
 	double end = WinApp::window_width / 2;
+
+	//’n–Ê
+	Object3d* floorobj = nullptr;
+
 };
 

@@ -10,6 +10,7 @@ GameScene::~GameScene()
 	//3dオブジェクト解放
 	delete sphereobj;
 	delete blockobj;
+	delete floorobj;
 	//3Dモデル解放
 	delete spheremodel;
 	delete blockmodel;
@@ -61,12 +62,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//読み込み
 	resorcemanager = ResourceManager::Getinstance();
-	boneTestModel = resorcemanager->LoadFbx("boneTest");
-	cube = resorcemanager->LoadFbx("fbxcube");
 	resorcemanager->LoadObj("blackcube");
 	resorcemanager->LoadObj("redcube");
-
-
+	resorcemanager->LoadObj("floor");
 
 	//プレイヤー
 	Player::SetInput(input);
@@ -92,8 +90,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		enemys.push_back(std::move(newObject));
 	}
 
-	//パーティクル
-
+	//地面
+	floorobj= Object3d::Create();
+	floorobj->SetModel(resorcemanager->LoadObj("floor"));
+	floorobj->SetPosition(XMFLOAT3(0,-1,10));
+	floorobj->SetRotation(XMFLOAT3(0, 90, 0));
+	floorobj->SetScale(XMFLOAT3(1.0f, 1.0f, 10.0f));
 
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
@@ -186,6 +188,8 @@ void GameScene::Update()
 			time = 0;
 		}
 
+		/*eye.z += 1.0f;
+		camera->SetEye(eye);*/
 		camera->Update();
 		matView = camera->GetmatView();
 		//プレイヤー
@@ -212,6 +216,9 @@ void GameScene::Update()
 			particle->Update();
 		}
 
+		//地面
+		floorobj->Update();
+
 		AllCollision();
 	}
 }
@@ -228,6 +235,8 @@ void GameScene::Draw()
 	{
 		enemy->Draw(dxCommon_->GetCommandlist());
 	}
+	//地面
+	floorobj->Draw();
 	Object3d::PostDraw();
 
 	//パーティクル
