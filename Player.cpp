@@ -13,7 +13,7 @@ void Player::Initialize()
 
 
 	//3dオブジェクト
-	playermodel = Model::LoadFromObj("block");
+	playermodel = Model::LoadFromObj("bluecube");
 	playerobj = Object3d::Create();
 	playerobj->SetModel(playermodel);
 

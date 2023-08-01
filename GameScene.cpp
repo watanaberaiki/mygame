@@ -91,7 +91,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		newObject->Update();
 		enemys.push_back(std::move(newObject));
 	}
-	
+
 	//パーティクル
 
 
@@ -102,13 +102,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//テクスチャ読み込み
 	spriteCommon->LoadTexture(0, "hit.png");
 	spriteCommon->LoadTexture(1, "mario.jpg");
-
+	spriteCommon->LoadTexture(2, "menu.png");
 	//スプライトにテクスチャ割り当て
 	hitsprite->Initialize(spriteCommon, 0);
 	mariosprite->Initialize(spriteCommon, 1);
+	menu->Initialize(spriteCommon, 2);
 	//スプライト初期位置
-	mariosprite->SetPosition({ 800,0 });
-	mariosprite->Update();
+	menu->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+
 
 	////3Dモデル
 	//spheremodel = Model::LoadFromObj("Skydome");
@@ -145,33 +147,73 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void GameScene::Update()
 {
-	camera->Update();
-	matView = camera->GetmatView();
-	//プレイヤー
-	player->SetPositionZ(eye.z + 3.0f);
-	player->Update();
+	if (isMenu) {
+		menu->Update();
 
-	//敵
-	for (std::unique_ptr<Enemy>& enemy : enemys)
-	{
-		enemy->Update();
-		//死んだ際のパーティクル
-		if (enemy->GetisDead()) {
-			Particle(enemy->GetPos());
+
+		//メニューから戻るとき
+		if (backMenu) {
+			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
+			if (backtime < maxTime) {
+				backtime++;
+			}
 		}
-	}
-	//敵の死んだ処理
-	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
-		return enemy->GetisDead();
-		});
+		else {
+			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+			if (time < maxTime) {
+				time++;
+			}
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+			if (time == maxTime) {
+				time = 0;
+				backMenu = true;
+			} 
+		}
+		if (backMenu) {
+			if (backtime == maxTime) {
+				isMenu = false;
+				backMenu = false;
+				backtime = 0;
+			}
+		}
 
-	//パーティクル
-	for (std::unique_ptr<ParticleManager>& particle : particles)
-	{
-		particle->Update();
 	}
+	else {
+		if (input_->TriggerKey(DIK_M)) {
+			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+			isMenu = true;
+			time = 0;
+		}
 
-	AllCollision();
+		camera->Update();
+		matView = camera->GetmatView();
+		//プレイヤー
+		player->SetPositionZ(eye.z + 3.0f);
+		player->Update();
+
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys)
+		{
+			enemy->Update();
+			//死んだ際のパーティクル
+			if (enemy->GetisDead()) {
+				Particle(enemy->GetPos());
+			}
+		}
+		//敵の死んだ処理
+		enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+			return enemy->GetisDead();
+			});
+
+		//パーティクル
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Update();
+		}
+
+		AllCollision();
+	}
 }
 
 void GameScene::Draw()
@@ -206,11 +248,15 @@ void GameScene::Draw()
 
 	//スプライト描画
 	spriteCommon->PreDraw();
+	if (isMenu) {
+		menu->Draw();
+	}
+
 	if (isHit) {
 		hitsprite->Draw();
 	}
 
-	
+
 
 	spriteCommon->PostDraw();
 }
@@ -221,22 +267,6 @@ void GameScene::AllCollision()
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player->GetBullet();
 	//敵弾リストの取得
 	int i = 0;
-	
-	/*for (std::unique_ptr<Enemy>& enemy : enemys)
-	{
-		enemyBullets=enemy->GetBullet();
-		i++;
-	}*/
-
-	////自キャラと敵弾の判定
-	//for (int i = 0; i < enemysize; i++) {
-	//	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-	//		if (player->GetCubeObject()->CheakCollision(bullet->GetCubeObject())) {
-	//			bullet->OnCollision();
-	//			player->OnCollision();
-	//		}
-	//	}
-	//}
 
 	//自キャラと敵の判定
 	for (std::unique_ptr<Enemy>& enemy : enemys)
@@ -246,6 +276,7 @@ void GameScene::AllCollision()
 		}
 	}
 
+	//自キャラと敵の弾
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 		for (const std::unique_ptr<EnemyBullet>& enemybullet : enemy->GetBullet()) {
 			if (player->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
@@ -254,6 +285,18 @@ void GameScene::AllCollision()
 			}
 		}
 
+	}
+
+	//自弾と敵弾の判定
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		for (const std::unique_ptr<EnemyBullet>& enemybullet : enemy->GetBullet()) {
+			for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+				if (playerbullet->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
+					playerbullet->OnCollision();
+					enemybullet->OnCollision();
+				}
+			}
+		}
 	}
 
 	////自弾と敵弾の判定
@@ -317,4 +360,12 @@ void GameScene::Particle(XMFLOAT3 pos)
 	}
 	newparticle->Update();
 	particles.push_back(std::move(newparticle));
+}
+
+double GameScene::easeOutQuad(double time, double start, double difference, double totaltime)
+{
+	double x = totaltime / time;
+	double v = 1 - (1 - x) * (1 - x);
+	double ret = difference * v + start;
+	return ret;
 }

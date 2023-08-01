@@ -1,5 +1,5 @@
 (1)
-position 0.5 -0.6 10 
+position 0.5 -0.6 30 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 (2)
@@ -15,6 +15,26 @@ position 1.5 0.5 150
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 (5)
-position -0.8 -0.9 200 
+position -0.8 -0.9 150 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+(6)
+position -0.1 -0.5 200 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+(7)
+position 0.8 0.0 200 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+(8)
+position 0.5 0.4 200 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+(9)
+position 0.2 -0.5 250 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+(10)
+position -0.8 -0.6 250 
 rotation 0 0 0 
 scale 0.1 0.1 0.1

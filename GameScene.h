@@ -49,7 +49,8 @@ public:
 	void AllCollision();
 	//パーティクル処理
 	void Particle(XMFLOAT3 pos);
-	
+	//イージング
+	double easeOutQuad(double time,double start,double difference,double totaltime);
 private:
 	//ポインタ
 	Input* input_ = nullptr;
@@ -63,7 +64,8 @@ private:
 	//スプライト
 	Sprite* hitsprite = new Sprite();
 	Sprite* mariosprite = new Sprite();
-	
+	Sprite* menu = new Sprite();
+
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
 	Model* spheremodel=nullptr;
@@ -95,7 +97,7 @@ private:
 	Railcamera* railCamera = nullptr;
 
 	//敵
-	static const int enemysize = 5;
+	static const int enemysize = 10;
 	std::list<std::unique_ptr<Enemy>>enemys;
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
@@ -116,5 +118,14 @@ private:
 	std::list<std::unique_ptr<CubeObject3D>>collisionBoxs;
 
 	CSVLoader* enemycsv = nullptr;
+
+	//メニュー
+	bool isMenu = false;
+	bool backMenu = false;
+	double time = 0.0;
+	double backtime = 0.0;
+	double maxTime = 50.0;
+	double start = -WinApp::window_width/2;
+	double end = WinApp::window_width / 2;
 };
 
