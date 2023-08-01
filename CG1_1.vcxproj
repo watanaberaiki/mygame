@@ -164,6 +164,7 @@
     <ClCompile Include="FbxObject3D.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LoadFile.cpp" />
     <ClCompile Include="LineModel.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -299,6 +300,8 @@
     <ClInclude Include="FbxObject3D.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="LoadFile.h" />
     <ClInclude Include="LineModel.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="Model.h" />

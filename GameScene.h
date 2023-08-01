@@ -18,6 +18,10 @@
 #include"FbxLoader.h"
 #include"FbxObject3D.h"
 #include"Railcamera.h"
+#include"LoadFile.h"
+#include<map>
+
+struct LevelData;
 
 #include"LineModel.h"
 #include"LineObject.h"
@@ -35,55 +39,56 @@
 #pragma warning(pop)
 class GameScene
 {
-//ƒƒ“ƒoŠÖ”
+//ãƒ¡ãƒ³ãƒé–¢æ•°
 public:
 	GameScene();
 	~GameScene();
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Initialize(DirectXCommon* dxCommon, Input* input);
-	//XV
+	//æ›´æ–°
 	void Update();
-	//•`‰æ
+	//æç”»
 	void Draw();
-	//”»’èˆê——
+	//åˆ¤å®šä¸€è¦§
 	void AllCollision();
-	//ƒp[ƒeƒBƒNƒ‹ˆ—
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«å‡¦ç†
 	void Particle(XMFLOAT3 pos);
-	//ƒC[ƒWƒ“ƒO
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	double easeOutQuad(double time,double start,double difference,double totaltime);
 private:
-	//ƒ|ƒCƒ“ƒ^
+	//ãƒã‚¤ãƒ³ã‚¿
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	std::list<std::unique_ptr<ParticleManager>> particles;
 
-	//ƒXƒvƒ‰ƒCƒg‹¤’Ê•”
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå…±é€šéƒ¨
 	SpriteCommon* spriteCommon = nullptr;
-	//ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	Sprite* hitsprite = new Sprite();
 	Sprite* mariosprite = new Sprite();
 	Sprite* menu = new Sprite();
 
-	/*OBJ‚©‚çƒ‚ƒfƒ‹ƒf[ƒ^‚ğ“Ç‚İ‚Ş*/
-	//3Dƒ‚ƒfƒ‹
+	/*OBJã‹ã‚‰ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€*/
+	//3Dãƒ¢ãƒ‡ãƒ«
 	Model* spheremodel=nullptr;
 	Model* blockmodel = nullptr;
-	//3Dƒ‚ƒfƒ‹‚Ì“–‚½‚è”»’è
+	Model* testmodel = nullptr;
+	//3Dãƒ¢ãƒ‡ãƒ«ã®å½“ãŸã‚Šåˆ¤å®š
 	XMFLOAT3 minsphereModel = {}, maxsphereModel = {};
 	
-	//3DƒIƒuƒWƒFƒNƒg
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	Object3d* sphereobj=nullptr;
 	Object3d* blockobj = nullptr;
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	Camera* camera = nullptr;
 
-	//ƒJƒƒ‰—p
-	XMFLOAT3 eye = {0,0,0};		//‹“_À•W
-	XMFLOAT3 target = {0,0,0};	//’‹“_À•W
-	XMFLOAT3 up = {0,0,0};		//ã•ûŒüƒxƒNƒgƒ‹
+	//ã‚«ãƒ¡ãƒ©ç”¨
+	XMFLOAT3 eye = {0,0,0};		//è¦–ç‚¹åº§æ¨™
+	XMFLOAT3 target = {0,0,0};	//æ³¨è¦–ç‚¹åº§æ¨™
+	XMFLOAT3 up = {0,0,0};		//ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	XMMATRIX matView = {};
 
 	//FBXModel
@@ -93,33 +98,38 @@ private:
 	static const int bonetestsize = 5;
 	FbxObject3D* bonetest[bonetestsize] = {};
 
-	//ƒŒ[ƒ‹ƒJƒƒ‰
+	//ãƒ¬ãƒ¼ãƒ«ã‚«ãƒ¡ãƒ©
 	Railcamera* railCamera = nullptr;
 
-	//“G
+	//ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
+	LevelData* leveldata = nullptr;
+	//é…ç½®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæƒ…å ±
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
+	//æ•µ
 	static const int enemysize = 10;
 	std::list<std::unique_ptr<Enemy>>enemys;
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	Player* player = nullptr;
-	////ƒ}ƒbƒv—p
+	////ãƒãƒƒãƒ—ç”¨
 	int enemycount = 0;
 
-	//ƒqƒbƒgŠm”F
+	//ãƒ’ãƒƒãƒˆç¢ºèª
 	bool isHit = false;
 
-	//ƒ‰ƒCƒ“
+	//ãƒ©ã‚¤ãƒ³
 	LineModel* linemodel = nullptr;
 	LineObject* lineobject = nullptr;
 
 	ResourceManager* resorcemanager = nullptr;
 
-	//”»’è‚ğ‚Ü‚Æ‚ß‚ÄŠÇ—
+	//åˆ¤å®šã‚’ã¾ã¨ã‚ã¦ç®¡ç†
 	std::list<std::unique_ptr<CubeObject3D>>collisionBoxs;
 
 	CSVLoader* enemycsv = nullptr;
 
-	//ƒƒjƒ…[
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 	bool isMenu = false;
 	bool backMenu = false;
 	double time = 0.0;
@@ -128,8 +138,7 @@ private:
 	double start = -WinApp::window_width/2;
 	double end = WinApp::window_width / 2;
 
-	//’n–Ê
+	//åœ°é¢
 	Object3d* floorobj = nullptr;
-
 };
 
