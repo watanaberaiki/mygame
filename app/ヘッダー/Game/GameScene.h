@@ -4,7 +4,6 @@
 #include"DirectXCommon.h"
 #include "SpriteCommon.h"
 #include "Sprite.h"
-#include"Object3d.h"
 #include <DirectXMath.h>
 #include<math.h>
 #include <d3dcompiler.h>
@@ -20,8 +19,6 @@
 #include"LineObject.h"
 #include"Enemy.h"
 #include"Player.h"
-#include"CubeModel.h"
-#include"CubeObject3D.h"
 #include"ResourceManager.h"
 #include"EnemyBullet.h"
 #include"CSVLoader.h"

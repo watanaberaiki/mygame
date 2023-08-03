@@ -13,7 +13,7 @@
 /// </summary>
 class Object3d
 {
-private: // エイリアス
+protected: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -47,7 +47,7 @@ public: // サブクラス
 		float alpha;		//アルファ
 	};
 
-private: // 定数
+protected: // 定数
 	static const int division = 50;					// 分割数
 	static const float radius;				// 底面の半径
 	static const float prizmHeight;			// 柱の高さ
@@ -114,7 +114,7 @@ public: // 静的メンバ関数
 	/// モデルのセッター
 	/// </summary>
 	void SetModel(Model* model) { this->model = model;}
-private: // 静的メンバ変数
+protected: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
 	// デスクリプタサイズ
@@ -161,7 +161,7 @@ private: // 静的メンバ変数
 
 	static Camera* camera;
 
-private:// 静的メンバ関数
+protected:// 静的メンバ関数
 	/// <summary>
 	/// デスクリプタヒープの初期化
 	/// </summary>
@@ -234,7 +234,7 @@ public: // メンバ関数
 
 	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
 
-private: // メンバ変数
+protected: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	//モデル
 	Model* model = nullptr;

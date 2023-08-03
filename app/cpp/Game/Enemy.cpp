@@ -13,7 +13,7 @@ void Enemy::Initialize()
 
 	//3dオブジェクト
 	enemymodel = resource->LoadObj("redcube");
-	enemyobj = Object3d::Create();
+	enemyobj = WireObject::Create();
 	enemyobj->SetModel(enemymodel);
 
 	//当たり判定キューブモデル

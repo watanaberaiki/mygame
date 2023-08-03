@@ -57,7 +57,7 @@ private://メンバ変数
 	//3Dモデル
 	Model* enemymodel = nullptr;
 	//3Dオブジェクト
-	Object3d* enemyobj = nullptr;
+	WireObject* enemyobj = nullptr;
 
 	//判定用
 	CubeModel* cubeModel = nullptr;

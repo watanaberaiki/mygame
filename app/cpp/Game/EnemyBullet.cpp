@@ -9,7 +9,7 @@ void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
 
 	//3dオブジェクト
 	bulletmodel = resource->LoadObj("block");
-	bulletobj = Object3d::Create();
+	bulletobj = WireObject::Create();
 	bulletobj->SetModel(bulletmodel);
 
 

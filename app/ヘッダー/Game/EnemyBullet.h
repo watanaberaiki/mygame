@@ -6,7 +6,7 @@
 #include"CubeModel.h"
 #include"CubeObject3D.h"
 #include"ResourceManager.h"
-
+#include"WireObject.h"
 class EnemyBullet
 {
 public://メンバ関数
@@ -48,7 +48,7 @@ private://メンバ変数
 	//3Dモデル
 	Model* bulletmodel = nullptr;
 	//3Dオブジェクト
-	Object3d* bulletobj = nullptr;
+	WireObject* bulletobj = nullptr;
 
 
 	//スピード

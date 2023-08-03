@@ -46,8 +46,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	camera->SetUp(up);
 	camera->Update();
 
+	//ワイヤーオブジェクト
+	WireObject::SetCamera(camera);
 	//オブジェクト3dカメラ
 	Object3d::SetCamera(camera);
+	
 	//当たり判定キューブオブジェクト
 	CubeObject3D::SetCamera(camera);
 	CubeObject3D::SetDevice(dxCommon_->GetDevice());
@@ -89,8 +92,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		newObject->SetPosition(enemycsv->GetPosition(i));
 		newObject->SetRotation(enemycsv->GetRotation(i));
 		newObject->SetScale(enemycsv->GetScale(i));
-
-		//newObject->SetPosition(XMFLOAT3((float)(i*0.2),(float)(i*0.2),(float)i*20));
 		newObject->Update();
 		enemys.push_back(std::move(newObject));
 	}

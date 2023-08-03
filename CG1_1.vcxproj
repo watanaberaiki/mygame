@@ -166,7 +166,7 @@
     <ClCompile Include="app\cpp\Base\LoadFile.cpp" />
     <ClCompile Include="app\cpp\3D\LineModel.cpp" />
     <ClCompile Include="app\cpp\3D\LineObject.cpp" />
-    <ClCompile Include="app\cpp\Game\main.cpp" />
+    <ClCompile Include="app\cpp\Base\main.cpp" />
     <ClCompile Include="app\cpp\3D\Model.cpp" />
     <ClCompile Include="app\cpp\3D\Object3d.cpp" />
     <ClCompile Include="app\cpp\2D\ParticleManager.cpp" />
