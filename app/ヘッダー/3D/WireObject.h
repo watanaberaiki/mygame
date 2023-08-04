@@ -12,8 +12,17 @@ class WireObject :
     public Object3d
 {
 public:
-    void InitializeGraphicsPipeline();
-
+	//静的初期化
+	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
+	//描画前処理
+	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
+	//描画後処理
+	static void PostDraw();
+	//描画処理
+	void Draw();
+	//パイプライン初期化
+    static void InitializeGraphicsPipeline();
+	//オブジェクト生成
     static WireObject* Create();
 
 private: // 静的メンバ変数

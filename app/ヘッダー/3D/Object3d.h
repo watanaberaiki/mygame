@@ -63,6 +63,7 @@ public: // 静的メンバ関数
 	/// <param name="window_height">画面高さ</param>
 	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
 
+
 	/// <summary>
 	/// 描画前処理
 	/// </summary>

@@ -76,7 +76,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	//3Dオブジェクト静的初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
-	//WireObject::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
+	WireObject::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 
 	ParticleManager::StaticInitialize(dxCommon, winApp->window_width, winApp->window_height);
 

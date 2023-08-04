@@ -36,6 +36,67 @@ WireObject::Material WireObject::material;
 Camera* WireObject::camera;
 
 
+void WireObject::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
+{
+	// nullptrチェック
+	assert(device);
+
+	WireObject::device = device;
+
+	// デスクリプタヒープの初期化
+	InitializeDescriptorHeap();
+
+	// カメラ初期化
+	InitializeCamera(window_width, window_height);
+
+	// パイプライン初期化
+	InitializeGraphicsPipeline();
+
+	//モデルにデバイスをセット
+	Model::SetDevice(device);
+	//// テクスチャ読み込み
+	//LoadTexture();
+
+	// モデル生成
+	CreateModel();
+}
+
+void WireObject::PreDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	// PreDrawとPostDrawがペアで呼ばれていなければエラー
+	assert(WireObject::cmdList == nullptr);
+
+	// コマンドリストをセット
+	WireObject::cmdList = cmdList;
+
+	// パイプラインステートの設定
+	cmdList->SetPipelineState(pipelinestate.Get());
+	// ルートシグネチャの設定
+	cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	// プリミティブ形状を設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void WireObject::PostDraw()
+{
+	// コマンドリストを解除
+	WireObject::cmdList = nullptr;
+}
+
+void WireObject::Draw()
+{
+	//nullptrチェック
+	assert(device);
+	assert(WireObject::cmdList);
+
+	//モデルがセットせれていなければ描画をスキップ
+	if (model == nullptr)return;
+	// 定数バッファビューをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	//モデルを描画
+	model->Draw(cmdList, 1);
+}
+
 void WireObject::InitializeGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;

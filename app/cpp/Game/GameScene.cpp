@@ -251,11 +251,7 @@ void GameScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandlist());
 	//プレイヤー
 	player->Draw(dxCommon_->GetCommandlist());
-	//敵
-	for (std::unique_ptr<Enemy>& enemy : enemys)
-	{
-		enemy->Draw(dxCommon_->GetCommandlist());
-	}
+
 	//地面
 	floorobj->Draw();
   	for (auto& object : objects) {
@@ -263,6 +259,16 @@ void GameScene::Draw()
 	}
 
 	Object3d::PostDraw();
+
+	//ワイヤーオブジェクト描画
+	WireObject::PreDraw(dxCommon_->GetCommandlist());
+	//敵
+	for (std::unique_ptr<Enemy>& enemy : enemys)
+	{
+		enemy->Draw(dxCommon_->GetCommandlist());
+	}
+
+	WireObject::PostDraw();
 
 	//パーティクル
 	for (std::unique_ptr<ParticleManager>& particle : particles)
