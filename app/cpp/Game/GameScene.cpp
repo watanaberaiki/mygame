@@ -82,7 +82,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 
 
-	//敵
+	//敵読み込み
 	enemycsv = new CSVLoader();
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
 	Enemy::SetDxCommon(dxCommon);
@@ -92,6 +92,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		newObject->SetPosition(enemycsv->GetPosition(i));
 		newObject->SetRotation(enemycsv->GetRotation(i));
 		newObject->SetScale(enemycsv->GetScale(i));
+		newObject->SetType(enemycsv->Getmove(i));
 		newObject->Update();
 		enemys.push_back(std::move(newObject));
 	}

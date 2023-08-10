@@ -8,6 +8,7 @@ void CSVLoader::LoadCSV(const std::string fileName)
 	position.clear();
 	scale.clear();
 	rotation.clear();
+	move.clear();
 
 	//ファイルを開く
 	std::ifstream file;
@@ -51,6 +52,12 @@ void CSVLoader::LoadCSV(const std::string fileName)
 			line_stream >> scale1.y;
 			line_stream >> scale1.z;
 			scale.emplace_back(scale1);
+		}
+		if (key == "move")
+		{
+			int move1;
+			line_stream >> move1;
+			move.emplace_back(move1);
 		}
 	}
 	//ファイルを閉じる

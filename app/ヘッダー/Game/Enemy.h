@@ -9,6 +9,13 @@
 #include"EnemyBullet.h"
 #include"ResourceManager.h"
 
+enum EnemyMove {
+	Move_z,
+	Move_xz,
+	Move_yz,
+	Move_xyz
+};
+
 class Enemy
 {
 public://メンバ関数
@@ -31,6 +38,7 @@ public://メンバ関数
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+	void SetType(int type) { this->type = type; }
 	static void SetDxCommon(DirectXCommon* dxcommon) { Enemy::dxcommon = dxcommon; }
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
@@ -64,7 +72,9 @@ private://メンバ変数
 	CubeObject3D* collisionBox = nullptr;
 
 	//スピード
-	float speed = 0.2f;
+	float speedZ = 0.2f;
+	float speedY = 0.1f;
+	float speedX = 0.1f;
 
 	int time = 0;
 	const int MaxTime = 60;
@@ -75,5 +85,14 @@ private://メンバ変数
 
 	//死亡判定
 	bool isdead = false;
+
+	//動き
+	int type=0;
+	bool plusX = false;
+	bool plusY = false;
+	const float MoveX = 5.0f;
+	const float MoveY = 5.0f;
+
+
 };
 

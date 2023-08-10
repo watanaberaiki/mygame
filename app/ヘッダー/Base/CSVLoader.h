@@ -22,6 +22,7 @@ public:
 	XMFLOAT3 GetPosition(int num) { return position[num]; };
 	XMFLOAT3 GetRotation(int num) { return rotation[num]; };
 	XMFLOAT3 GetScale(int num) { return scale[num]; };
+	int Getmove(int num) { return move[num]; }
 
 private:
 	//読み込むオブジェクトの数
@@ -30,4 +31,5 @@ private:
 	std::vector<XMFLOAT3> position;
 	std::vector<XMFLOAT3> rotation;
 	std::vector<XMFLOAT3> scale;
+	std::vector<int> move;
 };

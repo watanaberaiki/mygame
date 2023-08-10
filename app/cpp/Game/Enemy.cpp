@@ -3,7 +3,7 @@ DirectXCommon* Enemy::dxcommon = nullptr;
 
 void Enemy::Initialize()
 {
-	resource=ResourceManager::Getinstance();
+	resource = ResourceManager::Getinstance();
 
 	//fbx
 	enemyfbxmodel = resource->LoadFbx("boneTest");
@@ -98,13 +98,104 @@ void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 void Enemy::Move()
 {
-	position.z -= speed;
+	switch (type)
+	{
+		//z•ûŒü‚Ì‚Ý
+	case Move_z:
+		position.z -= speedZ;
+		break;
+		//xz•ûŒü
+	case Move_xz:
+		position.z -= speedZ;
+
+		if (plusX) {
+			if (position.x <MoveX) {
+				position.x += speedX;
+			}
+			else {
+				plusX = false;
+			}
+		}
+		else {
+			if (position.x > -MoveX) {
+				position.x -= speedX;
+			}
+			else {
+				plusX = true;
+			}
+		}
+		break;
+		//yz•ûŒü
+	case Move_yz:
+		position.z -= speedZ;
+		if (plusY) {
+			if (position.y < MoveY) {
+				position.y += speedY;
+			}
+			else {
+				plusY = false;
+			}
+		}
+		else {
+			if (position.y > -MoveY) {
+				position.y -= speedY;
+			}
+			else {
+				plusY = true;
+			}
+		}
+
+
+
+		break;
+		//xyz•ûŒü
+	case Move_xyz:
+		position.z -= speedZ;
+
+		if (plusX) {
+			if (position.x < 8.0) {
+				position.x += speedX;
+			}
+			else {
+				plusX = false;
+			}
+		}
+		else {
+			if (position.x > -8.0) {
+				position.x -= speedX;
+			}
+			else {
+				plusX = true;
+			}
+		}
+
+		if (plusY) {
+			if (position.y < MoveY) {
+				position.y += speedY;
+			}
+			else {
+				plusY = false;
+			}
+		}
+		else {
+			if (position.y > -MoveY) {
+				position.y -= speedY;
+			}
+			else {
+				plusY = true;
+			}
+		}
+
+		break;
+	default:
+		break;
+	}
 }
 
 void Enemy::Fire()
 {
 	std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
-	newObject->Initialize(dxcommon,resource);
+	newObject->Initialize(dxcommon, resource);
 	newObject->SetPosition(position);
 	bullets.push_back(std::move(newObject));
 }
