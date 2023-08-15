@@ -12,6 +12,7 @@
 #include"LineModel.h"
 #include"LineObject.h"
 #include<DirectXMath.h>
+#include"Vector3.h"
 class Player
 {
 public://メンバ関数
@@ -25,6 +26,8 @@ public://メンバ関数
 	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
 	//動き
 	void Move();
+	//レティクルを動かす
+	void MoveReticle();
 	//発射
 	void Fire();
 	//コールバック関数
@@ -83,5 +86,10 @@ private://メンバ変数
 	//ライン
 	LineModel* linemodel = nullptr;
 	LineObject* lineobject[4] = {};
+
+	//レティクル用ベクトル
+	Vector3 reticleVec;
+	Vector3 frontVec;
+
 };
 

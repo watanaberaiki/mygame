@@ -216,7 +216,7 @@ void GameScene::Update()
 		object->Update();
 	}
 		//プレイヤー
-		player->SetPositionZ(eye.z + 3.0f);
+		player->SetPositionZ(eye.z + 4.0f);
 		player->Update();
 
 		//敵

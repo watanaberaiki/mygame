@@ -52,10 +52,13 @@ void Player::Update()
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		return bullet->GetIsDeath();
 		});
-
+	//自機の動き
 	Move();
-
+	//弾の発射処理
 	Fire();
+	//レティクルの動き
+	MoveReticle();
+
 
 	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
@@ -82,12 +85,19 @@ void Player::Update()
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
-	//レティクル
-	frontReticlepos = position;
-	frontReticlepos.z += frontdepth;
 
-	backReticlepos = position;
-	backReticlepos.z += backdepth;
+	//レティクル
+	reticleVec = { backReticlepos.x-(-position.x), backReticlepos.y-( -position.y), backReticlepos.z- position.z };
+	/*reticleVec = reticleVec / frontdepth;*/
+	//正規化
+	reticleVec.normalize();
+
+	//frontReticlepos = position;
+	frontVec = reticleVec * frontdepth; 
+	frontReticlepos = XMFLOAT3(frontVec.x+position.x, frontVec.y + position.y, frontVec.z + position.z);
+
+	//backReticlepos = position;
+	backReticlepos.z = backdepth;
 
 	for (int i = 0; i < 4; i++) {
 		if (i < 2) {
@@ -137,12 +147,12 @@ void Player::Move()
 	//キーボードでの移動
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
 		if (input->PushKey(DIK_W)) {
-			if (position.y < 1.0) {
+			if (position.y < 1.5) {
 				position.y += 0.1f;
 			}
 		}
 		else if (input->PushKey(DIK_S)) {
-			if (position.y > -1.0) {
+			if (position.y > -1.5) {
 				position.y -= 0.1f;
 			}
 		}
@@ -150,13 +160,44 @@ void Player::Move()
 
 	if (input->PushKey(DIK_A) || input->PushKey(DIK_D)) {
 		if (input->PushKey(DIK_A)) {
-			if (position.x > -2.0) {
+			if (position.x > -2.5) {
 				position.x -= 0.1f;
 			}
 		}
 		else if (input->PushKey(DIK_D)) {
-			if (position.x < 2.0) {
+			if (position.x < 2.5) {
 				position.x += 0.1f;
+			}
+		}
+	}
+
+}
+
+void Player::MoveReticle()
+{
+	//キーボードでの移動
+	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)) {
+		if (input->PushKey(DIK_UP)) {
+			if (backReticlepos.y < 1.5) {
+				backReticlepos.y += 0.1f;
+			}
+		}
+		else if (input->PushKey(DIK_DOWN)) {
+			if (backReticlepos.y > -1.5) {
+				backReticlepos.y -= 0.1f;
+			}
+		}
+	}
+
+	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT)) {
+		if (input->PushKey(DIK_LEFT)) {
+			if (backReticlepos.x > -2.5) {
+				backReticlepos.x -= 0.1f;
+			}
+		}
+		else if (input->PushKey(DIK_RIGHT)) {
+			if (backReticlepos.x < 2.5) {
+				backReticlepos.x += 0.1f;
 			}
 		}
 	}

@@ -73,8 +73,8 @@ private://メンバ変数
 
 	//スピード
 	float speedZ = 0.2f;
-	float speedY = 0.1f;
-	float speedX = 0.1f;
+	float speedY = 0.02f;
+	float speedX = 0.02f;
 
 	int time = 0;
 	const int MaxTime = 60;
@@ -90,8 +90,8 @@ private://メンバ変数
 	int type=0;
 	bool plusX = false;
 	bool plusY = false;
-	const float MoveX = 5.0f;
-	const float MoveY = 5.0f;
+	const float MoveX = 2.5f;
+	const float MoveY = 1.5f;
 
 
 };
