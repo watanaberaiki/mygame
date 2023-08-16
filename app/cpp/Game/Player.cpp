@@ -87,16 +87,15 @@ void Player::Update()
 
 
 	//レティクル
-	reticleVec = { backReticlepos.x-(-position.x), backReticlepos.y-( -position.y), backReticlepos.z- position.z };
-	/*reticleVec = reticleVec / frontdepth;*/
+	reticleVec = { backReticlepos.x - (position.x), backReticlepos.y - (position.y), backReticlepos.z - position.z };
 	//正規化
 	reticleVec.normalize();
-
-	//frontReticlepos = position;
-	frontVec = reticleVec * frontdepth; 
-	frontReticlepos = XMFLOAT3(frontVec.x+position.x, frontVec.y + position.y, frontVec.z + position.z);
-
-	//backReticlepos = position;
+	//手前レティクル
+	frontVec = reticleVec * frontdepth;
+	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);
+	//奥側のレティクル
+	//backVec= reticleVec * backdepth;
+	//backReticlepos= XMFLOAT3(backVec.x, backVec.y, backVec.z);
 	backReticlepos.z = backdepth;
 
 	for (int i = 0; i < 4; i++) {
@@ -178,36 +177,29 @@ void Player::MoveReticle()
 	//キーボードでの移動
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)) {
 		if (input->PushKey(DIK_UP)) {
-			if (backReticlepos.y < 1.5) {
-				backReticlepos.y += 0.1f;
-			}
+			backReticlepos.y += 0.3f;
 		}
 		else if (input->PushKey(DIK_DOWN)) {
-			if (backReticlepos.y > -1.5) {
-				backReticlepos.y -= 0.1f;
-			}
+			backReticlepos.y -= 0.3f;
 		}
 	}
 
 	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT)) {
 		if (input->PushKey(DIK_LEFT)) {
-			if (backReticlepos.x > -2.5) {
-				backReticlepos.x -= 0.1f;
-			}
+			backReticlepos.x -= 0.3f;
 		}
 		else if (input->PushKey(DIK_RIGHT)) {
-			if (backReticlepos.x < 2.5) {
-				backReticlepos.x += 0.1f;
-			}
+			backReticlepos.x += 0.3f;
 		}
 	}
 }
 
 void Player::Fire()
 {
+	velocity = XMFLOAT3(reticleVec.x, reticleVec.y, reticleVec.z);
 	if (input->TriggerKey(DIK_SPACE)) {
 		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
-		newObject->Initialize(dxcommon, resource);
+		newObject->Initialize(dxcommon, resource, velocity);
 		newObject->SetPosition(position);
 		bullets.push_back(std::move(newObject));
 	}

@@ -90,6 +90,7 @@ private://メンバ変数
 	//レティクル用ベクトル
 	Vector3 reticleVec;
 	Vector3 frontVec;
-
+	Vector3 backVec;
+	XMFLOAT3 velocity;
 };
 

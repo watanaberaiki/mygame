@@ -1,6 +1,6 @@
 #include "PlayerBullet.h"
 
-void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
+void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource, XMFLOAT3 velocity)
 {
 
 	bulletfbxmodel = resource->LoadFbx("boneTest");
@@ -26,6 +26,9 @@ void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource
 	collisionBox->SetScale(scale);
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
+
+	velocity = XMFLOAT3(velocity.x*speed, velocity.y * speed, velocity.z * speed);
+	this->velocity = velocity;
 
 }
 
@@ -73,8 +76,10 @@ void PlayerBullet::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 void PlayerBullet::Move()
 {
-	position.z += speed;
-	if (position.z>=20) {
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
+	if (position.z>=50) {
 		OnCollision();
 	}
 }

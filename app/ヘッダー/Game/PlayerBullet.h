@@ -10,7 +10,7 @@ class PlayerBullet
 {
 public://メンバ関数
 	//初期化
-	void Initialize(DirectXCommon* dxcommon,ResourceManager* resource);
+	void Initialize(DirectXCommon* dxcommon,ResourceManager* resource,XMFLOAT3 velocity);
 	//更新処理
 	void Update();
 	//描画処理
@@ -53,7 +53,8 @@ private://メンバ変数
 
 
 	//スピード
-	float speed = 0.2f;
+	float speed = 0.4f;
+	XMFLOAT3 velocity = {};
 	//フラグ
 	bool isfire = false;
 	bool isdeath = false;
