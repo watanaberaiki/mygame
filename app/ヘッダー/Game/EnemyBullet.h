@@ -11,7 +11,7 @@ class EnemyBullet
 {
 public://メンバ関数
 	//初期化
-	void Initialize(DirectXCommon* dxcommon, ResourceManager*resource);
+	void Initialize(DirectXCommon* dxcommon, ResourceManager*resource,XMFLOAT3 velocity);
 	//更新処理
 	void Update();
 	//描画処理
@@ -65,6 +65,9 @@ private://メンバ変数
 	//判定用
 	CubeModel* cubeModel = nullptr;
 	CubeObject3D* collisionBox = nullptr;
+
+	//自機に向けてのロックオン用
+	XMFLOAT3 velocity = {};
 
 };
 

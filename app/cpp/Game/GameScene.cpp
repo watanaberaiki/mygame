@@ -85,6 +85,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//敵読み込み
 	enemycsv = new CSVLoader();
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
+	Enemy::SetPlayer(player);
 	Enemy::SetDxCommon(dxCommon);
 	for (int i = 0; i < enemysize; i++) {
 		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();

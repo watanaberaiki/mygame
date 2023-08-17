@@ -8,6 +8,7 @@
 #include"DirectXCommon.h"
 #include"EnemyBullet.h"
 #include"ResourceManager.h"
+#include"Player.h"
 
 enum EnemyMove {
 	Move_z,
@@ -40,6 +41,8 @@ public://メンバ関数
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 	void SetType(int type) { this->type = type; }
 	static void SetDxCommon(DirectXCommon* dxcommon) { Enemy::dxcommon = dxcommon; }
+	static void SetPlayer(Player* player) { Enemy::player = player; }
+
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets; }
@@ -49,6 +52,7 @@ public://メンバ関数
 
 private://静的メンバ変数
 	static DirectXCommon* dxcommon;
+	static Player* player;
 
 private://メンバ変数
 	//位置、大きさ、回転
@@ -93,6 +97,9 @@ private://メンバ変数
 	const float MoveX = 2.5f;
 	const float MoveY = 1.5f;
 
+	//自機を狙う弾用
+	Vector3 velocityvec;
+	XMFLOAT3 velocity;
 
 };
 

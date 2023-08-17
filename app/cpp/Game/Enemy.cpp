@@ -1,5 +1,6 @@
 #include "Enemy.h"
 DirectXCommon* Enemy::dxcommon = nullptr;
+Player* Enemy::player = nullptr;
 
 void Enemy::Initialize()
 {
@@ -40,8 +41,13 @@ void Enemy::Update()
 	//’e‚Ì”­ŽË
 	time++;
 	if (time >= MaxTime) {
-		Fire();
-		time = 0;
+		//ƒvƒŒƒCƒ„[‚Ì— ‚És‚Á‚½‚ç’e‚ðŒ‚‚½‚È‚­‚È‚é
+		if (player->GetPosition().z < position.z) {
+			if (position.z- player->GetPosition().z<=40.0f) {
+				Fire();
+				time = 0;
+			}
+		}
 	}
 	//’e
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
@@ -109,7 +115,7 @@ void Enemy::Move()
 		position.z -= speedZ;
 
 		if (plusX) {
-			if (position.x <MoveX) {
+			if (position.x < MoveX) {
 				position.x += speedX;
 			}
 			else {
@@ -194,8 +200,12 @@ void Enemy::Move()
 
 void Enemy::Fire()
 {
+	velocityvec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
+	velocityvec.normalize();
+
+	velocity = XMFLOAT3(velocityvec.x, velocityvec.y, velocityvec.z);
 	std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
-	newObject->Initialize(dxcommon, resource);
+	newObject->Initialize(dxcommon, resource, velocity);
 	newObject->SetPosition(position);
 	bullets.push_back(std::move(newObject));
 }

@@ -1,6 +1,6 @@
 #include "EnemyBullet.h"
 
-void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
+void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource, XMFLOAT3 velocity)
 {
 	bulletfbxmodel = resource->LoadFbx("boneTest");
 	bulletfbxobj = new FbxObject3D();
@@ -26,6 +26,8 @@ void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource)
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 
+	velocity = XMFLOAT3(velocity.x * speed, velocity.y * speed, velocity.z * speed);
+	this->velocity = velocity;
 }
 
 void EnemyBullet::Update()
@@ -73,7 +75,9 @@ void EnemyBullet::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 void EnemyBullet::Move()
 {
-	position.z -= speed;
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
 }
 
 void EnemyBullet::OnCollision()
