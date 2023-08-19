@@ -96,7 +96,7 @@ void Player::Update()
 	//‰œ‘¤‚ÌƒŒƒeƒBƒNƒ‹
 	//backVec= reticleVec * backdepth;
 	//backReticlepos= XMFLOAT3(backVec.x, backVec.y, backVec.z);
-	backReticlepos.z = backdepth;
+	backReticlepos.z = backdepth+position.z;
 
 	for (int i = 0; i < 4; i++) {
 		if (i < 2) {

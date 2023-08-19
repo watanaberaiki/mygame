@@ -79,9 +79,9 @@ void PlayerBullet::Move()
 	position.x += velocity.x;
 	position.y += velocity.y;
 	position.z += velocity.z;
-	if (position.z>=50) {
+	/*if (position.z>=50) {
 		OnCollision();
-	}
+	}*/
 }
 
 void PlayerBullet::OnCollision()

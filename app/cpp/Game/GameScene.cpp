@@ -35,8 +35,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
 
-	eye = XMFLOAT3(0, 0, -10);	//視点座標
-	target = XMFLOAT3(0, 0, 0);	//注視点座標
+	eye = XMFLOAT3(0, 0, 5);	//視点座標
+	target = XMFLOAT3(0, 0, 10);	//注視点座標
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
 	camera = new Camera();
@@ -50,7 +50,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	WireObject::SetCamera(camera);
 	//オブジェクト3dカメラ
 	Object3d::SetCamera(camera);
-	
+
 	//当たり判定キューブオブジェクト
 	CubeObject3D::SetCamera(camera);
 	CubeObject3D::SetDevice(dxCommon_->GetDevice());
@@ -98,12 +98,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		enemys.push_back(std::move(newObject));
 	}
 
-	//地面
-	floorobj= Object3d::Create();
-	floorobj->SetModel(resorcemanager->LoadObj("floor"));
-	floorobj->SetPosition(XMFLOAT3(0,-1,10));
-	floorobj->SetRotation(XMFLOAT3(0, 90, 0));
-	floorobj->SetScale(XMFLOAT3(1.0f, 1.0f, 10.0f));
+	////地面
+	//floorobj= Object3d::Create();
+	//floorobj->SetModel(resorcemanager->LoadObj("floor"));
+	//floorobj->SetPosition(XMFLOAT3(0,-1,10));
+	//floorobj->SetRotation(XMFLOAT3(0, 90, 0));
+	//floorobj->SetScale(XMFLOAT3(1.0f, 1.0f, 10.0f));
 
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
@@ -189,7 +189,7 @@ void GameScene::Update()
 			if (time == maxTime) {
 				time = 0;
 				backMenu = true;
-			} 
+			}
 		}
 		if (backMenu) {
 			if (backtime == maxTime) {
@@ -207,15 +207,18 @@ void GameScene::Update()
 			time = 0;
 		}
 
-		/*eye.z += 1.0f;
-		camera->SetEye(eye);*/
-			camera->Update();
-	matView=camera->GetmatView();
+		eye.z += 0.05f;
+		target.z= eye.z+1;
+		camera->SetEye(eye);
+		camera->SetTarget(target);
+		camera->Update();
+		matView = camera->GetmatView();
 
-	for (auto& object : objects) {
-		object->SetScale(XMFLOAT3(0.1f, 0.1f, 0.1f));
-		object->Update();
-	}
+		//json配置
+		for (auto& object : objects) {
+			//object->SetScale(XMFLOAT3(0.1f, 0.1f, 0.1f));
+			object->Update();
+		}
 		//プレイヤー
 		player->SetPositionZ(eye.z + 4.0f);
 		player->Update();
@@ -240,8 +243,8 @@ void GameScene::Update()
 			particle->Update();
 		}
 
-		//地面
-		floorobj->Update();
+		////地面
+		//floorobj->Update();
 
 		AllCollision();
 	}
@@ -254,9 +257,9 @@ void GameScene::Draw()
 	//プレイヤー
 	player->Draw(dxCommon_->GetCommandlist());
 
-	//地面
-	floorobj->Draw();
-  	for (auto& object : objects) {
+	////地面
+	//floorobj->Draw();
+	for (auto& object : objects) {
 		object->Draw();
 	}
 
