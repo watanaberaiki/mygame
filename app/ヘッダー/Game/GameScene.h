@@ -60,6 +60,8 @@ private:
 	Sprite* hitsprite = new Sprite();
 	Sprite* mariosprite = new Sprite();
 	Sprite* menu = new Sprite();
+	Sprite* boss = new Sprite();
+
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -131,5 +133,9 @@ private:
 
 	//地面
 	Object3d* floorobj = nullptr;
+
+	//シーン切り替え
+	bool isEnemyAlive = true;
+
 };
 

@@ -109,14 +109,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteCommon->LoadTexture(0, "hit.png");
 	spriteCommon->LoadTexture(1, "mario.jpg");
 	spriteCommon->LoadTexture(2, "menu.png");
+	spriteCommon->LoadTexture(3, "boss.png");
 	//スプライトにテクスチャ割り当て
 	hitsprite->Initialize(spriteCommon, 0);
 	mariosprite->Initialize(spriteCommon, 1);
 	menu->Initialize(spriteCommon, 2);
+	boss->Initialize(spriteCommon, 3);
 	//スプライト初期位置
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();
 
+	boss->SetPosition({ 800,0 });
+	boss->SetAnchorPoint({ 0.5f,0.5f });
+	boss->Update();
 	//3Dモデル
 
 	//モデルデータをマップに入れる
@@ -235,57 +240,66 @@ void GameScene::Update()
 
 	}
 	else {
+		//メニュー
 		if (input_->TriggerKey(DIK_M)) {
 			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 			isMenu = true;
 			time = 0;
 		}
+		if (isEnemyAlive) {
+			eye.z += 0.05f;
+			target.z = eye.z + 1;
+			camera->SetEye(eye);
+			camera->SetTarget(target);
+			camera->Update();
+			matView = camera->GetmatView();
 
-		eye.z += 0.05f;
-		target.z= eye.z+1;
-		camera->SetEye(eye);
-		camera->SetTarget(target);
-		camera->Update();
-		matView = camera->GetmatView();
-
-		//地面
-		for (auto& object : objects) {
-			object->Update();
-		}
-		for (auto& wireobject : wireobjects) {
-			wireobject->Update();
-		}
-		for (int i = 0; i < maxLine; i++) {
-			lineObject[i]->Update();
-		}
-
-		//プレイヤー
-		player->SetPositionZ(eye.z + 4.0f);
-		player->Update();
-
-		//敵
-		for (std::unique_ptr<Enemy>& enemy : enemys)
-		{
-			enemy->Update();
-			//死んだ際のパーティクル
-			if (enemy->GetisDead()) {
-				Particle(enemy->GetPos());
+			//地面
+			for (auto& object : objects) {
+				object->Update();
 			}
+			for (auto& wireobject : wireobjects) {
+				wireobject->Update();
+			}
+			for (int i = 0; i < maxLine; i++) {
+				lineObject[i]->Update();
+			}
+
+			//プレイヤー
+			player->SetPositionZ(eye.z + 4.0f);
+			player->Update();
+
+			//敵
+			for (std::unique_ptr<Enemy>& enemy : enemys)
+			{
+				enemy->Update();
+				//死んだ際のパーティクル
+				if (enemy->GetisDead()) {
+					Particle(enemy->GetPos());
+				}
+			}
+			//敵の死んだ処理
+			enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+				return enemy->GetisDead();
+				});
+
+			//パーティクル
+			for (std::unique_ptr<ParticleManager>& particle : particles)
+			{
+				particle->Update();
+			}
+			AllCollision();
+
+			//敵の全滅判定
+			if (enemys.empty()) {
+				isEnemyAlive = false;
+			}
+
 		}
-		//敵の死んだ処理
-		enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
-			return enemy->GetisDead();
-			});
-
-		//パーティクル
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Update();
+		else {
+			boss->Update();
 		}
-
-	
-
-		AllCollision();
+		
 	}
 }
 
@@ -344,6 +358,10 @@ void GameScene::Draw()
 
 	if (isHit) {
 		hitsprite->Draw();
+	}
+
+	if (isEnemyAlive == false) {
+		boss->Draw();
 	}
 
 	spriteCommon->PostDraw();
