@@ -94,6 +94,8 @@ private:
 	//配置オブジェクト情報
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
+	std::vector<WireObject*> wireobjects;
+
 	//敵
 	static const int enemysize = 10;
 	std::list<std::unique_ptr<Enemy>>enemys;
@@ -107,8 +109,9 @@ private:
 	bool isHit = false;
 
 	//ライン
+	static const int maxLine = 10;
 	LineModel* linemodel = nullptr;
-	LineObject* lineobject = nullptr;
+	LineObject* lineObject[maxLine] = {};
 
 	ResourceManager* resorcemanager = nullptr;
 

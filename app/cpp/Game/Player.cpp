@@ -92,7 +92,7 @@ void Player::Update()
 	reticleVec.normalize();
 	//手前レティクル
 	frontVec = reticleVec * frontdepth;
-	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);
+	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);	
 	//奥側のレティクル
 	//backVec= reticleVec * backdepth;
 	//backReticlepos= XMFLOAT3(backVec.x, backVec.y, backVec.z);

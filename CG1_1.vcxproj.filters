@@ -56,7 +56,6 @@
     <ClInclude Include="app\ヘッダー\3D\FbxLoader.h" />
     <ClInclude Include="app\ヘッダー\3D\FbxModel.h" />
     <ClInclude Include="app\ヘッダー\3D\FbxObject3D.h" />
-    <ClInclude Include="app\ヘッダー\Game\GameScene.h" />
     <ClInclude Include="app\ヘッダー\Base\Input.h" />
     <ClInclude Include="app\ヘッダー\Base\json.hpp" />
     <ClInclude Include="app\ヘッダー\Base\LoadFile.h" />
@@ -73,6 +72,7 @@
     <ClInclude Include="app\ヘッダー\Base\Vector3.h" />
     <ClInclude Include="app\ヘッダー\Base\WinApp.h" />
     <ClInclude Include="app\ヘッダー\3D\WireObject.h" />
+    <ClInclude Include="app\ヘッダー\Game\GameScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />

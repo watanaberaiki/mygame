@@ -94,7 +94,7 @@ private://ƒƒ“ƒo•Ï”
 	int type=0;
 	bool plusX = false;
 	bool plusY = false;
-	const float MoveX = 2.5f;
+	const float MoveX = 1.5f;
 	const float MoveY = 1.5f;
 
 	//©‹@‚ğ‘_‚¤’e—p

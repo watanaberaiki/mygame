@@ -295,7 +295,6 @@
     <ClInclude Include="app\ヘッダー\3D\FbxLoader.h" />
     <ClInclude Include="app\ヘッダー\3D\FbxModel.h" />
     <ClInclude Include="app\ヘッダー\3D\FbxObject3D.h" />
-    <ClInclude Include="app\ヘッダー\Game\GameScene.h" />
     <ClInclude Include="app\ヘッダー\Base\Input.h" />
     <ClInclude Include="app\ヘッダー\Base\json.hpp" />
     <ClInclude Include="app\ヘッダー\Base\LoadFile.h" />
@@ -304,6 +303,7 @@
     <ClInclude Include="app\ヘッダー\3D\Model.h" />
     <ClInclude Include="app\ヘッダー\3D\Object3d.h" />
     <ClInclude Include="app\ヘッダー\2D\ParticleManager.h" />
+    <ClInclude Include="app\ヘッダー\Game\GameScene.h" />
     <ClInclude Include="app\ヘッダー\Game\Player.h" />
     <ClInclude Include="app\ヘッダー\Game\PlayerBullet.h" />
     <ClInclude Include="app\ヘッダー\Base\ResourceManager.h" />

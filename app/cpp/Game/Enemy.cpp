@@ -159,7 +159,7 @@ void Enemy::Move()
 		position.z -= speedZ;
 
 		if (plusX) {
-			if (position.x < 8.0) {
+			if (position.x < MoveX) {
 				position.x += speedX;
 			}
 			else {
@@ -167,7 +167,7 @@ void Enemy::Move()
 			}
 		}
 		else {
-			if (position.x > -8.0) {
+			if (position.x > -MoveX) {
 				position.x -= speedX;
 			}
 			else {

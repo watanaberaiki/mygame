@@ -13,6 +13,9 @@ GameScene::~GameScene()
 	for (Object3d*& object : objects) {
 		delete object;
 	}
+	for (WireObject*& wireobject : wireobjects) {
+		delete wireobject;
+	}
 	////レベルデータ解放
 	//delete leveldata;
 	//delete floorobj;
@@ -98,13 +101,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		enemys.push_back(std::move(newObject));
 	}
 
-	////地面
-	//floorobj= Object3d::Create();
-	//floorobj->SetModel(resorcemanager->LoadObj("floor"));
-	//floorobj->SetPosition(XMFLOAT3(0,-1,10));
-	//floorobj->SetRotation(XMFLOAT3(0, 90, 0));
-	//floorobj->SetScale(XMFLOAT3(1.0f, 1.0f, 10.0f));
-
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
@@ -125,6 +121,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//モデルデータをマップに入れる
 	models.insert(std::make_pair("floor", resorcemanager->LoadObj("floor")));
+	models.insert(std::make_pair("line",resorcemanager->LoadObj("line")));
 
 	menu->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
@@ -141,28 +138,65 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		if (it != models.end()) {
 			model = it->second;
 		}
+		//そのまま描画したいもの
+		if (objectData.fileName == "floor") {
+			//3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			newObject->SetModel(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
 
-		//3Dオブジェクトを生成
-		Object3d* newObject = Object3d::Create();
-		newObject->SetModel(model);
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
 
-		// 座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.translation);
-		newObject->SetPosition(pos);
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
 
-		// 回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rotation);
-		newObject->SetRotation(rot);
+			// 配列に登録
+			objects.push_back(newObject);
+		}
+		//ワイヤーで描画したいもの
+		else if (objectData.fileName == "line") {
+			//3Dオブジェクトを生成
+			WireObject* newObject = WireObject::Create();
+			newObject->SetModel(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
 
-		// 座標
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scaling);
-		newObject->SetScale(scale);
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
 
-		// 配列に登録
-		objects.push_back(newObject);
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
+
+			// 配列に登録
+			wireobjects.push_back(newObject);
+		}
+	}
+
+	//地面の線
+	//ライン初期化
+	linemodel = new LineModel();
+	linemodel->Initialize(dxCommon->GetDevice(), 7.0f, -7.0f);
+	linemodel->SetImageData(XMFLOAT4(255, 255, 255, 1));
+	for (int i = 0; i < maxLine; i++) {
+		lineObject[i] = new LineObject();
+		lineObject[i]->Initialize();
+		lineObject[i]->SetModel(linemodel);
+		lineObject[i]->SetPosition(XMFLOAT3(0.5f, -2.9f,(float)10.0f*i));
+		lineObject[i]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 	}
 }
 
@@ -214,11 +248,17 @@ void GameScene::Update()
 		camera->Update();
 		matView = camera->GetmatView();
 
-		//json配置
+		//地面
 		for (auto& object : objects) {
-			//object->SetScale(XMFLOAT3(0.1f, 0.1f, 0.1f));
 			object->Update();
 		}
+		for (auto& wireobject : wireobjects) {
+			wireobject->Update();
+		}
+		for (int i = 0; i < maxLine; i++) {
+			lineObject[i]->Update();
+		}
+
 		//プレイヤー
 		player->SetPositionZ(eye.z + 4.0f);
 		player->Update();
@@ -243,8 +283,7 @@ void GameScene::Update()
 			particle->Update();
 		}
 
-		////地面
-		//floorobj->Update();
+	
 
 		AllCollision();
 	}
@@ -258,11 +297,13 @@ void GameScene::Draw()
 	player->Draw(dxCommon_->GetCommandlist());
 
 	////地面
-	//floorobj->Draw();
 	for (auto& object : objects) {
 		object->Draw();
 	}
 
+	for (int i = 0; i < maxLine; i++) {
+		lineObject[i]->Draw(dxCommon_->GetCommandlist());
+	}
 	Object3d::PostDraw();
 
 	//ワイヤーオブジェクト描画
@@ -271,6 +312,10 @@ void GameScene::Draw()
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
 		enemy->Draw(dxCommon_->GetCommandlist());
+	}
+	//地面の線
+	for (auto& wireobject : wireobjects) {
+		wireobject->Draw();
 	}
 
 	WireObject::PostDraw();
@@ -357,10 +402,12 @@ void GameScene::AllCollision()
 
 void GameScene::Particle(XMFLOAT3 pos)
 {
+	XMFLOAT3 posA = pos;
+	posA.z += 5; 
 	//パーティクル
 	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(pos);
+	newparticle->SetEmitterPos(posA);
 	for (int i = 0; i < 50; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 1.0f;
