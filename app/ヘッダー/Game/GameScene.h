@@ -31,6 +31,7 @@ struct LevelData;
 enum Scene {
 	Title,
 	Game,
+	Boss
 };
 class GameScene
 {

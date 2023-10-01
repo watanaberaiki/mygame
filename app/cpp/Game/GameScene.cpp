@@ -311,11 +311,15 @@ void GameScene::Update()
 
 			}
 			else {
-				boss->Update();
+				scene = Boss;
 			}
 
 		}
 		break;
+		//ボス戦
+		case Boss:
+
+			break;
 	}
 
 	
