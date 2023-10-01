@@ -28,6 +28,10 @@
 #include<utility>
 #pragma warning(pop)
 struct LevelData;
+enum Scene {
+	Title,
+	Game,
+};
 class GameScene
 {
 //メンバ関数
@@ -130,11 +134,13 @@ private:
 	double maxTime = 50.0;
 	double start = -WinApp::window_width/2;
 	double end = WinApp::window_width / 2;
+	int menunum = 0;
 
 	//地面
 	Object3d* floorobj = nullptr;
 
 	//シーン切り替え
+	Scene scene = Title;
 	bool isEnemyAlive = true;
 
 };

@@ -33,6 +33,11 @@ void Enemy::Update()
 {
 	Move();
 
+	if (player->GetPosition().z -position.z>=10.0f) {
+		isdead = true;
+	}
+
+
 	//デスフラグの立った球を削除
 	bullets.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
 		return bullet->GetIsDeath();

@@ -207,164 +207,190 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void GameScene::Update()
 {
-	if (isMenu) {
-		menu->Update();
-
-
-		//メニューから戻るとき
-		if (backMenu) {
-			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
-			if (backtime < maxTime) {
-				backtime++;
-			}
-		}
-		else {
-			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
-			if (time < maxTime) {
-				time++;
-			}
-		}
-		if (input_->TriggerKey(DIK_SPACE)) {
-			if (time == maxTime) {
-				time = 0;
-				backMenu = true;
-			}
-		}
-		if (backMenu) {
-			if (backtime == maxTime) {
-				isMenu = false;
-				backMenu = false;
-				backtime = 0;
-			}
+	switch (scene)
+	{
+	case Title:
+		if (input_->TriggerKey(DIK_RETURN)) {
+			scene = Game;
 		}
 
-	}
-	else {
-		//メニュー
-		if (input_->TriggerKey(DIK_M)) {
-			menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
-			isMenu = true;
-			time = 0;
-		}
-		if (isEnemyAlive) {
-			eye.z += 0.05f;
-			target.z = eye.z + 1;
-			camera->SetEye(eye);
-			camera->SetTarget(target);
-			camera->Update();
-			matView = camera->GetmatView();
+		break;
+	case Game:
+		if (isMenu) {
+			menu->Update();
 
-			//地面
-			for (auto& object : objects) {
-				object->Update();
-			}
-			for (auto& wireobject : wireobjects) {
-				wireobject->Update();
-			}
-			for (int i = 0; i < maxLine; i++) {
-				lineObject[i]->Update();
-			}
 
-			//プレイヤー
-			player->SetPositionZ(eye.z + 4.0f);
-			player->Update();
-
-			//敵
-			for (std::unique_ptr<Enemy>& enemy : enemys)
-			{
-				enemy->Update();
-				//死んだ際のパーティクル
-				if (enemy->GetisDead()) {
-					Particle(enemy->GetPos());
+			//メニューから戻るとき
+			if (backMenu) {
+				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
+				if (backtime < maxTime) {
+					backtime++;
 				}
 			}
-			//敵の死んだ処理
-			enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
-				return enemy->GetisDead();
-				});
-
-			//パーティクル
-			for (std::unique_ptr<ParticleManager>& particle : particles)
-			{
-				particle->Update();
+			else {
+				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				if (time < maxTime) {
+					time++;
+				}
 			}
-			AllCollision();
-
-			//敵の全滅判定
-			if (enemys.empty()) {
-				isEnemyAlive = false;
+			if (input_->TriggerKey(DIK_SPACE)) {
+				if (time == maxTime) {
+					time = 0;
+					backMenu = true;
+				}
+			}
+			if (backMenu) {
+				if (backtime == maxTime) {
+					isMenu = false;
+					backMenu = false;
+					backtime = 0;
+				}
 			}
 
 		}
 		else {
-			boss->Update();
+			//メニュー
+			if (input_->TriggerKey(DIK_M)) {
+				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				isMenu = true;
+				time = 0;
+			}
+			//仮のシーンチェンジ
+			if (input_->TriggerKey(DIK_RETURN)) {
+				scene = Title;
+			}
+
+			if (isEnemyAlive) {
+				eye.z += 0.05f;
+				target.z = eye.z + 1;
+				camera->SetEye(eye);
+				camera->SetTarget(target);
+				camera->Update();
+				matView = camera->GetmatView();
+
+				//地面
+				for (auto& object : objects) {
+					object->Update();
+				}
+				for (auto& wireobject : wireobjects) {
+					wireobject->Update();
+				}
+				for (int i = 0; i < maxLine; i++) {
+					lineObject[i]->Update();
+				}
+
+				//プレイヤー
+				player->SetPositionZ(eye.z + 4.0f);
+				player->Update();
+
+				//敵
+				for (std::unique_ptr<Enemy>& enemy : enemys)
+				{
+					enemy->Update();
+					//死んだ際のパーティクル
+					if (enemy->GetisDead()) {
+						Particle(enemy->GetPos());
+					}
+				}
+				//敵の死んだ処理
+				enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+					return enemy->GetisDead();
+					});
+
+				//パーティクル
+				for (std::unique_ptr<ParticleManager>& particle : particles)
+				{
+					particle->Update();
+				}
+				AllCollision();
+
+				//敵の全滅判定
+				if (enemys.empty()) {
+					isEnemyAlive = false;
+				}
+
+			}
+			else {
+				boss->Update();
+			}
+
 		}
-		
+		break;
 	}
+
+	
 }
 
 void GameScene::Draw()
 {
-	//オブジェクト描画
-	Object3d::PreDraw(dxCommon_->GetCommandlist());
-	//プレイヤー
-	player->Draw(dxCommon_->GetCommandlist());
-
-	////地面
-	for (auto& object : objects) {
-		object->Draw();
-	}
-
-	for (int i = 0; i < maxLine; i++) {
-		lineObject[i]->Draw(dxCommon_->GetCommandlist());
-	}
-	Object3d::PostDraw();
-
-	//ワイヤーオブジェクト描画
-	WireObject::PreDraw(dxCommon_->GetCommandlist());
-	//敵
-	for (std::unique_ptr<Enemy>& enemy : enemys)
+	switch (scene)
 	{
-		enemy->Draw(dxCommon_->GetCommandlist());
+	case Title:
+
+		break;
+	case Game:
+		//オブジェクト描画
+		Object3d::PreDraw(dxCommon_->GetCommandlist());
+		//プレイヤー
+		player->Draw(dxCommon_->GetCommandlist());
+
+		////地面
+		for (auto& object : objects) {
+			object->Draw();
+		}
+
+		for (int i = 0; i < maxLine; i++) {
+			lineObject[i]->Draw(dxCommon_->GetCommandlist());
+		}
+		Object3d::PostDraw();
+
+		//ワイヤーオブジェクト描画
+		WireObject::PreDraw(dxCommon_->GetCommandlist());
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys)
+		{
+			enemy->Draw(dxCommon_->GetCommandlist());
+		}
+		//地面の線
+		for (auto& wireobject : wireobjects) {
+			wireobject->Draw();
+		}
+
+		WireObject::PostDraw();
+
+		//パーティクル
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Draw();
+		}
+
+		//デバッグ表示
+		//プレイヤー
+		player->DebugDraw(dxCommon_->GetCommandlist());
+
+		////敵
+		//for (std::unique_ptr<Enemy>& enemy : enemys)
+		//{
+		//	enemy->DebugDraw(dxCommon_->GetCommandlist());
+		//}
+
+		//スプライト描画
+		spriteCommon->PreDraw();
+		if (isMenu) {
+			menu->Draw();
+		}
+
+		if (isHit) {
+			hitsprite->Draw();
+		}
+
+		if (isEnemyAlive == false) {
+			boss->Draw();
+		}
+
+		spriteCommon->PostDraw();
+		break;
 	}
-	//地面の線
-	for (auto& wireobject : wireobjects) {
-		wireobject->Draw();
-	}
-
-	WireObject::PostDraw();
-
-	//パーティクル
-	for (std::unique_ptr<ParticleManager>& particle : particles)
-	{
-		particle->Draw();
-	}
-
-	//デバッグ表示
-	//プレイヤー
-	player->DebugDraw(dxCommon_->GetCommandlist());
-
-	////敵
-	//for (std::unique_ptr<Enemy>& enemy : enemys)
-	//{
-	//	enemy->DebugDraw(dxCommon_->GetCommandlist());
-	//}
-
-	//スプライト描画
-	spriteCommon->PreDraw();
-	if (isMenu) {
-		menu->Draw();
-	}
-
-	if (isHit) {
-		hitsprite->Draw();
-	}
-
-	if (isEnemyAlive == false) {
-		boss->Draw();
-	}
-
-	spriteCommon->PostDraw();
 }
 
 void GameScene::AllCollision()
