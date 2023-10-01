@@ -403,6 +403,10 @@ void GameScene::Update()
 				}
 			}
 			break;
+		case Clear:
+			if (input_->TriggerKey(DIK_RETURN)) {
+				scene = Title;
+			}
 	}
 
 	
