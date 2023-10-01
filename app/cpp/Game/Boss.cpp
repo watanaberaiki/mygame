@@ -38,13 +38,8 @@ void Boss::Update()
 	//’e‚Ì”­ŽË
 	time++;
 	if (time >= MaxTime) {
-		//ƒvƒŒƒCƒ„[‚Ì— ‚És‚Á‚½‚ç’e‚ðŒ‚‚½‚È‚­‚È‚é
-		if (player->GetPosition().z < position.z) {
-			if (position.z - player->GetPosition().z <= 40.0f) {
-				Fire();
-				time = 0;
-			}
-		}
+		Fire();
+		time = 0;
 	}
 	//’e
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
@@ -70,6 +65,11 @@ void Boss::Update()
 	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
+
+	if (life <= 0) {
+		isdead = true;
+	}
+
 }
 
 void Boss::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -116,5 +116,5 @@ void Boss::Fire()
 
 void Boss::OnCollision()
 {
-	isdead = true;
+	life--;
 }

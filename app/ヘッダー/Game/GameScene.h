@@ -22,6 +22,7 @@
 #include"ResourceManager.h"
 #include"EnemyBullet.h"
 #include"CSVLoader.h"
+#include"Boss.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
@@ -31,7 +32,8 @@ struct LevelData;
 enum Scene {
 	Title,
 	Game,
-	Boss
+	BossFight,
+	Clear
 };
 class GameScene
 {
@@ -65,7 +67,6 @@ private:
 	Sprite* hitsprite = new Sprite();
 	Sprite* mariosprite = new Sprite();
 	Sprite* menu = new Sprite();
-	Sprite* boss = new Sprite();
 
 
 	/*OBJからモデルデータを読み込む*/
@@ -109,6 +110,9 @@ private:
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
 	Player* player = nullptr;
+
+	//ボス
+	Boss* boss = nullptr;
 	////マップ用
 	int enemycount = 0;
 

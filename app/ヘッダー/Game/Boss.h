@@ -30,6 +30,7 @@ public://メンバ関数
 
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
+	void SetPositionZ(float positionz) { this->position.z = positionz; }
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 	void SetType(int type) { this->type = type; }
@@ -94,5 +95,8 @@ private://メンバ変数
 	Vector3 velocityvec;
 	XMFLOAT3 velocity;
 
+
+	//hp
+	int life = 10;
 };
 
