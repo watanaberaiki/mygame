@@ -22,12 +22,19 @@
 #include"ResourceManager.h"
 #include"EnemyBullet.h"
 #include"CSVLoader.h"
+#include"Boss.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
 #include<utility>
 #pragma warning(pop)
 struct LevelData;
+enum Scene {
+	Title,
+	Game,
+	BossFight,
+	Clear
+};
 class GameScene
 {
 //メンバ関数
@@ -60,6 +67,7 @@ private:
 	Sprite* hitsprite = new Sprite();
 	Sprite* mariosprite = new Sprite();
 	Sprite* menu = new Sprite();
+
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -102,6 +110,9 @@ private:
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
 	Player* player = nullptr;
+
+	//ボス
+	Boss* boss = nullptr;
 	////マップ用
 	int enemycount = 0;
 
@@ -128,8 +139,14 @@ private:
 	double maxTime = 50.0;
 	double start = -WinApp::window_width/2;
 	double end = WinApp::window_width / 2;
+	int menunum = 0;
 
 	//地面
 	Object3d* floorobj = nullptr;
+
+	//シーン切り替え
+	Scene scene = Title;
+	bool isEnemyAlive = true;
+
 };
 

@@ -8,13 +8,6 @@
 
 #pragma comment (lib,"d3dcompiler.lib")
 
-enum Scene {
-	title,
-	game,
-	clear,
-	gameover
-};
-
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//　基盤システムの初期化

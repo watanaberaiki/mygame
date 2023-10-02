@@ -178,6 +178,7 @@
     <ClCompile Include="app\cpp\Base\Vector3.cpp" />
     <ClCompile Include="app\cpp\Base\WinApp.cpp" />
     <ClCompile Include="app\cpp\3D\WireObject.cpp" />
+    <ClCompile Include="app\cpp\Game\Boss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -312,6 +313,7 @@
     <ClInclude Include="app\ヘッダー\Base\Vector3.h" />
     <ClInclude Include="app\ヘッダー\Base\WinApp.h" />
     <ClInclude Include="app\ヘッダー\3D\WireObject.h" />
+    <ClInclude Include="app\ヘッダー\Game\Boss.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
