@@ -105,7 +105,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Boss::SetDxCommon(dxCommon);
 	boss = new Boss();
 	boss->Initialize();
-	boss->SetRotation(XMFLOAT3(0,0,0));
+	boss->SetRotation(XMFLOAT3(0, 0, 0));
 	boss->SetScale(XMFLOAT3(0.1f, 0.4f, 0.1f));
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
@@ -127,7 +127,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//モデルデータをマップに入れる
 	models.insert(std::make_pair("floor", resorcemanager->LoadObj("floor")));
-	models.insert(std::make_pair("line",resorcemanager->LoadObj("line")));
+	models.insert(std::make_pair("line", resorcemanager->LoadObj("line")));
 
 	menu->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
@@ -201,7 +201,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		lineObject[i] = new LineObject();
 		lineObject[i]->Initialize();
 		lineObject[i]->SetModel(linemodel);
-		lineObject[i]->SetPosition(XMFLOAT3(0.5f, -2.9f,(float)10.0f*i));
+		lineObject[i]->SetPosition(XMFLOAT3(0.5f, -2.9f, (float)10.0f * i));
 		lineObject[i]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 	}
 }
@@ -325,91 +325,91 @@ void GameScene::Update()
 
 				//ボス
 				boss->SetPosition(player->GetPosition());
-				boss->SetPositionZ(player->GetPosition().z+10.0f);
+				boss->SetPositionZ(player->GetPosition().z + 10.0f);
 
 			}
 
 		}
 		break;
 		//ボス戦
-		case BossFight:
-			if (isMenu) {
-				menu->Update();
+	case BossFight:
+		if (isMenu) {
+			menu->Update();
 
 
-				//メニューから戻るとき
-				if (backMenu) {
-					menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
-					if (backtime < maxTime) {
-						backtime++;
-					}
+			//メニューから戻るとき
+			if (backMenu) {
+				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
+				if (backtime < maxTime) {
+					backtime++;
 				}
-				else {
-					menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
-					if (time < maxTime) {
-						time++;
-					}
-				}
-				if (input_->TriggerKey(DIK_SPACE)) {
-					if (time == maxTime) {
-						time = 0;
-						backMenu = true;
-					}
-				}
-				if (backMenu) {
-					if (backtime == maxTime) {
-						isMenu = false;
-						backMenu = false;
-						backtime = 0;
-					}
-				}
-
 			}
 			else {
-				//メニュー
-				if (input_->TriggerKey(DIK_M)) {
-					menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
-					isMenu = true;
-					time = 0;
-				}
-				//仮のシーンチェンジ
-				if (input_->TriggerKey(DIK_RETURN)) {
-					scene = Title;
-				}
-
-				//地面
-				for (auto& object : objects) {
-					object->Update();
-				}
-				for (auto& wireobject : wireobjects) {
-					wireobject->Update();
-				}
-				for (int i = 0; i < maxLine; i++) {
-					lineObject[i]->Update();
-				}
-				//パーティクル
-				for (std::unique_ptr<ParticleManager>& particle : particles)
-				{
-					particle->Update();
-				}
-
-				player->Update();
-				boss->Update();
-				AllCollision();
-
-				//ボスの死亡
-				if (boss->GetisDead()) {
-					scene = Clear;
+				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				if (time < maxTime) {
+					time++;
 				}
 			}
-			break;
-		case Clear:
+			if (input_->TriggerKey(DIK_SPACE)) {
+				if (time == maxTime) {
+					time = 0;
+					backMenu = true;
+				}
+			}
+			if (backMenu) {
+				if (backtime == maxTime) {
+					isMenu = false;
+					backMenu = false;
+					backtime = 0;
+				}
+			}
+
+		}
+		else {
+			//メニュー
+			if (input_->TriggerKey(DIK_M)) {
+				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				isMenu = true;
+				time = 0;
+			}
+			//仮のシーンチェンジ
 			if (input_->TriggerKey(DIK_RETURN)) {
 				scene = Title;
 			}
+
+			//地面
+			for (auto& object : objects) {
+				object->Update();
+			}
+			for (auto& wireobject : wireobjects) {
+				wireobject->Update();
+			}
+			for (int i = 0; i < maxLine; i++) {
+				lineObject[i]->Update();
+			}
+			//パーティクル
+			for (std::unique_ptr<ParticleManager>& particle : particles)
+			{
+				particle->Update();
+			}
+
+			player->Update();
+			boss->Update();
+			AllCollision();
+
+			//ボスの死亡
+			if (boss->GetisDead()) {
+				scene = Clear;
+			}
+		}
+		break;
+	case Clear:
+		if (input_->TriggerKey(DIK_RETURN)) {
+			scene = Title;
+		}
 	}
 
-	
+
 }
 
 void GameScene::Draw()
@@ -477,7 +477,7 @@ void GameScene::Draw()
 
 		spriteCommon->PostDraw();
 		break;
-	//ボス戦
+		//ボス戦
 	case BossFight:
 		//オブジェクト描画
 		Object3d::PreDraw(dxCommon_->GetCommandlist());
@@ -496,7 +496,7 @@ void GameScene::Draw()
 
 		//ワイヤーオブジェクト描画
 		WireObject::PreDraw(dxCommon_->GetCommandlist());
-		
+
 		boss->Draw(dxCommon_->GetCommandlist());
 
 		//地面の線
@@ -535,7 +535,7 @@ void GameScene::Draw()
 
 		break;
 	}
-	
+
 }
 
 void GameScene::AllCollision()
@@ -618,7 +618,7 @@ void GameScene::AllCollision()
 void GameScene::Particle(XMFLOAT3 pos)
 {
 	XMFLOAT3 posA = pos;
-	posA.z += 5; 
+	posA.z += 5;
 	//パーティクル
 	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	newparticle->Initialize("line.png");
