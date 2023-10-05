@@ -116,10 +116,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteCommon->LoadTexture(1, "mario.jpg");
 	spriteCommon->LoadTexture(2, "menu.png");
 	spriteCommon->LoadTexture(3, "boss.png");
+	spriteCommon->LoadTexture(4, "title.png");
 	//スプライトにテクスチャ割り当て
 	hitsprite->Initialize(spriteCommon, 0);
 	mariosprite->Initialize(spriteCommon, 1);
 	menu->Initialize(spriteCommon, 2);
+	title->Initialize(spriteCommon, 4);
 	//スプライト初期位置
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();
@@ -211,8 +213,68 @@ void GameScene::Update()
 	switch (scene)
 	{
 	case Title:
-		if (input_->TriggerKey(DIK_RETURN)) {
-			scene = Game;
+		//地面
+		for (auto& object : objects) {
+			object->Update();
+		}
+		for (auto& wireobject : wireobjects) {
+			wireobject->Update();
+		}
+
+		/*for (int i = 0; i < maxLine; i++) {
+			lineObject[i]->Update();
+		}*/
+
+		//スプライト
+		title->Update();
+		
+
+		//パーティクル
+		partpos = eye;
+		partpos.y = eye.y + 5;
+		partpos.z = eye.z + 2;
+		particletime++;
+		if (particleMaxtime <= particletime) {
+			TitleParticle(partpos);
+			particletime = 0;
+		}
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Update();
+		}
+
+
+
+		//ゲームシーンへのシーンチェンジ
+		if (input_->TriggerKey(DIK_SPACE)) {
+			isstart = true;
+			
+		}
+
+		if (isstart) {
+			title->SetSize(XMFLOAT2((float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX,totaltime), (float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)));
+			title->SetPosition(XMFLOAT2((float)easeOutQuad(startMaxTime, startpos, end - startpos, totaltime), (float)easeOutQuad(startMaxTime, startpos, endposY - startpos, totaltime)));
+			if (startMaxTime >= totaltime) {
+				totaltime += 1;
+			}
+			else if (startMaxTime < totaltime) {
+				//プレイヤー
+				player->SetPositionZ(eye.z + 4.0f);
+				//スケールがだんだん元の大きさになる
+				directionscale = (float)easeOutQuad(playerDirectionMaxTime, startscale, endscale - startscale, playerDirectionTime);
+				player->SetScale(XMFLOAT3(directionscale, directionscale, directionscale));
+				//プレイヤーが動かないように判定を送る
+				player->SetIsStart(isstart);
+				player->Update();
+				if (playerDirectionMaxTime>=playerDirectionTime) {
+					playerDirectionTime += 1;
+				}
+				else if (playerDirectionMaxTime < playerDirectionTime) {
+					scene = Game;
+					isstart = false;
+				}
+			}
+
 		}
 
 		break;
@@ -282,6 +344,8 @@ void GameScene::Update()
 
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
+				//プレイヤーが動くように判定を送る
+				player->SetIsStart(isstart);
 				player->Update();
 
 				//敵
@@ -290,7 +354,7 @@ void GameScene::Update()
 					enemy->Update();
 					//死んだ際のパーティクル
 					if (enemy->GetisDead()) {
-						Particle(enemy->GetPos());
+						EnemyParticle(enemy->GetPos());
 					}
 				}
 				//敵の死んだ処理
@@ -417,6 +481,48 @@ void GameScene::Draw()
 	switch (scene)
 	{
 	case Title:
+		//オブジェクト描画
+		Object3d::PreDraw(dxCommon_->GetCommandlist());
+
+		//プレイヤー
+		player->Draw(dxCommon_->GetCommandlist());
+
+		////地面
+		for (auto& object : objects) {
+			object->Draw();
+		}
+
+		/*for (int i = 0; i < maxLine; i++) {
+			lineObject[i]->Draw(dxCommon_->GetCommandlist());
+		}*/
+
+		Object3d::PostDraw();
+
+		//ワイヤーオブジェクト描画
+		WireObject::PreDraw(dxCommon_->GetCommandlist());
+
+		//プレイヤー
+		player->WireDraw();
+
+		//地面の線
+		for (auto& wireobject : wireobjects) {
+			wireobject->Draw();
+		}
+
+		WireObject::PostDraw();
+
+		//パーティクル
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Draw();
+		}
+
+		//スプライト
+		spriteCommon->PreDraw();
+
+		title->Draw();
+
+		spriteCommon->PostDraw();
 
 		break;
 	case Game:
@@ -437,6 +543,11 @@ void GameScene::Draw()
 
 		//ワイヤーオブジェクト描画
 		WireObject::PreDraw(dxCommon_->GetCommandlist());
+
+		//プレイヤー
+		player->WireDraw();
+
+
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys)
 		{
@@ -615,7 +726,7 @@ void GameScene::AllCollision()
 
 }
 
-void GameScene::Particle(XMFLOAT3 pos)
+void GameScene::EnemyParticle(XMFLOAT3 pos)
 {
 	XMFLOAT3 posA = pos;
 	posA.z += 5;
@@ -651,6 +762,53 @@ void GameScene::Particle(XMFLOAT3 pos)
 		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		//追加
 		newparticle->Add(20, pos, vel, acc, 1.0f, 0.0f, color);
+	}
+	newparticle->Update();
+	particles.push_back(std::move(newparticle));
+}
+
+void GameScene::TitleParticle(XMFLOAT3 pos)
+{
+	//パーティクル
+	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");
+	newparticle->SetEmitterPos(pos);
+	for (int i = 0; i < 3; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 15.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos / 2.0f;
+
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = -rnd_vel;
+		//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc = 0.001f;
+		XMFLOAT3 acc{};
+		//acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		//色
+		const float rnd_color = 1.0f;
+		XMFLOAT4 color{  };
+		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+
+		//時間
+		const int rnd_life = 80;
+		int life = 0;
+		life = rand() % rnd_life + 1;
+		life += 20;
+
+		//追加
+		newparticle->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
 	}
 	newparticle->Update();
 	particles.push_back(std::move(newparticle));

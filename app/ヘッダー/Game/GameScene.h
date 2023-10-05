@@ -49,8 +49,10 @@ public:
 	void Draw();
 	//判定一覧
 	void AllCollision();
-	//パーティクル処理
-	void Particle(XMFLOAT3 pos);
+	//敵のパーティクル処理
+	void EnemyParticle(XMFLOAT3 pos);
+	//タイトルシーンのパーティクル処理
+	void TitleParticle(XMFLOAT3 pos);
 	//イージング
 	double easeOutQuad(double time,double start,double difference,double totaltime);
 private:
@@ -67,7 +69,7 @@ private:
 	Sprite* hitsprite = new Sprite();
 	Sprite* mariosprite = new Sprite();
 	Sprite* menu = new Sprite();
-
+	Sprite* title = new Sprite();
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -123,7 +125,7 @@ private:
 	static const int maxLine = 10;
 	LineModel* linemodel = nullptr;
 	LineObject* lineObject[maxLine] = {};
-
+	
 	ResourceManager* resorcemanager = nullptr;
 
 	//判定をまとめて管理
@@ -148,5 +150,28 @@ private:
 	Scene scene = Title;
 	bool isEnemyAlive = true;
 
+	//タイトルパーティクル用
+	XMFLOAT3 partpos = {};
+	int particletime = 0;
+	const int particleMaxtime = 5;
+
+	//スタート演出用
+	bool isstart = false;
+	double totaltime = 0.0;
+	double startMaxTime = 40.0;
+	double startsizeX = 1280;
+	double startsizeY = 720;
+	double endsize =0;
+
+	double startpos = 0;
+	double endposx = WinApp::window_width / 2;
+	double endposY = WinApp::window_height / 2;
+
+	//自機登場演出
+	double playerDirectionTime = 0;
+	double playerDirectionMaxTime = 50;
+	double startscale = 0;
+	double endscale = 0.1;
+	float directionscale = 0;
 };
 

@@ -13,6 +13,7 @@
 #include"LineObject.h"
 #include<DirectXMath.h>
 #include"Vector3.h"
+#include"WireObject.h"
 class Player
 {
 public://メンバ関数
@@ -22,6 +23,8 @@ public://メンバ関数
 	void Update();
 	//描画処理
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//ワイヤーフレーム
+	void WireDraw();
 	//当たり判定
 	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
 	//動き
@@ -35,8 +38,9 @@ public://メンバ関数
 	//セッター
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 	void SetPositionZ(float positionz) { this->position.z = positionz; }
-	void SetScale(XMFLOAT3 scale) { this->position = scale; }
-	void SetRotation(XMFLOAT3 rotation) { this->position = rotation; }
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+	void SetIsStart(bool isstart) { this->isstart = isstart; }
 	static void SetInput(Input* input) { Player::input = input; }
 	static void SetDxCommon(DirectXCommon* dxcommon) { Player::dxcommon = dxcommon; }
 	//ゲッター
@@ -68,7 +72,7 @@ private://メンバ変数
 	//3Dモデル
 	Model* playermodel = nullptr;
 	//3Dオブジェクト
-	Object3d* playerobj = nullptr;
+	WireObject* playerobj = nullptr;
 
 	//判定用
 	CubeModel* cubeModel = nullptr;
@@ -92,5 +96,8 @@ private://メンバ変数
 	Vector3 frontVec;
 	Vector3 backVec;
 	XMFLOAT3 velocity;
+
+	//スタート演出中に動かせないようにする
+	bool isstart = false;
 };
 

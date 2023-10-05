@@ -772,4 +772,6 @@ void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT
 	p.accel = accel;
 	p.num_frame = life;
 	p.color = color;
+	p.s_scale = start_scale;
+	p.e_scale = end_scale;
 }

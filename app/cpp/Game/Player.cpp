@@ -13,8 +13,8 @@ void Player::Initialize()
 
 
 	//3dオブジェクト
-	playermodel = Model::LoadFromObj("bluecube");
-	playerobj = Object3d::Create();
+	playermodel = Model::LoadFromObj("block");
+	playerobj = WireObject::Create();
 	playerobj->SetModel(playermodel);
 
 	//当たり判定キューブモデル
@@ -114,8 +114,7 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	////fbx
 	//playerfbxobj->Draw(cmdList);
 
-	//オブジェクト
-	playerobj->Draw();
+
 
 	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
@@ -124,6 +123,12 @@ void Player::Draw(ID3D12GraphicsCommandList* cmdList)
 	}
 
 
+}
+
+void Player::WireDraw()
+{
+	//オブジェクト
+	playerobj->Draw();
 }
 
 void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
@@ -143,31 +148,36 @@ void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 void Player::Move()
 {
-	//キーボードでの移動
-	if (input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
-		if (input->PushKey(DIK_W)) {
-			if (position.y < 1.5) {
-				position.y += 0.1f;
+	if (isstart == false) {
+		//キーボードでの移動
+		if (input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
+			if (input->PushKey(DIK_W)) {
+				if (position.y < 1.5) {
+					position.y += 0.1f;
+				}
+			}
+			else if (input->PushKey(DIK_S)) {
+				if (position.y > -1.5) {
+					position.y -= 0.1f;
+				}
 			}
 		}
-		else if (input->PushKey(DIK_S)) {
-			if (position.y > -1.5) {
-				position.y -= 0.1f;
+
+		if (input->PushKey(DIK_A) || input->PushKey(DIK_D)) {
+			if (input->PushKey(DIK_A)) {
+				if (position.x > -2.5) {
+					position.x -= 0.1f;
+				}
+			}
+			else if (input->PushKey(DIK_D)) {
+				if (position.x < 2.5) {
+					position.x += 0.1f;
+				}
 			}
 		}
 	}
+	else {
 
-	if (input->PushKey(DIK_A) || input->PushKey(DIK_D)) {
-		if (input->PushKey(DIK_A)) {
-			if (position.x > -2.5) {
-				position.x -= 0.1f;
-			}
-		}
-		else if (input->PushKey(DIK_D)) {
-			if (position.x < 2.5) {
-				position.x += 0.1f;
-			}
-		}
 	}
 
 }
