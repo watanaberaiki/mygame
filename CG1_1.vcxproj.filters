@@ -1,87 +1,253 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Resources\shaders\BasicGS.hlsl" />
-    <FxCompile Include="Resources\shaders\BasicPS.hlsl" />
-    <FxCompile Include="Resources\shaders\BasicVS.hlsl" />
-    <FxCompile Include="Resources\shaders\FBXPS.hlsl" />
-    <FxCompile Include="Resources\shaders\FBXVS.hlsl" />
-    <FxCompile Include="Resources\shaders\OBJPS.hlsl" />
-    <FxCompile Include="Resources\shaders\OBJVS.hlsl" />
-    <FxCompile Include="Resources\shaders\ParticleGS.hlsl" />
-    <FxCompile Include="Resources\shaders\ParticlePS.hlsl" />
-    <FxCompile Include="Resources\shaders\ParticleVS.hlsl" />
-    <FxCompile Include="Resources\shaders\PixelShader.hlsl" />
-    <FxCompile Include="Resources\shaders\SpritePS.hlsl" />
-    <FxCompile Include="Resources\shaders\SpriteVS.hlsl" />
-    <FxCompile Include="Resources\shaders\VertexShader.hlsl" />
+    <FxCompile Include="Resources\shaders\BasicGS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\BasicPS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\BasicVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\OBJPS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\OBJVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleGS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PixelShader.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticlePS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpritePS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpriteVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\VertexShader.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\FBXVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\FBXPS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="app\cpp\Base\Camera.cpp" />
-    <ClCompile Include="app\cpp\Base\CSVLoader.cpp" />
-    <ClCompile Include="app\cpp\3D\CubeModel.cpp" />
-    <ClCompile Include="app\cpp\3D\CubeObject3D.cpp" />
-    <ClCompile Include="app\cpp\Base\DirectXCommon.cpp" />
-    <ClCompile Include="app\cpp\Game\Enemy.cpp" />
-    <ClCompile Include="app\cpp\Game\EnemyBullet.cpp" />
-    <ClCompile Include="app\cpp\3D\FbxLoader.cpp" />
-    <ClCompile Include="app\cpp\3D\FbxModel.cpp" />
-    <ClCompile Include="app\cpp\3D\FbxObject3D.cpp" />
-    <ClCompile Include="app\cpp\Game\GameScene.cpp" />
-    <ClCompile Include="app\cpp\Base\Input.cpp" />
-    <ClCompile Include="app\cpp\Base\LoadFile.cpp" />
-    <ClCompile Include="app\cpp\3D\LineModel.cpp" />
-    <ClCompile Include="app\cpp\3D\LineObject.cpp" />
-    <ClCompile Include="app\cpp\Base\main.cpp" />
-    <ClCompile Include="app\cpp\3D\Model.cpp" />
-    <ClCompile Include="app\cpp\3D\Object3d.cpp" />
-    <ClCompile Include="app\cpp\2D\ParticleManager.cpp" />
-    <ClCompile Include="app\cpp\Game\Player.cpp" />
-    <ClCompile Include="app\cpp\Game\PlayerBullet.cpp" />
-    <ClCompile Include="app\cpp\Base\ResourceManager.cpp" />
-    <ClCompile Include="app\cpp\2D\Sprite.cpp" />
-    <ClCompile Include="app\cpp\2D\SpriteCommon.cpp" />
-    <ClCompile Include="app\cpp\Base\Vector3.cpp" />
-    <ClCompile Include="app\cpp\Base\WinApp.cpp" />
-    <ClCompile Include="app\cpp\3D\WireObject.cpp" />
-    <ClCompile Include="app\cpp\Game\Boss.cpp" />
+    <ClCompile Include="app\cpp\Base\Boss.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\Camera.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\CSVLoader.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\CubeModel.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\CubeObject3D.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\DirectXCommon.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\Enemy.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\EnemyBullet.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\FbxLoader.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\FbxModel.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\FbxObject3D.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\GameScene.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\Input.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\LineModel.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\LineObject.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\LoadFile.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\main.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\Model.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\Object3d.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\2D\ParticleManager.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\Player.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\PlayerBullet.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\ResourceManager.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\2D\Sprite.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\2D\SpriteCommon.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\Vector3.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\Base\WinApp.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="app\cpp\3D\WireObject.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app\ヘッダー\Base\Camera.h" />
-    <ClInclude Include="app\ヘッダー\Base\CSVLoader.h" />
-    <ClInclude Include="app\ヘッダー\3D\CubeModel.h" />
-    <ClInclude Include="app\ヘッダー\3D\CubeObject3D.h" />
-    <ClInclude Include="app\ヘッダー\Base\DirectXCommon.h" />
-    <ClInclude Include="app\ヘッダー\Game\Enemy.h" />
-    <ClInclude Include="app\ヘッダー\Game\EnemyBullet.h" />
-    <ClInclude Include="app\ヘッダー\3D\FbxLoader.h" />
-    <ClInclude Include="app\ヘッダー\3D\FbxModel.h" />
-    <ClInclude Include="app\ヘッダー\3D\FbxObject3D.h" />
-    <ClInclude Include="app\ヘッダー\Base\Input.h" />
-    <ClInclude Include="app\ヘッダー\Base\json.hpp" />
-    <ClInclude Include="app\ヘッダー\Base\LoadFile.h" />
-    <ClInclude Include="app\ヘッダー\3D\LineModel.h" />
-    <ClInclude Include="app\ヘッダー\3D\LineObject.h" />
-    <ClInclude Include="app\ヘッダー\3D\Model.h" />
-    <ClInclude Include="app\ヘッダー\3D\Object3d.h" />
-    <ClInclude Include="app\ヘッダー\2D\ParticleManager.h" />
-    <ClInclude Include="app\ヘッダー\Game\Player.h" />
-    <ClInclude Include="app\ヘッダー\Game\PlayerBullet.h" />
-    <ClInclude Include="app\ヘッダー\Base\ResourceManager.h" />
-    <ClInclude Include="app\ヘッダー\2D\Sprite.h" />
-    <ClInclude Include="app\ヘッダー\2D\SpriteCommon.h" />
-    <ClInclude Include="app\ヘッダー\Base\Vector3.h" />
-    <ClInclude Include="app\ヘッダー\Base\WinApp.h" />
-    <ClInclude Include="app\ヘッダー\3D\WireObject.h" />
-    <ClInclude Include="app\ヘッダー\Game\GameScene.h" />
-    <ClInclude Include="app\ヘッダー\Game\Boss.h" />
+    <ClInclude Include="app\ヘッダー\Base\Boss.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\Camera.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\CSVLoader.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\CubeModel.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\CubeObject3D.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\DirectXCommon.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\EnemyBullet.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\FbxLoader.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\Enemy.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\FbxModel.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\FbxObject3D.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\GameScene.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\Input.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\LineModel.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\json.hpp">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\LineObject.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\Model.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\LoadFile.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\Object3d.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\2D\ParticleManager.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\Player.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\PlayerBullet.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\2D\Sprite.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\ResourceManager.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\2D\SpriteCommon.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\Vector3.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\Base\WinApp.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\ヘッダー\3D\WireObject.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="app\header\2D\ParticleManager.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\shaders\Basic.hlsli" />
-    <None Include="Resources\shaders\FBX.hlsli" />
-    <None Include="Resources\shaders\OBJ.hlsli" />
-    <None Include="Resources\shaders\Particle.hlsli" />
-    <None Include="Resources\shaders\ShaderHeader.hlsli" />
-    <None Include="Resources\shaders\Sprite.hlsli" />
+    <None Include="Resources\shaders\Basic.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\Particle.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\ShaderHeader.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\Sprite.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\OBJ.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\FBX.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ソースファイル">
+      <UniqueIdentifier>{5d66b751-f2a3-4d64-9758-8104c32bea47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダーファイル">
+      <UniqueIdentifier>{f2592d87-19cc-425a-9f60-0f46686dc603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル">
+      <UniqueIdentifier>{0ecfed74-7574-4629-872c-8c2d3128e680}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -8,66 +8,66 @@
 
 #pragma comment (lib,"d3dcompiler.lib")
 
-//WindowsƒAƒvƒŠ‚Å‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg(mainŠÖ”)
+//Windowsã‚¢ãƒ—ãƒªã§ã®ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ(mainé–¢æ•°)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
-	//@Šî”ÕƒVƒXƒeƒ€‚Ì‰Šú‰»
-	//ƒ|ƒCƒ“ƒ^
+	//ã€€åŸºç›¤ã‚·ã‚¹ãƒ†ãƒ ã®åˆæœŸåŒ–
+	//ãƒã‚¤ãƒ³ã‚¿
 	Input* input = nullptr;
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 
 
-	//WindowsAPI‚Ì‰Šú‰»
+	//WindowsAPIã®åˆæœŸåŒ–
 	winApp = new WinApp();
 	winApp->Initialize();
 
 #ifdef _DEBUG
 	ID3D12Debug1* debugController = nullptr;
 	if(SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
-		//ƒfƒoƒbƒOƒŒƒCƒ„[‚ğ—LŒø‚É‚·‚é
+		//ãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 		debugController->EnableDebugLayer();
-		//‚³‚ç‚ÉGPU‘¤‚Å‚àƒ`ƒFƒbƒN‚ğs‚¦‚é‚æ‚¤‚É‚·‚é
+		//ã•ã‚‰ã«GPUå´ã§ã‚‚ãƒã‚§ãƒƒã‚¯ã‚’è¡Œãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
 		debugController->SetEnableGPUBasedValidation(TRUE);
 	}
 #endif
-	//DirectX‚Ì‰Šú‰»
+	//DirectXã®åˆæœŸåŒ–
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
 #ifdef  _DEBUG
 	ID3D12InfoQueue* infoQueue = nullptr;
 	if (SUCCEEDED(dxCommon->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
-		//ƒ„ƒo‚¢ƒGƒ‰[‚É~‚Ü‚é
+		//ãƒ¤ãƒã„ã‚¨ãƒ©ãƒ¼æ™‚ã«æ­¢ã¾ã‚‹
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-		//ƒGƒ‰[‚É~‚Ü‚é
+		//ã‚¨ãƒ©ãƒ¼æ™‚ã«æ­¢ã¾ã‚‹
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		//Œx‚É~‚Ü‚é
+		//è­¦å‘Šæ™‚ã«æ­¢ã¾ã‚‹
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-		//‰ğ•ú
+		//è§£æ”¾
 		infoQueue->Release();
-		//—}§‚·‚éƒƒbƒZ[ƒW‚ÌID
+		//æŠ‘åˆ¶ã™ã‚‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ID
 		D3D12_MESSAGE_ID denyIds[] = {
-			//Windows11‚Å‚ÌDXGIƒfƒoƒbƒOƒŒƒCƒ„[‚ÆDX12ƒfƒoƒbƒOƒŒƒCƒ„[‚Ì‘ŠŒİì—pƒoƒO‚É‚æ‚éƒGƒ‰[ƒƒbƒZ[ƒW
+			//Windows11ã§ã®DXGIãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨DX12ãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç›¸äº’ä½œç”¨ãƒã‚°ã«ã‚ˆã‚‹ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
 		};
-		//—}§‚·‚éƒŒƒxƒ‹
+		//æŠ‘åˆ¶ã™ã‚‹ãƒ¬ãƒ™ãƒ«
 		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
 		D3D12_INFO_QUEUE_FILTER filter{};
 		filter.DenyList.NumIDs = _countof(denyIds);
 		filter.DenyList.pIDList = denyIds;
 		filter.DenyList.NumSeverities = _countof(severities);
 		filter.DenyList.pSeverityList = severities;
-		//w’è‚µ‚½ƒƒbƒZ[ƒW‚Ì•\¦‚ğ—}§‚·‚é
+		//æŒ‡å®šã—ãŸãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¡¨ç¤ºã‚’æŠ‘åˆ¶ã™ã‚‹
 		infoQueue->PushStorageFilter(&filter);
 	}
 #endif 
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 
 
-	//“ü—Í‚Ì‰Šú‰»
+	//å…¥åŠ›ã®åˆæœŸåŒ–
 	input = new Input();
 	input->Initialize(winApp);
 
-	//3DƒIƒuƒWƒFƒNƒgÃ“I‰Šú‰»
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé™çš„åˆæœŸåŒ–
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 	WireObject::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 
@@ -78,46 +78,46 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	gamescene->Initialize(dxCommon,input);
 
 
-	//Å‰‚ÌƒV[ƒ“‚Ì‰Šú‰»
+	//æœ€åˆã®ã‚·ãƒ¼ãƒ³ã®åˆæœŸåŒ–
 
 #ifdef _DEBUG
 
 #endif
-	//ƒQ[ƒ€ƒ‹[ƒv
+	//ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
 	while (true) {
-		//ƒƒbƒZ[ƒW‚ª‚ ‚éH
+		//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒã‚ã‚‹ï¼Ÿ
 		if (winApp->ProcessMesseage()) {
-			//ƒQ[ƒ€ƒ‹[ƒv‚ğ”²‚¯‚é
+			//ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			break;
 		}
-		//“ü—Í‚ÌXV
+		//å…¥åŠ›ã®æ›´æ–°
 		input->Update();
-		//ƒQ[ƒ€ƒV[ƒ“
+		//ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 		gamescene->Update();
-		//// 4.•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
+		//// 4.æç”»ã‚³ãƒãƒ³ãƒ‰ã“ã“ã‹ã‚‰
 
 		dxCommon->PreDraw();
 		
-		//ƒQ[ƒ€ƒV[ƒ“
+		//ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 		gamescene->Draw();
 
 		dxCommon->PostDraw();
-		// 4.•`‰æƒRƒ}ƒ“ƒh‚±‚±‚Ü‚Å
+		// 4.æç”»ã‚³ãƒãƒ³ãƒ‰ã“ã“ã¾ã§
 	}
-	//“ü—ÍŠJ•ú
+	//å…¥åŠ›é–‹æ”¾
 	delete input;
-	//WindowsAPI‚ÌI—¹ˆ—
+	//WindowsAPIã®çµ‚äº†å‡¦ç†
 	winApp->Finalize();
-	//WindowsAPI‚Ì‰ğ•ú
+	//WindowsAPIã®è§£æ”¾
 	delete winApp;
-	//DirectX‰ğ•ú
+	//DirectXè§£æ”¾
 	delete dxCommon;
-	//GameScene‰ğ•ú
+	//GameSceneè§£æ”¾
 	delete gamescene;
-	//ƒJƒƒ‰‰ğ•ú
+	//ã‚«ãƒ¡ãƒ©è§£æ”¾
 	/*delete camera;*/
 	FbxLoader::GetInstance()->Finalize();
-	//Šî”ÕƒVƒXƒeƒ€‚ÌI—¹
+	//åŸºç›¤ã‚·ã‚¹ãƒ†ãƒ ã®çµ‚äº†
 
 	return 0;
 }

@@ -1,28 +1,28 @@
 #include "Input.h"
 
-void Input::Initialize(WinApp* winApp)
+void Input::Initialize(WinApp* winApp_)
 {
-	//Ø‚è‚Ä‚«‚½WinApp‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‹L˜^
-	this->winApp = winApp;
+	//å€Ÿã‚Šã¦ããŸWinAppã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¨˜éŒ²
+	this->winApp = winApp_;
 
 	HRESULT result;
 
-	// DirectInput‚Ì‰Šú‰»
+	// DirectInputã®åˆæœŸåŒ–
 	ComPtr<IDirectInput8> directInput = nullptr;
 	result = DirectInput8Create(
 		winApp->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
-	// ƒL[ƒ{[ƒhƒfƒoƒCƒX‚Ì¶¬
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆ
 	
 	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result));
 
-	// “ü—Íƒf[ƒ^Œ`®‚ÌƒZƒbƒg
-	result = keyboard->SetDataFormat(&c_dfDIKeyboard); // •W€Œ`®
+	// å…¥åŠ›ãƒ‡ãƒ¼ã‚¿å½¢å¼ã®ã‚»ãƒƒãƒˆ
+	result = keyboard->SetDataFormat(&c_dfDIKeyboard); // æ¨™æº–å½¢å¼
 	assert(SUCCEEDED(result));
 
-	// ”r‘¼§ŒäƒŒƒxƒ‹‚ÌƒZƒbƒg
+	// æ’ä»–åˆ¶å¾¡ãƒ¬ãƒ™ãƒ«ã®ã‚»ãƒƒãƒˆ
 	result = keyboard->SetCooperativeLevel(
 		winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
@@ -32,18 +32,18 @@ void Input::Update()
 {
 	HRESULT result;
 
-	//‘O‰ñ‚ÌƒL[“ü—Í‚ğ•Û‘¶
+	//å‰å›ã®ã‚­ãƒ¼å…¥åŠ›ã‚’ä¿å­˜
 	memcpy(keyPre, key, sizeof(key));
 
-	// ƒL[ƒ{[ƒhî•ñ‚Ìæ“¾ŠJn
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±ã®å–å¾—é–‹å§‹
 	result=keyboard->Acquire();
-	// ‘SƒL[‚Ì“ü—Íó‘Ô‚ğæ“¾‚·‚é
+	// å…¨ã‚­ãƒ¼ã®å…¥åŠ›çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹
 	result=keyboard->GetDeviceState(sizeof(key), key);
 }
 
 bool Input::PushKey(BYTE keyNumber) 
 {
-	//w’èƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚ê‚Îtrue‚ğ•Ô‚·
+	//æŒ‡å®šã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ã„ã‚Œã°trueã‚’è¿”ã™
 	if (key[keyNumber]) {
 		return true;
 	}

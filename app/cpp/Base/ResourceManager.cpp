@@ -7,7 +7,7 @@ void ResourceManager::Initialize()
 
 FbxModel* ResourceManager::LoadFbx(const string modelName)
 {
-	//読み込まれたテクスチャを参照
+	//隱ｭ縺ｿ霎ｼ縺ｾ繧後◆繝�繧ｯ繧ｹ繝√Ε繧貞盾辣ｧ
 	auto it = fbxmodels.find(modelName);
 	if (it != fbxmodels.end()) {
 		model = it->second;
@@ -21,7 +21,7 @@ FbxModel* ResourceManager::LoadFbx(const string modelName)
 
 Model* ResourceManager::LoadObj(const string modelName)
 {
-	//読み込まれたテクスチャを参照
+	//隱ｭ縺ｿ霎ｼ縺ｾ繧後◆繝�繧ｯ繧ｹ繝√Ε繧貞盾辣ｧ
 	auto it = objmodels.find(modelName);
 	if (it != objmodels.end()) {
 		objmodel = it->second;

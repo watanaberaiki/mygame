@@ -10,17 +10,17 @@ void CSVLoader::LoadCSV(const std::string fileName)
 	rotation.clear();
 	move.clear();
 
-	//ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	std::ifstream file;
 	file.open(fileName);
 	assert(!file.fail());
 
 	std::string line;
 
-	//ƒtƒ@ƒCƒ‹‚©‚çáŠQ•¨‚ÌêŠ‚ğ“Ç‚İ‚İ
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰éšœå®³ç‰©ã®å ´æ‰€ã‚’èª­ã¿è¾¼ã¿
 	while (getline(file, line))
 	{
-		//1s•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+		//1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 		std::istringstream line_stream(line);
 
 		std::string key;
@@ -60,6 +60,6 @@ void CSVLoader::LoadCSV(const std::string fileName)
 			move.emplace_back(move1);
 		}
 	}
-	//ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	file.close();
 }

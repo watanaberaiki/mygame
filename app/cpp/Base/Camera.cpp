@@ -1,13 +1,13 @@
 #include "Camera.h"
 #include"WinApp.h"
-void Camera::Initialize(Input* input) {
-	//“§‹“Š‰e•ÏŠ·s—ñ‚ÌŒvZ
+void Camera::Initialize(Input* input_) {
+	//é€è¦–æŠ•å½±å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 	matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),
 		(float)WinApp::window_width / WinApp::window_height,
 		0.1f, 1000.0f
 	);
-	this->input = input;
+	this->input = input_;
 }
 
 void Camera::Update() {
@@ -42,6 +42,6 @@ void Camera::Update() {
 			target.z -= 1.0;
 		}
 	}*/
-	//ƒrƒ…[•ÏŠ·s—ñ‚ÌŒvZ
+	//ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 }
