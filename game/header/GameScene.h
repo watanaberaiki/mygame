@@ -70,6 +70,7 @@ private:
 	Sprite* mariosprite = new Sprite();
 	Sprite* menu = new Sprite();
 	Sprite* title = new Sprite();
+	Sprite* startsprite = new Sprite();
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル

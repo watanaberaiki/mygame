@@ -117,11 +117,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteCommon->LoadTexture(2, "menu.png");
 	spriteCommon->LoadTexture(3, "boss.png");
 	spriteCommon->LoadTexture(4, "title.png");
+	spriteCommon->LoadTexture(5, "start.png");
 	//スプライトにテクスチャ割り当て
 	hitsprite->Initialize(spriteCommon, 0);
 	mariosprite->Initialize(spriteCommon, 1);
 	menu->Initialize(spriteCommon, 2);
 	title->Initialize(spriteCommon, 4);
+	startsprite->Initialize(spriteCommon, 5);
 	//スプライト初期位置
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();
@@ -228,6 +230,7 @@ void GameScene::Update()
 		//スプライト
 		title->Update();
 		
+		startsprite->Update();
 
 		//パーティクル
 		partpos = eye;
@@ -254,6 +257,10 @@ void GameScene::Update()
 		if (isstart) {
 			title->SetSize(XMFLOAT2((float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX,totaltime), (float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)));
 			title->SetPosition(XMFLOAT2((float)easeOutQuad(startMaxTime, startpos, end - startpos, totaltime), (float)easeOutQuad(startMaxTime, startpos, endposY - startpos, totaltime)));
+
+			startsprite->SetSize(XMFLOAT2((float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX, totaltime), (float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)));
+			startsprite->SetPosition(XMFLOAT2((float)easeOutQuad(startMaxTime, startpos, end - startpos, totaltime), (float)easeOutQuad(startMaxTime, startpos, endposY - startpos, totaltime)));
+
 			if (startMaxTime >= totaltime) {
 				totaltime += 1;
 			}
@@ -521,6 +528,8 @@ void GameScene::Draw()
 		spriteCommon->PreDraw();
 
 		title->Draw();
+
+		startsprite->Draw();
 
 		spriteCommon->PostDraw();
 
