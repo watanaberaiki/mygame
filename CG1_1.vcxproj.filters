@@ -131,9 +131,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app\ヘッダー\Base\Boss.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="app\ヘッダー\Base\Camera.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>

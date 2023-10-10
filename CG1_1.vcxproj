@@ -252,7 +252,6 @@
     <ClInclude Include="app\ヘッダー\Base\Vector3.h" />
     <ClInclude Include="app\ヘッダー\Base\WinApp.h" />
     <ClInclude Include="app\ヘッダー\3D\WireObject.h" />
-    <ClInclude Include="app\ヘッダー\Base\Boss.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Extermal\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

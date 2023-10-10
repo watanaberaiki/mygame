@@ -198,6 +198,8 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 
 void Sprite::Update() {
 
+	HRESULT result = {};
+
 	ID3D12Resource* textureBuffer = spriteCommon_->GetTextureBuffer(textureIndex_);
 	if (textureBuffer)
 	{
@@ -239,7 +241,7 @@ void Sprite::Update() {
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	Vertex* vertMap = nullptr;
-	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
 	for (int i = 0; i < _countof(vertices); i++) {
