@@ -224,39 +224,39 @@
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app\header\2D\ParticleManager.h" />
-    <ClInclude Include="app\ヘッダー\Base\Camera.h" />
-    <ClInclude Include="app\ヘッダー\Base\CSVLoader.h" />
-    <ClInclude Include="app\ヘッダー\3D\CubeModel.h" />
-    <ClInclude Include="app\ヘッダー\3D\CubeObject3D.h" />
-    <ClInclude Include="app\ヘッダー\Base\DirectXCommon.h" />
-    <ClInclude Include="app\ヘッダー\Base\Enemy.h" />
-    <ClInclude Include="app\ヘッダー\Base\EnemyBullet.h" />
-    <ClInclude Include="app\ヘッダー\3D\FbxLoader.h" />
-    <ClInclude Include="app\ヘッダー\3D\FbxModel.h" />
-    <ClInclude Include="app\ヘッダー\3D\FbxObject3D.h" />
-    <ClInclude Include="app\ヘッダー\Base\Input.h" />
-    <ClInclude Include="app\ヘッダー\Base\json.hpp" />
-    <ClInclude Include="app\ヘッダー\Base\LoadFile.h" />
-    <ClInclude Include="app\ヘッダー\3D\LineModel.h" />
-    <ClInclude Include="app\ヘッダー\3D\LineObject.h" />
-    <ClInclude Include="app\ヘッダー\3D\Model.h" />
-    <ClInclude Include="app\ヘッダー\3D\Object3d.h" />
-    <ClInclude Include="app\ヘッダー\2D\ParticleManager.h" />
-    <ClInclude Include="game\header\GameScene.h" />
-    <ClInclude Include="app\ヘッダー\Base\Player.h" />
-    <ClInclude Include="app\ヘッダー\Base\PlayerBullet.h" />
-    <ClInclude Include="app\ヘッダー\Base\ResourceManager.h" />
-    <ClInclude Include="app\ヘッダー\2D\Sprite.h" />
-    <ClInclude Include="app\ヘッダー\2D\SpriteCommon.h" />
-    <ClInclude Include="app\ヘッダー\Base\Vector3.h" />
-    <ClInclude Include="app\ヘッダー\Base\WinApp.h" />
-    <ClInclude Include="app\ヘッダー\3D\WireObject.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="Extermal\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="app\header\2D\ParticleManager.h" />
+    <ClInclude Include="app\header\2D\Sprite.h" />
+    <ClInclude Include="app\header\2D\SpriteCommon.h" />
+    <ClInclude Include="app\header\3D\CubeModel.h" />
+    <ClInclude Include="app\header\3D\CubeObject3D.h" />
+    <ClInclude Include="app\header\3D\FbxLoader.h" />
+    <ClInclude Include="app\header\3D\FbxModel.h" />
+    <ClInclude Include="app\header\3D\FbxObject3D.h" />
+    <ClInclude Include="app\header\3D\LineModel.h" />
+    <ClInclude Include="app\header\3D\LineObject.h" />
+    <ClInclude Include="app\header\3D\Model.h" />
+    <ClInclude Include="app\header\3D\Object3d.h" />
+    <ClInclude Include="app\header\3D\WireObject.h" />
+    <ClInclude Include="app\header\Base\Boss.h" />
+    <ClInclude Include="app\header\Base\Camera.h" />
+    <ClInclude Include="app\header\Base\CSVLoader.h" />
+    <ClInclude Include="app\header\Base\DirectXCommon.h" />
+    <ClInclude Include="app\header\Base\Enemy.h" />
+    <ClInclude Include="app\header\Base\EnemyBullet.h" />
+    <ClInclude Include="app\header\Base\Input.h" />
+    <ClInclude Include="app\header\Base\json.hpp" />
+    <ClInclude Include="app\header\Base\LoadFile.h" />
+    <ClInclude Include="app\header\Base\Player.h" />
+    <ClInclude Include="app\header\Base\PlayerBullet.h" />
+    <ClInclude Include="app\header\Base\ResourceManager.h" />
+    <ClInclude Include="app\header\Base\Vector3.h" />
+    <ClInclude Include="app\header\Base\WinApp.h" />
+    <ClInclude Include="game\header\GameScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -118,17 +118,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteCommon->LoadTexture(3, "boss.png");
 	spriteCommon->LoadTexture(4, "title.png");
 	spriteCommon->LoadTexture(5, "start.png");
+	spriteCommon->LoadTexture(6, "black1x1.png");
+	spriteCommon->LoadTexture(7, "white1x1.png");
 	//スプライトにテクスチャ割り当て
 	hitsprite->Initialize(spriteCommon, 0);
 	mariosprite->Initialize(spriteCommon, 1);
 	menu->Initialize(spriteCommon, 2);
 	title->Initialize(spriteCommon, 4);
 	startsprite->Initialize(spriteCommon, 5);
+	blacksprite->Initialize(spriteCommon, 6);
+	whitesprite->Initialize(spriteCommon, 7);
+
 	//スプライト初期位置
 	mariosprite->SetPosition({ 800,0 });
 	mariosprite->Update();
-	//3Dモデル
 
+	//画面遷移用スプライト
+	whitesprite->SetAnchorPoint(XMFLOAT2(0.5, 0.5));
+	whitesprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
+
+	//3Dモデル
 	//モデルデータをマップに入れる
 	models.insert(std::make_pair("floor", resorcemanager->LoadObj("floor")));
 	models.insert(std::make_pair("line", resorcemanager->LoadObj("line")));
@@ -212,9 +221,28 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void GameScene::Update()
 {
+	//デバッグ用
+	if (scene != Clear && scene != Dead) {
+		if (input_->TriggerKey(DIK_1)) {
+			isTransition = true;
+			nextScene = Clear;
+		}
+		if (input_->TriggerKey(DIK_2)) {
+			isTransition = true;
+			nextScene = Dead;
+		}
+	}
+
+	if (isTransition || isBackTransition) {
+		Transition(nextScene);
+	}
+
+
+
 	switch (scene)
 	{
 	case Title:
+
 		//地面
 		for (auto& object : objects) {
 			object->Update();
@@ -229,33 +257,41 @@ void GameScene::Update()
 
 		//スプライト
 		title->Update();
-		
+
 		startsprite->Update();
 
-		//パーティクル
-		partpos = eye;
-		partpos.y = eye.y + 5;
-		partpos.z = eye.z + 2;
-		particletime++;
-		if (particleMaxtime <= particletime) {
-			TitleParticle(partpos);
-			particletime = 0;
+		//戻っている最中は押しても反応しない
+		if (isBackTransition) {
+
 		}
+		else
+		{
+			//ゲームシーンへのシーンチェンジ
+			if (input_->TriggerKey(DIK_SPACE)) {
+				isstart = true;
+
+			}
+
+			//パーティクル生成
+			partpos = eye;
+			partpos.y = eye.y + 5;
+			partpos.z = eye.z + 2;
+			particletime++;
+			if (particleMaxtime <= particletime) {
+				TitleParticle(partpos);
+				particletime = 0;
+			}
+
+		}
+		//パーティクル更新処理
 		for (std::unique_ptr<ParticleManager>& particle : particles)
 		{
 			particle->Update();
 		}
 
-
-
-		//ゲームシーンへのシーンチェンジ
-		if (input_->TriggerKey(DIK_SPACE)) {
-			isstart = true;
-			
-		}
-
+		//スタート演出
 		if (isstart) {
-			title->SetSize(XMFLOAT2((float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX,totaltime), (float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)));
+			title->SetSize(XMFLOAT2((float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX, totaltime), (float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)));
 			title->SetPosition(XMFLOAT2((float)easeOutQuad(startMaxTime, startpos, end - startpos, totaltime), (float)easeOutQuad(startMaxTime, startpos, endposY - startpos, totaltime)));
 
 			startsprite->SetSize(XMFLOAT2((float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX, totaltime), (float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)));
@@ -273,7 +309,7 @@ void GameScene::Update()
 				//プレイヤーが動かないように判定を送る
 				player->SetIsStart(isstart);
 				player->Update();
-				if (playerDirectionMaxTime>=playerDirectionTime) {
+				if (playerDirectionMaxTime >= playerDirectionTime) {
 					playerDirectionTime += 1;
 				}
 				else if (playerDirectionMaxTime < playerDirectionTime) {
@@ -475,9 +511,43 @@ void GameScene::Update()
 		}
 		break;
 	case Clear:
-		if (input_->TriggerKey(DIK_RETURN)) {
-			scene = Title;
+
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Update();
 		}
+		//戻っている最中は押しても反応しない
+		if (isBackTransition) {
+
+		}
+		else
+		{
+			if (input_->TriggerKey(DIK_SPACE)) {
+				isTransition = true;
+				nextScene = Title;
+			}
+		}
+
+
+		break;
+	case Dead:
+
+		for (std::unique_ptr<ParticleManager>& particle : particles)
+		{
+			particle->Update();
+		}
+		//戻っている最中は押しても反応しない
+		if (isBackTransition) {
+
+		}
+		else
+		{
+			if (input_->TriggerKey(DIK_SPACE)) {
+				isTransition = true;
+				nextScene = Title;
+			}
+		}
+		break;
 	}
 
 
@@ -656,6 +726,19 @@ void GameScene::Draw()
 		break;
 	}
 
+	//パーティクル
+	for (std::unique_ptr<ParticleManager>& particle : particles)
+	{
+		particle->Draw();
+	}
+
+	//スプライト描画
+	spriteCommon->PreDraw();
+
+	//遷移演出
+	whitesprite->Draw();
+
+	spriteCommon->PostDraw();
 }
 
 void GameScene::AllCollision()
@@ -819,6 +902,174 @@ void GameScene::TitleParticle(XMFLOAT3 pos_)
 	}
 	newparticle->Update();
 	particles.push_back(std::move(newparticle));
+}
+
+void GameScene::TransitionParticle(XMFLOAT3 pos_)
+{
+	//パーティクル
+	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");
+	newparticle->SetEmitterPos(pos_);
+	for (int i = 0; i < 30; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 20.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos / 2.0f;
+		//pos.z = (float)rand() / RAND_MAX * rnd_pos / 2.0f;
+
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = -rnd_vel;
+		//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		//const float rnd_acc = 0.001f;
+		XMFLOAT3 acc{};
+		//acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		//色
+		const float rnd_color = 1.0f;
+		XMFLOAT4 color{  };
+		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+
+		//時間
+		const int rnd_life = 80;
+		int life = 0;
+		life = rand() % rnd_life + 1;
+		life += 20;
+
+		//追加
+		newparticle->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+	}
+	newparticle->Update();
+	particles.push_back(std::move(newparticle));
+}
+
+void GameScene::TransitionBackParticle(XMFLOAT3 pos_,int num)
+{
+	//パーティクル
+	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");
+	newparticle->SetEmitterPos(pos_);
+	for (int i = 0; i < num; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 20.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos / 2.0f;
+		//pos.z = (float)rand() / RAND_MAX * rnd_pos / 2.0f;
+
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = rnd_vel;
+		//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		//const float rnd_acc = 0.001f;
+		XMFLOAT3 acc{};
+		//acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		//色
+		const float rnd_color = 1.0f;
+		XMFLOAT4 color{  };
+		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+
+		//時間
+		const int rnd_life = 40;
+		int life = 0;
+		life = rand() % rnd_life + 1;
+		life += 20;
+
+		//追加
+		newparticle->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+	}
+	newparticle->Update();
+	particles.push_back(std::move(newparticle));
+}
+
+void GameScene::Transition(Scene nextScene_)
+{
+	//遷移中
+	if (isTransition) {
+		//パーティクル座標
+		partpos = eye;
+		partpos.y = eye.y + 5;
+		partpos.z = eye.z;
+
+		//パーティクル
+		TransitionParticle(partpos);
+		if (MaxDelay <= delayTime) {
+			//白い画像の位置
+			whitesprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionStartPosY, transitionEndposY - transitionStartPosY, totalTransitionTime)));
+			whitesprite->Update();
+
+			//トータルのタイムを増やす
+			if (MaxTransitionTime > totalTransitionTime) {
+				totalTransitionTime++;
+			}
+
+			//MaxTimeを超えたら戻る演出を入れる
+			if (MaxTransitionTime <= totalTransitionTime) {
+				isTransition = false;
+				isBackTransition = true;
+				totalTransitionTime = 0;
+				scene = nextScene_;
+				delayTime = 0;
+			}
+		}
+		delayTime++;
+
+	}
+	//遷移戻り
+	else if (isBackTransition) {
+		whitesprite->Update();
+		if (MaxDelay <= delayTime) {
+			//パーティクルの位置
+			partpos = eye;
+			partpos.y = eye.y - 5;
+			partpos.z = eye.z;
+			//後半は出ないようにしておく
+			if (totalTransitionTime > MaxTransitionTime - 40.0) {
+
+			}
+			else {
+				//パーティクル
+				TransitionBackParticle(partpos,(int)(MaxTransitionTime-totalTransitionTime*2));
+			}
+
+			//白い画像の位置
+			whitesprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionEndposY, transitionStartPosY - transitionEndposY, totalTransitionTime)));
+
+			//トータルのタイムを増やす
+			if (MaxTransitionTime > totalTransitionTime) {
+				totalTransitionTime++;
+			}
+			//MaxTimeを超えたら戻る
+			if (MaxTransitionTime <= totalTransitionTime) {
+				isTransition = false;
+				isBackTransition = false;
+				totalTransitionTime = 0;
+				delayTime = 0;
+			}
+		}
+		delayTime++;
+	}
+
+	for (std::unique_ptr<ParticleManager>& particle : particles)
+	{
+		particle->Update();
+	}
 }
 
 double GameScene::easeOutQuad(double time_, double start_, double difference, double totaltime_)
