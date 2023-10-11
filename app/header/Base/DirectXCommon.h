@@ -6,6 +6,7 @@
 #include"WinApp.h"
 #include <vector>
 #include<chrono>
+#include<d3d12sdklayers.h>
 class DirectXCommon
 {
 

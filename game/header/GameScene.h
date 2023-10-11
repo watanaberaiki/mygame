@@ -33,7 +33,8 @@ enum Scene {
 	Title,
 	Game,
 	BossFight,
-	Clear
+	Clear,
+	Dead
 };
 class GameScene
 {
@@ -53,6 +54,11 @@ public:
 	void EnemyParticle(XMFLOAT3 pos);
 	//タイトルシーンのパーティクル処理
 	void TitleParticle(XMFLOAT3 pos);
+	//画面遷移時に使うパーティクル
+	void TransitionParticle(XMFLOAT3 pos);
+	void TransitionBackParticle(XMFLOAT3 pos,int num);
+	//画面遷移
+	void Transition(Scene nextScene);
 	//イージング
 	double easeOutQuad(double time,double start,double difference,double totaltime);
 private:
@@ -71,6 +77,8 @@ private:
 	Sprite* menu = new Sprite();
 	Sprite* title = new Sprite();
 	Sprite* startsprite = new Sprite();
+	Sprite* blacksprite = new Sprite();
+	Sprite* whitesprite = new Sprite();
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -174,5 +182,20 @@ private:
 	double startscale = 0;
 	double endscale = 0.1;
 	float directionscale = 0;
+
+	//画面遷移
+	Scene nextScene = {};
+	//遷移中判定
+	bool isTransition = false;
+	//戻る遷移判定
+	bool isBackTransition = false;
+	
+	double totalTransitionTime = 0.0;
+	double MaxTransitionTime = 150.0;
+	double transitionStartPosY = WinApp::window_height+WinApp::window_height/2;
+	double transitionEndposY = WinApp::window_height/2;
+
+	int MaxDelay = 20;
+	int delayTime = 0;
 };
 
