@@ -1,3 +1,5 @@
+//キーボード入力のクラス
+
 #pragma once
 #include"WinApp.h"
 #include <Windows.h>

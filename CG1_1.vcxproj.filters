@@ -246,9 +246,6 @@
     <ClInclude Include="app\header\Base\Input.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="app\header\Base\json.hpp">
-      <Filter>ヘッダーファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="app\header\Base\LoadFile.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>

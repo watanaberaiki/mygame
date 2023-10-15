@@ -1,3 +1,5 @@
+//ライン描画のための3Dモデルクラス
+
 #pragma once
 #include "vector"
 #include "DirectXMath.h"

@@ -1,3 +1,5 @@
+//DirectX基礎部分のクラス化
+
 #pragma once
 
 #include <d3d12.h>

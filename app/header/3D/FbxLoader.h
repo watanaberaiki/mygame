@@ -1,4 +1,6 @@
-﻿#pragma once
+//FBXを読み込むためのクラス
+
+#pragma once
 #include "fbxsdk.h"
 #include "FbxModel.h"
 #include <d3d12.h>

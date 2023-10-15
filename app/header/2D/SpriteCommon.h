@@ -1,3 +1,5 @@
+//スプライト共通処理のクラス
+
 #pragma once
 #include "DirectXCommon.h"
 #include <DirectXMath.h>
@@ -18,18 +20,19 @@ class SpriteCommon
 public:
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
-
+	//描画前処理
 	void PreDraw();
-
+	//描画後処理
 	void PostDraw();
+	//画像読み込み
 	void LoadTexture(uint32_t index, const std::string& fileName);
 
-	void SetTextureCommands(uint32_t index);
-
+	//ゲッター
 	DirectXCommon* GetDirectXCommon() { return dxcommon_; }
-
 	ID3D12Resource* GetTextureBuffer(uint32_t index) { return texBuff[index].Get(); }
 
+	//セッター
+	void SetTextureCommands(uint32_t index);
 
 private:
 	//SRVの最大個数

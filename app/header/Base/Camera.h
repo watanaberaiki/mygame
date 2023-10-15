@@ -1,3 +1,5 @@
+//メインカメラクラス
+
 #pragma once
 #include <DirectXTex.h>
 #include"Input.h"
@@ -8,50 +10,27 @@ class Camera
 {
 
 public:
+	//初期化処理
 	void Initialize(Input* input_);
+	//更新処理
 	void Update();
 
 	/*static void SetInput(Input* input) { Camera::input = input; }*/
 
 public:
-	/// <summary>
-	/// 視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	const XMFLOAT3& GetEye() { return eye; }
 
-	/// <summary>
-	/// 視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
+
+	//セッター
 	void SetEye(XMFLOAT3 eye_) { this->eye = eye_; };
-
-	/// <summary>
-	/// 注視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	const XMFLOAT3& GetTarget() { return target; }
-
-	/// <summary>
-	/// 注視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
 	void SetTarget(XMFLOAT3 target_) { this->target = target_; };
-
-	/// <summary>
-	/// 注視点座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	const XMFLOAT3& GetUp() { return up; }
-
-	/// <summary>
-	/// 注視点座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
 	void SetUp(XMFLOAT3 up_) { this->up = up_; };
 
+	//ゲッター
+	const XMFLOAT3& GetTarget() { return target; }
+	const XMFLOAT3& GetUp() { return up; }
+	const XMFLOAT3& GetEye() { return eye; }
 	const XMMATRIX& GetmatView() { return matView; }
-	XMMATRIX GetmatViewProjection() { return (matView*matProjection); }
+	XMMATRIX GetmatViewProjection() { return (matView * matProjection); }
 
 private:
 	XMMATRIX matView = {};
@@ -61,6 +40,6 @@ private:
 	XMMATRIX matProjection = {};
 
 	//キーボード
-	Input* input=nullptr;
+	Input* input = nullptr;
 };
 

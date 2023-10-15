@@ -46,13 +46,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)app\cpp\2D;$(ProjectDir)app\cpp\3D;$(ProjectDir)app\cpp\Base;$(ProjectDir)app\cpp\Game;$(ProjectDir)app\ヘッダー\2D;$(ProjectDir)app\ヘッダー\3D;$(ProjectDir)app\ヘッダー\Base;$(ProjectDir)app\ヘッダー\Game</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)lib\DirectXTex\inc;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)app\cpp\2D;$(ProjectDir)app\cpp\3D;$(ProjectDir)app\cpp\Base;$(ProjectDir)app\cpp\Game;$(ProjectDir)app\ヘッダー\2D;$(ProjectDir)app\ヘッダー\3D;$(ProjectDir)app\ヘッダー\Base;$(ProjectDir)app\ヘッダー\Game</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(ProjectDir)lib\DirectXTex\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)app\cpp\2D;$(ProjectDir)app\cpp\3D;$(ProjectDir)app\cpp\Base;$(ProjectDir)app\cpp\Game;$(ProjectDir)app\ヘッダー\2D;$(ProjectDir)app\ヘッダー\3D;$(ProjectDir)app\ヘッダー\Base;$(ProjectDir)app\ヘッダー\Game</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)lib\DirectXTex\inc;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)app\cpp\2D;$(ProjectDir)app\cpp\3D;$(ProjectDir)app\cpp\Base;$(ProjectDir)app\cpp\Game;$(ProjectDir)app\ヘッダー\2D;$(ProjectDir)app\ヘッダー\3D;$(ProjectDir)app\ヘッダー\Base;$(ProjectDir)app\ヘッダー\Game</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(ProjectDir)lib\DirectXTex\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -69,7 +69,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -93,7 +93,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -224,11 +224,6 @@
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Extermal\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
-      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="app\header\2D\ParticleManager.h" />
     <ClInclude Include="app\header\2D\Sprite.h" />
     <ClInclude Include="app\header\2D\SpriteCommon.h" />
@@ -249,7 +244,6 @@
     <ClInclude Include="app\header\Base\Enemy.h" />
     <ClInclude Include="app\header\Base\EnemyBullet.h" />
     <ClInclude Include="app\header\Base\Input.h" />
-    <ClInclude Include="app\header\Base\json.hpp" />
     <ClInclude Include="app\header\Base\LoadFile.h" />
     <ClInclude Include="app\header\Base\Player.h" />
     <ClInclude Include="app\header\Base\PlayerBullet.h" />

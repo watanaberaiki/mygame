@@ -1,3 +1,5 @@
+//リソース関連を読み込み保管しておけるクラス
+
 #pragma once
 #include<map>
 #include"FbxModel.h"

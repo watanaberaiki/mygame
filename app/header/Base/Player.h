@@ -1,3 +1,5 @@
+//プレイヤーのクラス
+
 #pragma once
 #include"FbxObject3D.h"
 #include"FbxModel.h"

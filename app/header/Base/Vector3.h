@@ -1,3 +1,5 @@
+//自作のVectorクラス
+
 #pragma once
 #include <DirectXMath.h>
 

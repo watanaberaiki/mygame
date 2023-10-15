@@ -1,3 +1,5 @@
+//オブジェクトクラス
+
 #pragma once
 
 #include <Windows.h>
@@ -208,32 +210,18 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	const XMFLOAT3& GetPosition() const { return position; }
+	
 
-	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
+	//セッター
 	void SetPosition(const XMFLOAT3& position_) { this->position = position_; }
-
-	/// <summary>
-	//マテリアル読み込み
-	/// </summary>
-	static void LoadMaterial(const std::string& directoryPath, const std::string& filename);
-
 	void SetScale(const XMFLOAT3& scale_) { this->scale = scale_; }
-
-	const XMFLOAT3& GetScale()const { return scale; }
-
 	void SetRotation(const XMFLOAT3& rotation_) { this->rotation = rotation_; }
-
-	const XMMATRIX& GetMatWorld()const { return matWorld; }
-
 	static void SetCamera(Camera* camera_) { Object3d::camera = camera_; }
+
+	//ゲッター
+	const XMFLOAT3& GetScale()const { return scale; }
+	const XMMATRIX& GetMatWorld()const { return matWorld; }
+	const XMFLOAT3& GetPosition() const { return position; }
 
 protected: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
