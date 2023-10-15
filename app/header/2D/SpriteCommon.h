@@ -1,3 +1,5 @@
+//スプライト共通処理のクラス
+
 #pragma once
 #include "DirectXCommon.h"
 #include <DirectXMath.h>

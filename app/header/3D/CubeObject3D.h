@@ -1,3 +1,6 @@
+//当たり判定の可視化するためのオブジェクトクラス
+
+
 #pragma once
 
 #include "CubeModel.h"

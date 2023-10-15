@@ -1,3 +1,5 @@
+//WindowsAPIのクラス
+
 #include<Windows.h>
 #pragma once
 class WinApp{

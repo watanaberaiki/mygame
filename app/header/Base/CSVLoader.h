@@ -1,3 +1,5 @@
+//CSVを読み込むクラス
+
 #pragma once
 #include "array"
 #include "DirectXMath.h"

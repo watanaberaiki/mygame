@@ -1,3 +1,5 @@
+//オブジェクトクラス
+
 #pragma once
 
 #include <Windows.h>

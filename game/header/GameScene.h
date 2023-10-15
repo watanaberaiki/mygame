@@ -1,3 +1,5 @@
+//ゲームの処理のクラス
+
 #include"Vector3.h"
 #include "Input.h"
 #include"WinApp.h"

@@ -1,3 +1,5 @@
+//FBXのモデルクラス
+
 #include <string>
 #include <DirectXMath.h>
 #include<vector>

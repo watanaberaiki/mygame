@@ -1,3 +1,5 @@
+//ワイヤーフレーム表示のオブジェクトクラス
+
 #pragma once
 #include "Object3d.h"
 #include <Windows.h>

@@ -1,3 +1,5 @@
+//ライン描画のためのオブジェクトクラス
+
 #pragma once
 
 #include "CubeModel.h"

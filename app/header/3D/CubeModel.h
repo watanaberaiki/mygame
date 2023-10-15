@@ -1,3 +1,5 @@
+//当たり判定の可視化するための3Dモデルクラス
+
 #pragma once
 #include "vector"
 #include "DirectXMath.h"

@@ -1,3 +1,5 @@
+//スプライト一つ一つのクラス
+
 #pragma once
 #include "SpriteCommon.h"
 #include <DirectXMath.h>

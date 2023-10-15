@@ -1,3 +1,5 @@
+//メインカメラクラス
+
 #pragma once
 #include <DirectXTex.h>
 #include"Input.h"

@@ -1,3 +1,5 @@
+//jsonを読み込むクラス
+
 #pragma once
 
 #include <string>
