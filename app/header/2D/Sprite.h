@@ -38,60 +38,39 @@ public:
 
 	//初期化
 	void Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex = UINT32_MAX);
-
+	//更新処理
 	void Update();
-
+	//描画処理
 	void Draw();
 
+	//ゲッター
 	XMFLOAT4 GetColor() const { return color; }
-
 	const XMFLOAT2 GetPosition() const { return position_; }
-
 	const float& GetRotationZ() const { return rotationZ; }
-
 	const XMFLOAT2 GetSize() const { return size_; }
-
 	const XMFLOAT2 GetAnchorPoint() const { return anchorPoint_; }
-
 	const bool& GetIsFlipX() const { return isFlipX; }
-
 	const bool& GetIsFlipY() const { return isFlipY; }
-
 	const bool& GetIsInvisible() const { return isInvisible_; }
-
 	const uint32_t GetTextureIndex() const { return textureIndex_; }
-
 	const XMFLOAT2 GetTextureLeftTop() const { return textureLeftTop_; }
-
 	const XMFLOAT2 GetTextureSize() const { return textureSize_; }
 
-
-
-
-
+	//セッター
 	void SetColor(XMFLOAT4 color_) { this->color = color_; }
-
 	void SetPosition(const XMFLOAT2& position) { this->position_ = position; }
-
 	void SetRotationZ(const float& rotationZ_) { this->rotationZ = rotationZ_; }
-
 	void SetSize(const XMFLOAT2& size) { this->size_ = size; }
-
 	void SetAnchorPoint(const XMFLOAT2& anchorPoint) { this->anchorPoint_ = anchorPoint; }
-
 	void SetIsFlipX(const bool& isFlipX_) { this->isFlipX = isFlipX_; }
-
 	void SetIsFlipY(const bool& isFlipY_) { this->isFlipY = isFlipY_; }
-
 	void SetIsInvisible(const bool& isInvisible) { this->isInvisible_ = isInvisible; }
-
 	void SetTextureIndex(const uint32_t& textureIndex) { this->textureIndex_ = textureIndex; }
-
 	void SetTextureLeftTop(const XMFLOAT2& textureLeftTop) { this->textureLeftTop_ = textureLeftTop; }
-
 	void SetTextureSize(const XMFLOAT2& textureSize) { this->textureSize_ = textureSize; }
 
 private:
+	//初期のテクスチャのサイズを読み込み適用
 	void AdjustTextureSize();
 
 private:
