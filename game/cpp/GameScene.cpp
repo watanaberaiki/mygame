@@ -279,7 +279,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		newobject->SetModel(linemodel);
 		newobject->SetPosition(XMFLOAT3(0.0f, -1.8f, (float)20.0f * i + 20));
 		newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
-		newobject->Update();
 		floorEndScale = newobject->GetScale();
 		lineObjects.push_back(std::move(newobject));
 	}
