@@ -66,9 +66,9 @@ LevelData* LoadFile::LoadFileData(const std::string& fileName) {
 			objectData.translation.m128_f32[2] = (float)transform["translation"][0];
 			objectData.translation.m128_f32[3] = 1.0f;
 			// 回転角
-			objectData.rotation.m128_f32[0] = (float)transform["rot"][1];
-			objectData.rotation.m128_f32[1] = (float)transform["rot"][2];
-			objectData.rotation.m128_f32[2] = (float)transform["rot"][0];
+			objectData.rotation.m128_f32[0] = (float)transform["rotation"][1];
+			objectData.rotation.m128_f32[1] = (float)transform["rotation"][2];
+			objectData.rotation.m128_f32[2] = (float)transform["rotation"][0];
 			objectData.rotation.m128_f32[3] = 0.0f;
 			// スケーリング
 			objectData.scaling.m128_f32[0] = (float)transform["scale"][1];

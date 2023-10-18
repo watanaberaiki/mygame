@@ -110,8 +110,9 @@ private:
 	static const int bonetestsize = 5;
 	FbxObject3D* bonetest[bonetestsize] = {};
 
-	//ファイル読み込み
-	LevelData* leveldata = nullptr;
+	//地面jsonファイル読み込み
+	LevelData* floordata = nullptr;
+
 	//配置オブジェクト情報
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
@@ -133,9 +134,9 @@ private:
 	bool isHit = false;
 
 	//ライン
-	static const int maxLine = 10;
+	static const int maxLine = 5;
 	LineModel* linemodel = nullptr;
-	LineObject* lineObject[maxLine] = {};
+	std::list <std::unique_ptr<LineObject>>lineObjects;
 	
 	ResourceManager* resorcemanager = nullptr;
 
@@ -178,12 +179,23 @@ private:
 	double endposx = WinApp::window_width / 2;
 	double endposY = WinApp::window_height / 2;
 
-	//自機登場演出
-	double playerDirectionTime = 0;
-	double playerDirectionMaxTime = 50;
-	double startscale = 0;
-	double endscale = 0.1;
-	float directionscale = 0;
+	//スタート時に白線関連をだんだん大きくしていく演出
+	double directionTime = 0;
+	double directionMaxTime = 50;
+	//プレイヤーのスケール
+	double playerStartScale = 0;
+	double playerEndScale = 0.1;
+	float playerDirectionScale = 0;
+	//地面の白線のスケール
+	XMFLOAT3 floorStartScale = {0.0f,0.0f,0.0f};
+	XMFLOAT3 floorEndScale = {0.0f,0.0f,0.0f};
+	XMFLOAT3 floorDirectionScale = {};
+	//横の壁の白線のスケール
+	XMFLOAT3 lineStartScale = { 0.0f,0.0f,0.0f };
+	std::list<XMFLOAT3>lineEndScales = {};
+	XMFLOAT3 lineDirectionScale = { 0.0f,0.0f,0.0f };
+
+
 
 	//画面遷移
 	Scene nextScene = {};
@@ -193,7 +205,7 @@ private:
 	bool isBackTransition = false;
 	
 	double totalTransitionTime = 0.0;
-	double MaxTransitionTime = 150.0;
+	double MaxTransitionTime = 100.0;
 	double transitionStartPosY = WinApp::window_height+WinApp::window_height/2;
 	double transitionEndposY = WinApp::window_height/2;
 
