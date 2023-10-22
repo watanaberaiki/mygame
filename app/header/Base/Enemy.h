@@ -64,14 +64,14 @@ private://メンバ変数
 
 
 	//FBXモデル
-	FbxModel* enemyfbxmodel = nullptr;
+	FbxModel* enemyFbxModel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* enemyfbxobj = nullptr;
+	FbxObject3D* enemyFbxObj = nullptr;
 
 	//3Dモデル
-	Model* enemymodel = nullptr;
+	Model* enemyModel = nullptr;
 	//3Dオブジェクト
-	WireObject* enemyobj = nullptr;
+	WireObject* enemyObj = nullptr;
 
 	//判定用
 	CubeModel* cubeModel = nullptr;
@@ -100,7 +100,7 @@ private://メンバ変数
 	const float MoveY = 1.5f;
 
 	//自機を狙う弾用
-	Vector3 velocityvec = {};
+	Vector3 velocityVec = {};
 	XMFLOAT3 velocity = {};
 
 };

@@ -6,16 +6,16 @@ void Player::Initialize()
 {
 	resource = ResourceManager::Getinstance();
 	//fbx
-	playerfbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("bonetest");
-	playerfbxobj = new FbxObject3D();
-	playerfbxobj->Initialize();
-	playerfbxobj->SetModel(playerfbxmodel);
+	playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("bonetest");
+	playerFbxObj = new FbxObject3D();
+	playerFbxObj->Initialize();
+	playerFbxObj->SetModel(playerFbxModel);
 
 
 	//3dオブジェクト
-	playermodel = Model::LoadFromObj("block");
-	playerobj = WireObject::Create();
-	playerobj->SetModel(playermodel);
+	playerModel = Model::LoadFromObj("block");
+	playerObj = WireObject::Create();
+	playerObj->SetModel(playerModel);
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
@@ -28,17 +28,17 @@ void Player::Initialize()
 	collisionBox->Update();
 
 	//ライン初期化
-	linemodel = new LineModel();
-	linemodel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
-	linemodel->SetImageData(XMFLOAT4(255, 255, 255, 1));
+	lineModel = new LineModel();
+	lineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	lineModel->SetImageData(XMFLOAT4(255, 255, 255, 1));
 	for (int i = 0; i < 4; i++) {
-		lineobject[i] = new LineObject();
-		lineobject[i]->Initialize();
-		lineobject[i]->SetModel(linemodel);
+		lineObject[i] = new LineObject();
+		lineObject[i]->Initialize();
+		lineObject[i]->SetModel(lineModel);
 	}
 	//XMConvertToDegrees
-	lineobject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
-	lineobject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+	lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+	lineObject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 
 	//レティクルの位置
 	frontdepth = 10;
@@ -74,10 +74,10 @@ void Player::Update()
 
 
 	//オブジェクト
-	playerobj->SetPosition(position);
-	playerobj->SetScale(scale);
-	playerobj->SetRotation(rotation);
-	playerobj->Update();
+	playerObj->SetPosition(position);
+	playerObj->SetScale(scale);
+	playerObj->SetRotation(rotation);
+	playerObj->Update();
 
 	//判定
 	collisionBox->SetPosition(position);
@@ -100,12 +100,12 @@ void Player::Update()
 
 	for (int i = 0; i < 4; i++) {
 		if (i < 2) {
-			lineobject[i]->SetPosition(frontReticlepos);
+			lineObject[i]->SetPosition(frontReticlepos);
 		}
 		else {
-			lineobject[i]->SetPosition(backReticlepos);
+			lineObject[i]->SetPosition(backReticlepos);
 		}
-		lineobject[i]->Update();
+		lineObject[i]->Update();
 	}
 }
 
@@ -128,7 +128,7 @@ void Player::Draw()
 void Player::WireDraw()
 {
 	//オブジェクト
-	playerobj->Draw();
+	playerObj->Draw();
 }
 
 void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
@@ -142,13 +142,13 @@ void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 	//collisionBox->Draw(cmdList);
 
 	for (int i = 0; i < 4; i++) {
-		lineobject[i]->Draw(cmdList);
+		lineObject[i]->Draw(cmdList);
 	}
 }
 
 void Player::Move()
 {
-	if (isstart == false) {
+	if (isStart == false) {
 		//キーボードでの移動
 		if (input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
 			if (input->PushKey(DIK_W)) {

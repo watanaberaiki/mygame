@@ -8,27 +8,27 @@ void ResourceManager::Initialize()
 FbxModel* ResourceManager::LoadFbx(const string modelName)
 {
 	//読み込まれたテクスチャを参照
-	auto it = fbxmodels.find(modelName);
-	if (it != fbxmodels.end()) {
+	auto it = fbxModels.find(modelName);
+	if (it != fbxModels.end()) {
 		model = it->second;
 		return model;
 	}
 
 	model = FbxLoader::GetInstance()->LoadModelFromFile(modelName);
-	fbxmodels[modelName] = model;
+	fbxModels[modelName] = model;
 	return model;
 }
 
 Model* ResourceManager::LoadObj(const string modelName)
 {
 	//読み込まれたテクスチャを参照
-	auto it = objmodels.find(modelName);
-	if (it != objmodels.end()) {
-		objmodel = it->second;
-		return objmodel;
+	auto it = objModels.find(modelName);
+	if (it != objModels.end()) {
+		objModel = it->second;
+		return objModel;
 	}
 
-	objmodel = Model::LoadFromObj(modelName);
-	objmodels[modelName] = objmodel;
-	return objmodel;
+	objModel = Model::LoadFromObj(modelName);
+	objModels[modelName] = objModel;
+	return objModel;
 }

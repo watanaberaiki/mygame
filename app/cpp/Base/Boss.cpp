@@ -7,15 +7,15 @@ void Boss::Initialize()
 	resource = ResourceManager::Getinstance();
 
 	//fbx
-	bossfbxmodel = resource->LoadFbx("boneTest");
-	bossfbxobj = new FbxObject3D();
-	bossfbxobj->Initialize();
-	bossfbxobj->SetModel(bossfbxmodel);
+	bossFbxModel = resource->LoadFbx("boneTest");
+	bossFbxObj = new FbxObject3D();
+	bossFbxObj->Initialize();
+	bossFbxObj->SetModel(bossFbxModel);
 
 	//3dオブジェクト
-	bossmodel = resource->LoadObj("redcube");
-	bossobj = WireObject::Create();
-	bossobj->SetModel(bossmodel);
+	bossModel = resource->LoadObj("redcube");
+	bossObj = WireObject::Create();
+	bossObj->SetModel(bossModel);
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
@@ -55,10 +55,10 @@ void Boss::Update()
 
 
 	//オブジェクト
-	bossobj->SetPosition(position);
-	bossobj->SetScale(scale);
-	bossobj->SetRotation(rotation);
-	bossobj->Update();
+	bossObj->SetPosition(position);
+	bossObj->SetScale(scale);
+	bossObj->SetRotation(rotation);
+	bossObj->Update();
 
 	//判定
 	collisionBox->SetPosition(position);
@@ -78,7 +78,7 @@ void Boss::Draw()
 	//enemyfbxobj->Draw(cmdList);
 
 	////オブジェクト
-	bossobj->Draw();
+	bossObj->Draw();
 
 	//弾
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
@@ -104,10 +104,10 @@ void Boss::Move()
 
 void Boss::Fire()
 {
-	velocityvec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
-	velocityvec.normalize();
+	velocityVec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
+	velocityVec.normalize();
 
-	velocity = XMFLOAT3(velocityvec.x, velocityvec.y, velocityvec.z);
+	velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
 	std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
 	newObject->Initialize(dxcommon, resource, velocity);
 	newObject->SetPosition(position);

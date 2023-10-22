@@ -112,7 +112,7 @@ private:
 	// インデックスバッファ
 	ComPtr<ID3D12Resource> indexBuff;
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texBuff;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	// インデックスバッファビュー

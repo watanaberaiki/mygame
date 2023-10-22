@@ -39,8 +39,8 @@ public:
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//ゲッター
-	XMFLOAT3 GetColPositionMin() { return colpositionmin; }
-	XMFLOAT3 GetColPositionMax() { return colpositionmax; };
+	XMFLOAT3 GetColPositionMin() { return colPositionMin; }
+	XMFLOAT3 GetColPositionMax() { return colPositionMax; };
 public:
 	//頂点データ配列
 	struct VertexPosNormalUv
@@ -84,7 +84,7 @@ private:
 	//テクスチャーのGPUのハンドル
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = {};
 	//判定用
-	XMFLOAT3 colpositionmin = { 0,0,0 };
-	XMFLOAT3 colpositionmax = { 0,0,0 };
+	XMFLOAT3 colPositionMin = { 0,0,0 };
+	XMFLOAT3 colPositionMax = { 0,0,0 };
 };
 

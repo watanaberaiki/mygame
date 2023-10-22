@@ -74,25 +74,25 @@ private:
 	//スプライト共通部
 	SpriteCommon* spriteCommon = nullptr;
 	//スプライト
-	Sprite* hitsprite = new Sprite();
-	Sprite* mariosprite = new Sprite();
-	Sprite* menu = new Sprite();
-	Sprite* title = new Sprite();
-	Sprite* startsprite = new Sprite();
-	Sprite* blacksprite = new Sprite();
-	Sprite* whitesprite = new Sprite();
+	Sprite* hitSprite = new Sprite();
+	Sprite* marioSprite = new Sprite();
+	Sprite* menuSprite = new Sprite();
+	Sprite* titleSprite = new Sprite();
+	Sprite* startSprite = new Sprite();
+	Sprite* blackSprite = new Sprite();
+	Sprite* whiteSprite = new Sprite();
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
-	Model* spheremodel=nullptr;
-	Model* blockmodel = nullptr;
-	Model* testmodel = nullptr;
+	Model* sphereModel=nullptr;
+	Model* blockModel = nullptr;
+	Model* testModel = nullptr;
 	//3Dモデルの当たり判定
 	XMFLOAT3 minsphereModel = {}, maxsphereModel = {};
 	
 	//3Dオブジェクト
-	Object3d* sphereobj=nullptr;
-	Object3d* blockobj = nullptr;
+	Object3d* sphereObj=nullptr;
+	Object3d* blockObj = nullptr;
 
 	//カメラ
 	Camera* camera = nullptr;
@@ -111,12 +111,12 @@ private:
 	FbxObject3D* bonetest[bonetestsize] = {};
 
 	//地面jsonファイル読み込み
-	LevelData* floordata = nullptr;
+	LevelData* floorData = nullptr;
 
 	//配置オブジェクト情報
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
-	std::vector<WireObject*> wireobjects;
+	std::vector<WireObject*> wireObjects;
 
 	//敵
 	static const int enemysize = 10;
@@ -128,14 +128,14 @@ private:
 	//ボス
 	Boss* boss = nullptr;
 	////マップ用
-	int enemycount = 0;
+	int enemyCount = 0;
 
 	//ヒット確認
 	bool isHit = false;
 
 	//ライン
 	static const int maxLine = 5;
-	LineModel* linemodel = nullptr;
+	LineModel* lineModel = nullptr;
 	std::list <std::unique_ptr<LineObject>>lineObjects;
 	
 	ResourceManager* resorcemanager = nullptr;
@@ -156,28 +156,28 @@ private:
 	int menunum = 0;
 
 	//地面
-	Object3d* floorobj = nullptr;
+	Object3d* floorObj = nullptr;
 
 	//シーン切り替え
 	Scene scene = Title;
 	bool isEnemyAlive = true;
 
 	//タイトルパーティクル用
-	XMFLOAT3 partpos = {};
-	int particletime = 0;
-	const int particleMaxtime = 5;
+	XMFLOAT3 partPos = {};
+	int particleTime = 0;
+	const int particleMaxTime = 5;
 
 	//スタート演出用
-	bool isstart = false;
-	double totaltime = 0.0;
+	bool isStart = false;
+	double totalTime = 0.0;
 	double startMaxTime = 40.0;
-	double startsizeX = 1280;
-	double startsizeY = 720;
-	double endsize =0;
+	double startSizeX = 1280;
+	double startSizeY = 720;
+	double endSize =0;
 
-	double startpos = 0;
-	double endposx = WinApp::window_width / 2;
-	double endposY = WinApp::window_height / 2;
+	double startPos = 0;
+	double endPosx = WinApp::window_width / 2;
+	double endPosY = WinApp::window_height / 2;
 
 	//スタート時に白線関連をだんだん大きくしていく演出
 	double directionTime = 0;

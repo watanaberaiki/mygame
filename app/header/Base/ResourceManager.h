@@ -28,9 +28,9 @@ public:
 
 private:
 	FbxModel* model=nullptr;
-	Model* objmodel = nullptr;
-	std::map<string, FbxModel*>fbxmodels;
-	std::map<string, Model*>objmodels;
+	Model* objModel = nullptr;
+	std::map<string, FbxModel*>fbxModels;
+	std::map<string, Model*>objModels;
 	/*std::map<char, SpriteCommon>fbxmodels;*/
 
 	//インスタンス

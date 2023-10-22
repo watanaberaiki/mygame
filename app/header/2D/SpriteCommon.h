@@ -28,7 +28,7 @@ public:
 	void LoadTexture(uint32_t index, const std::string& fileName);
 
 	//ゲッター
-	DirectXCommon* GetDirectXCommon() { return dxcommon_; }
+	DirectXCommon* GetDirectXCommon() { return dxcommon; }
 	ID3D12Resource* GetTextureBuffer(uint32_t index) { return texBuff[index].Get(); }
 
 	//セッター
@@ -41,7 +41,7 @@ private:
 	static std::string kDefaultTextureDirectoryPath;
 
 private:
-	DirectXCommon* dxcommon_=nullptr;
+	DirectXCommon* dxcommon=nullptr;
 
 	// パイプランステートの生成
 	ComPtr<ID3D12PipelineState> pipelineState;

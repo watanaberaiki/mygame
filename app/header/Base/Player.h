@@ -42,7 +42,7 @@ public://メンバ関数
 	void SetPositionZ(float positionz_) { this->position.z = positionz_; }
 	void SetScale(XMFLOAT3 scale_) { this->scale = scale_; }
 	void SetRotation(XMFLOAT3 rotation_) { this->rotation = rotation_; }
-	void SetIsStart(bool isstart_) { this->isstart = isstart_; }
+	void SetIsStart(bool isstart_) { this->isStart = isstart_; }
 	static void SetInput(Input* input_) { Player::input = input_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Player::dxcommon = dxcommon_; }
 	//ゲッター
@@ -67,14 +67,14 @@ private://メンバ変数
 
 
 	//FBXモデル
-	FbxModel* playerfbxmodel = nullptr;
+	FbxModel* playerFbxModel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* playerfbxobj = nullptr;
+	FbxObject3D* playerFbxObj = nullptr;
 
 	//3Dモデル
-	Model* playermodel = nullptr;
+	Model* playerModel = nullptr;
 	//3Dオブジェクト
-	WireObject* playerobj = nullptr;
+	WireObject* playerObj = nullptr;
 
 	//判定用
 	CubeModel* cubeModel = nullptr;
@@ -90,8 +90,8 @@ private://メンバ変数
 	ResourceManager* resource = nullptr;
 
 	//ライン
-	LineModel* linemodel = nullptr;
-	LineObject* lineobject[4] = {};
+	LineModel* lineModel = nullptr;
+	LineObject* lineObject[4] = {};
 
 	//レティクル用ベクトル
 	Vector3 reticleVec = {};
@@ -100,6 +100,6 @@ private://メンバ変数
 	XMFLOAT3 velocity = {};
 
 	//スタート演出中に動かせないようにする
-	bool isstart = false;
+	bool isStart = false;
 };
 

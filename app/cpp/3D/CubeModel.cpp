@@ -283,25 +283,25 @@ void CubeModel::CreateVertex()
 	for (int i = 0; i < 24; i++)
 	{
 		//小さい
-		if (colpositionmin.x >= vertices[i].pos.x) {
-			colpositionmin.x = vertices[i].pos.x;
+		if (colPositionMin.x >= vertices[i].pos.x) {
+			colPositionMin.x = vertices[i].pos.x;
 		}
-		if (colpositionmin.y >= vertices[i].pos.y) {
-			colpositionmin.y = vertices[i].pos.y;
+		if (colPositionMin.y >= vertices[i].pos.y) {
+			colPositionMin.y = vertices[i].pos.y;
 		}
-		if (colpositionmin.z >= vertices[i].pos.z) {
-			colpositionmin.z = vertices[i].pos.z;
+		if (colPositionMin.z >= vertices[i].pos.z) {
+			colPositionMin.z = vertices[i].pos.z;
 		}
 		
 		//大きい
-		if (colpositionmax.x >= vertices[i].pos.x) {
-			colpositionmax.x = vertices[i].pos.x;
+		if (colPositionMax.x >= vertices[i].pos.x) {
+			colPositionMax.x = vertices[i].pos.x;
 		}
-		if (colpositionmax.y >= vertices[i].pos.y) {
-			colpositionmax.y = vertices[i].pos.y;
+		if (colPositionMax.y >= vertices[i].pos.y) {
+			colPositionMax.y = vertices[i].pos.y;
 		}
-		if (colpositionmax.z >= vertices[i].pos.z) {
-			colpositionmax.z = vertices[i].pos.z;
+		if (colPositionMax.z >= vertices[i].pos.z) {
+			colPositionMax.z = vertices[i].pos.z;
 		}
 
 	}

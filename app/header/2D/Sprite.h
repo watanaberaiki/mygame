@@ -45,29 +45,29 @@ public:
 
 	//ゲッター
 	XMFLOAT4 GetColor() const { return color; }
-	const XMFLOAT2 GetPosition() const { return position_; }
+	const XMFLOAT2 GetPosition() const { return position; }
 	const float& GetRotationZ() const { return rotationZ; }
-	const XMFLOAT2 GetSize() const { return size_; }
-	const XMFLOAT2 GetAnchorPoint() const { return anchorPoint_; }
+	const XMFLOAT2 GetSize() const { return size; }
+	const XMFLOAT2 GetAnchorPoint() const { return anchorPoint; }
 	const bool& GetIsFlipX() const { return isFlipX; }
 	const bool& GetIsFlipY() const { return isFlipY; }
-	const bool& GetIsInvisible() const { return isInvisible_; }
-	const uint32_t GetTextureIndex() const { return textureIndex_; }
-	const XMFLOAT2 GetTextureLeftTop() const { return textureLeftTop_; }
-	const XMFLOAT2 GetTextureSize() const { return textureSize_; }
+	const bool& GetIsInvisible() const { return isInvisible; }
+	const uint32_t GetTextureIndex() const { return textureIndex; }
+	const XMFLOAT2 GetTextureLeftTop() const { return textureLeftTop; }
+	const XMFLOAT2 GetTextureSize() const { return textureSize; }
 
 	//セッター
 	void SetColor(XMFLOAT4 color_) { this->color = color_; }
-	void SetPosition(const XMFLOAT2& position) { this->position_ = position; }
+	void SetPosition(const XMFLOAT2& position_) { this->position = position_; }
 	void SetRotationZ(const float& rotationZ_) { this->rotationZ = rotationZ_; }
-	void SetSize(const XMFLOAT2& size) { this->size_ = size; }
-	void SetAnchorPoint(const XMFLOAT2& anchorPoint) { this->anchorPoint_ = anchorPoint; }
+	void SetSize(const XMFLOAT2& size_) { this->size = size_; }
+	void SetAnchorPoint(const XMFLOAT2& anchorPoint_) { this->anchorPoint = anchorPoint_; }
 	void SetIsFlipX(const bool& isFlipX_) { this->isFlipX = isFlipX_; }
 	void SetIsFlipY(const bool& isFlipY_) { this->isFlipY = isFlipY_; }
-	void SetIsInvisible(const bool& isInvisible) { this->isInvisible_ = isInvisible; }
-	void SetTextureIndex(const uint32_t& textureIndex) { this->textureIndex_ = textureIndex; }
-	void SetTextureLeftTop(const XMFLOAT2& textureLeftTop) { this->textureLeftTop_ = textureLeftTop; }
-	void SetTextureSize(const XMFLOAT2& textureSize) { this->textureSize_ = textureSize; }
+	void SetIsInvisible(const bool& isInvisible_) { this->isInvisible = isInvisible_; }
+	void SetTextureIndex(const uint32_t& textureIndex_) { this->textureIndex = textureIndex_; }
+	void SetTextureLeftTop(const XMFLOAT2& textureLeftTop_) { this->textureLeftTop = textureLeftTop_; }
+	void SetTextureSize(const XMFLOAT2& textureSize_) { this->textureSize = textureSize_; }
 
 private:
 	//初期のテクスチャのサイズを読み込み適用
@@ -75,29 +75,29 @@ private:
 
 private:
 
-	SpriteCommon* spriteCommon_ = nullptr;
+	SpriteCommon* spriteCommon = nullptr;
 
-	uint32_t textureIndex_ = 0;
+	uint32_t textureIndex = 0;
 
 	XMFLOAT4 color = { 1,0,0,0.5f };
 
 	float rotationZ=0;
-	XMFLOAT2 position_ = {};
+	XMFLOAT2 position = {};
 
-	XMFLOAT2 size_ = { 200.0f,200.0f };
+	XMFLOAT2 size = { 200.0f,200.0f };
 
-	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
+	XMFLOAT2 anchorPoint = { 0.0f,0.0f };
 
 	bool isFlipX = false;
 	bool isFlipY = false;
 
-	bool isInvisible_ = false;
+	bool isInvisible = false;
 
 	Vertex vertices[4]= {};
 
-	XMFLOAT2 textureLeftTop_ = { 0.0f,0.0f };
+	XMFLOAT2 textureLeftTop = { 0.0f,0.0f };
 
-	XMFLOAT2 textureSize_ = { 100.0f,100.0f };
+	XMFLOAT2 textureSize = { 100.0f,100.0f };
 
 	//ワールド変換行列
 	XMMATRIX matWorld = {};

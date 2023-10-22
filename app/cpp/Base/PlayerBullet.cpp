@@ -3,15 +3,15 @@
 void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource, XMFLOAT3 velocity_)
 {
 
-	bulletfbxmodel = resource->LoadFbx("boneTest");
-	bulletfbxobj = new FbxObject3D();
-	bulletfbxobj->Initialize();
-	bulletfbxobj->SetModel(bulletfbxmodel);
+	bulletFbxModel = resource->LoadFbx("boneTest");
+	bulletFbxObj = new FbxObject3D();
+	bulletFbxObj->Initialize();
+	bulletFbxObj->SetModel(bulletFbxModel);
 
 	//3dオブジェクト
-	bulletmodel = resource->LoadObj("blackcube");
-	bulletobj = Object3d::Create();
-	bulletobj->SetModel(bulletmodel);
+	bulletModel = resource->LoadObj("blackcube");
+	bulletObj = Object3d::Create();
+	bulletObj->SetModel(bulletModel);
 
 
 	//当たり判定キューブモデル
@@ -43,14 +43,14 @@ void PlayerBullet::Update()
 
 	//時間経過でデス
 	if (--deathTimer_ <= 0) {
-		isdeath = true;
+		isDeath = true;
 	}
 
 	//オブジェクト
-	bulletobj->SetPosition(position);
-	bulletobj->SetScale(scale);
-	bulletobj->SetRotation(rotation);
-	bulletobj->Update();
+	bulletObj->SetPosition(position);
+	bulletObj->SetScale(scale);
+	bulletObj->SetRotation(rotation);
+	bulletObj->Update();
 
 	//判定
 	collisionBox->SetPosition(position);
@@ -65,7 +65,7 @@ void PlayerBullet::Draw()
 	//bulletfbxobj->Draw(cmdList);
 
 	//オブジェクト
-	bulletobj->Draw();
+	bulletObj->Draw();
 
 }
 
@@ -86,5 +86,5 @@ void PlayerBullet::Move()
 
 void PlayerBullet::OnCollision()
 {
-	isdeath = true;
+	isDeath = true;
 }

@@ -7,15 +7,15 @@ void Enemy::Initialize()
 	resource = ResourceManager::Getinstance();
 
 	//fbx
-	enemyfbxmodel = resource->LoadFbx("boneTest");
-	enemyfbxobj = new FbxObject3D();
-	enemyfbxobj->Initialize();
-	enemyfbxobj->SetModel(enemyfbxmodel);
+	enemyFbxModel = resource->LoadFbx("boneTest");
+	enemyFbxObj = new FbxObject3D();
+	enemyFbxObj->Initialize();
+	enemyFbxObj->SetModel(enemyFbxModel);
 
 	//3dオブジェクト
-	enemymodel = resource->LoadObj("redcube");
-	enemyobj = WireObject::Create();
-	enemyobj->SetModel(enemymodel);
+	enemyModel = resource->LoadObj("redcube");
+	enemyObj = WireObject::Create();
+	enemyObj->SetModel(enemyModel);
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
@@ -68,10 +68,10 @@ void Enemy::Update()
 
 
 	//オブジェクト
-	enemyobj->SetPosition(position);
-	enemyobj->SetScale(scale);
-	enemyobj->SetRotation(rotation);
-	enemyobj->Update();
+	enemyObj->SetPosition(position);
+	enemyObj->SetScale(scale);
+	enemyObj->SetRotation(rotation);
+	enemyObj->Update();
 
 	//判定
 	collisionBox->SetPosition(position);
@@ -86,7 +86,7 @@ void Enemy::Draw()
 	//enemyfbxobj->Draw(cmdList);
 
 	////オブジェクト
-	enemyobj->Draw();
+	enemyObj->Draw();
 
 	//弾
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
@@ -205,10 +205,10 @@ void Enemy::Move()
 
 void Enemy::Fire()
 {
-	velocityvec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
-	velocityvec.normalize();
+	velocityVec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
+	velocityVec.normalize();
 
-	velocity = XMFLOAT3(velocityvec.x, velocityvec.y, velocityvec.z);
+	velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
 	std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
 	newObject->Initialize(dxcommon, resource, velocity);
 	newObject->SetPosition(position);

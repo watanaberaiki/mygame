@@ -29,11 +29,11 @@ public://メンバ関数
 	void SetPosition(XMFLOAT3 position_) { this->position = position_; }
 	void SetScale(XMFLOAT3 scale_) { this->position = scale_; }
 	void SetRotation(XMFLOAT3 rotation_) { this->position = rotation_; }
-	void SetIsFire(bool isfire_) { this->isfire = isfire_; }
+	void SetIsFire(bool isfire_) { this->isFire = isfire_; }
 
 	//ゲッター
-	bool GetIsFIre() { return isfire; }
-	bool GetIsDeath()const { return isdeath; }
+	bool GetIsFIre() { return isFire; }
+	bool GetIsDeath()const { return isDeath; }
 	CubeObject3D* GetCubeObject() { return collisionBox; }
 private://静的メンバ変数
 
@@ -45,20 +45,20 @@ private://メンバ変数
 
 
 	//FBXモデル
-	FbxModel* bulletfbxmodel = nullptr;
+	FbxModel* bulletFbxModel = nullptr;
 	//FBXオブジェクト
-	FbxObject3D* bulletfbxobj = nullptr;
+	FbxObject3D* bulletFbxObj = nullptr;
 	//3Dモデル
-	Model* bulletmodel = nullptr;
+	Model* bulletModel = nullptr;
 	//3Dオブジェクト
-	WireObject* bulletobj = nullptr;
+	WireObject* bulletObj = nullptr;
 
 
 	//スピード
 	float speed = 0.5f;
 	//フラグ
-	bool isfire = false;
-	bool isdeath = false;
+	bool isFire = false;
+	bool isDeath = false;
 
 	//寿命
 	static const int32_t kLifeTime = 60 * 5;

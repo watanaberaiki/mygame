@@ -1,27 +1,27 @@
 #include "Sprite.h"
 
-void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
+void Sprite::Initialize(SpriteCommon* spriteCommon_, uint32_t textureIndex_)
 {
 	HRESULT result{};
-	assert(spriteCommon);
-	spriteCommon_ = spriteCommon;
+	assert(spriteCommon_);
+	spriteCommon = spriteCommon_;
 
-	if (textureIndex != UINT32_MAX) {
-		textureIndex_ = textureIndex;
+	if (textureIndex_ != UINT32_MAX) {
+		textureIndex = textureIndex_;
 		AdjustTextureSize();
-		size_ = textureSize_;
+		size = textureSize;
 	}
 
-	ID3D12Resource* textureBuffer = spriteCommon_->GetTextureBuffer(textureIndex_);
+	ID3D12Resource* textureBuffer = spriteCommon->GetTextureBuffer(textureIndex);
 	if (textureBuffer)
 	{
 		//テクスチャ情報取得
 		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
 
-		float tex_left = textureLeftTop_.x / resDesc.Width;
-		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
-		float tex_top = textureLeftTop_.y / resDesc.Height;
-		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		float tex_left = textureLeftTop.x / resDesc.Width;
+		float tex_right = (textureLeftTop.x + textureSize.x) / resDesc.Width;
+		float tex_top = textureLeftTop.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop.y + textureSize.y) / resDesc.Height;
 
 		vertices[LB].uv = { tex_left, tex_bottom };
 		vertices[LT].uv = { tex_left, tex_top };
@@ -32,10 +32,10 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 
 #pragma region 頂点データ(3点分の座標)
 
-	float left = (0.0f - anchorPoint_.x) * size_.x;
-	float right = (1.0f - anchorPoint_.x) * size_.x;
-	float top = (0.0f - anchorPoint_.y) * size_.y;
-	float bottom = (1.0f - anchorPoint_.y) * size_.y;
+	float left = (0.0f - anchorPoint.x) * size.x;
+	float right = (1.0f - anchorPoint.x) * size.x;
+	float top = (0.0f - anchorPoint.y) * size.y;
+	float bottom = (1.0f - anchorPoint.y) * size.y;
 	//頂点データ
 					//   x      y      z  
 	vertices[LB].pos = { left,bottom, 0.0f };
@@ -73,7 +73,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 頂点バッファの生成
-	result = spriteCommon_->GetDirectXCommon()->GetDevice()->CreateCommittedResource(
+	result = spriteCommon->GetDirectXCommon()->GetDevice()->CreateCommittedResource(
 		&heapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc, // リソース設定
@@ -129,7 +129,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 
 
 	//定数バッファの生成
-	result = spriteCommon_->GetDirectXCommon()->GetDevice()->CreateCommittedResource(&cbHeapProp, D3D12_HEAP_FLAG_NONE, &cbResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuffMaterial));
+	result = spriteCommon->GetDirectXCommon()->GetDevice()->CreateCommittedResource(&cbHeapProp, D3D12_HEAP_FLAG_NONE, &cbResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuffMaterial));
 	assert(SUCCEEDED(result));
 
 	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
@@ -159,7 +159,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 
 
 		//定数バッファの生成
-		result = spriteCommon_->GetDirectXCommon()->GetDevice()->CreateCommittedResource(&cbHeapProp_, D3D12_HEAP_FLAG_NONE, &cbResourceDesc_, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBufferTransform));
+		result = spriteCommon->GetDirectXCommon()->GetDevice()->CreateCommittedResource(&cbHeapProp_, D3D12_HEAP_FLAG_NONE, &cbResourceDesc_, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBufferTransform));
 		assert(SUCCEEDED(result));
 
 		//定数バッファのマッピング
@@ -169,7 +169,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, uint32_t textureIndex)
 
 
 		rotationZ = 0.0f;
-		position_ = { 0.0f,0.0f };
+		position = { 0.0f,0.0f };
 
 
 
@@ -200,16 +200,16 @@ void Sprite::Update() {
 
 	HRESULT result = {};
 
-	ID3D12Resource* textureBuffer = spriteCommon_->GetTextureBuffer(textureIndex_);
+	ID3D12Resource* textureBuffer = spriteCommon->GetTextureBuffer(textureIndex);
 	if (textureBuffer)
 	{
 		//テクスチャ情報取得
 		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
 
-		float tex_left = textureLeftTop_.x / resDesc.Width;
-		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
-		float tex_top = textureLeftTop_.y / resDesc.Height;
-		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		float tex_left = textureLeftTop.x / resDesc.Width;
+		float tex_right = (textureLeftTop.x + textureSize.x) / resDesc.Width;
+		float tex_top = textureLeftTop.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop.y + textureSize.y) / resDesc.Height;
 
 		vertices[LB].uv = { tex_left, tex_bottom };
 		vertices[LT].uv = { tex_left, tex_top };
@@ -218,10 +218,10 @@ void Sprite::Update() {
 
 	}
 
-	float left = (0.0f - anchorPoint_.x) * size_.x;
-	float right = (1.0f - anchorPoint_.x) * size_.x;
-	float top = (0.0f - anchorPoint_.y) * size_.y;
-	float bottom = (1.0f - anchorPoint_.y) * size_.y;
+	float left = (0.0f - anchorPoint.x) * size.x;
+	float right = (1.0f - anchorPoint.x) * size.x;
+	float top = (0.0f - anchorPoint.y) * size.y;
+	float bottom = (1.0f - anchorPoint.y) * size.y;
 
 	if (isFlipX) {
 		left = -left;
@@ -260,7 +260,7 @@ void Sprite::Update() {
 
 	matWorld *= matRot;
 
-	matTrans = XMMatrixTranslation(position_.x, position_.y, 0.0f);
+	matTrans = XMMatrixTranslation(position.x, position.y, 0.0f);
 	matWorld *= matTrans;
 
 	constMapTransform->mat = matWorld * matProjection;
@@ -268,31 +268,31 @@ void Sprite::Update() {
 }
 void Sprite::Draw() {
 
-	if (isInvisible_) {
+	if (isInvisible) {
 		return;
 	}
 
 	//テクスチャコマンド
-	spriteCommon_->SetTextureCommands(textureIndex_);
+	spriteCommon->SetTextureCommands(textureIndex);
 
 
-	spriteCommon_->GetDirectXCommon()->GetCommandlist()->IASetVertexBuffers(0, 1, &vbView);
+	spriteCommon->GetDirectXCommon()->GetCommandlist()->IASetVertexBuffers(0, 1, &vbView);
 
-	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial.Get()->GetGPUVirtualAddress());
+	spriteCommon->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial.Get()->GetGPUVirtualAddress());
 
-	spriteCommon_->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(2, constBufferTransform.Get()->GetGPUVirtualAddress());
+	spriteCommon->GetDirectXCommon()->GetCommandlist()->SetGraphicsRootConstantBufferView(2, constBufferTransform.Get()->GetGPUVirtualAddress());
 
 
-	spriteCommon_->GetDirectXCommon()->GetCommandlist()->DrawInstanced(4, 1, 0, 0);
+	spriteCommon->GetDirectXCommon()->GetCommandlist()->DrawInstanced(4, 1, 0, 0);
 
 
 }
 
 void Sprite::AdjustTextureSize() {
-	ID3D12Resource* textureBuffer = spriteCommon_->GetTextureBuffer(textureIndex_);
+	ID3D12Resource* textureBuffer = spriteCommon->GetTextureBuffer(textureIndex);
 
 	D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
 
-	textureSize_.x = static_cast<float>(resDesc.Width);
-	textureSize_.y = static_cast<float>(resDesc.Height);
+	textureSize.x = static_cast<float>(resDesc.Width);
+	textureSize.y = static_cast<float>(resDesc.Height);
 }

@@ -18,7 +18,7 @@ ComPtr<ID3D12PipelineState> WireObject::pipelinestate;
 ComPtr<ID3D12DescriptorHeap> WireObject::descHeap;
 ComPtr<ID3D12Resource> WireObject::vertBuff;
 ComPtr<ID3D12Resource> WireObject::indexBuff;
-ComPtr<ID3D12Resource> WireObject::texbuff;
+ComPtr<ID3D12Resource> WireObject::texBuff;
 CD3DX12_CPU_DESCRIPTOR_HANDLE WireObject::cpuDescHandleSRV;
 CD3DX12_GPU_DESCRIPTOR_HANDLE WireObject::gpuDescHandleSRV;
 XMMATRIX WireObject::matView{};

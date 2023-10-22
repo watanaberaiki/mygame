@@ -7,7 +7,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 {
 	HRESULT result{};
 	assert(dxCommon);
-	dxcommon_ = dxCommon;
+	dxcommon = dxCommon;
 
 	//デスクリプタヒープの設定
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
@@ -15,7 +15,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	srvHeapDesc.NumDescriptors = kMaxSRVCount;
 
-	result = dxcommon_->GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
+	result = dxcommon->GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
 
 	//SRVヒープの先頭ハンドルを取得
@@ -237,7 +237,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, &errorBlob);
 	assert(SUCCEEDED(result));
-	result = dxcommon_->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+	result = dxcommon->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(result));
 	rootSigBlob->Release();
@@ -246,7 +246,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 
 
 
-	result = dxcommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+	result = dxcommon->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 
 #pragma endregion
@@ -304,7 +304,7 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName) {
 	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 	textureResourceDesc.SampleDesc.Count = 1;
 
-	result = dxcommon_->GetDevice()->CreateCommittedResource(
+	result = dxcommon->GetDevice()->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureResourceDesc,
@@ -338,9 +338,9 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName) {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; //2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
-	UINT descriptorHandleIncrementSize = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	UINT descriptorHandleIncrementSize = dxcommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	dxcommon_->GetDevice()->CreateShaderResourceView(
+	dxcommon->GetDevice()->CreateShaderResourceView(
 		texBuff[index].Get(),
 		&srvDesc,
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(srvHeap.Get()->GetCPUDescriptorHandleForHeapStart(), index, descriptorHandleIncrementSize));
@@ -350,24 +350,24 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName) {
 void SpriteCommon::SetTextureCommands(uint32_t index) {
 
 
-	UINT descriptorHandleIncrementSize = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	UINT descriptorHandleIncrementSize = dxcommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	dxcommon_->GetCommandlist()->SetGraphicsRootDescriptorTable
+	dxcommon->GetCommandlist()->SetGraphicsRootDescriptorTable
 	(1,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvHeap.Get()->GetGPUDescriptorHandleForHeapStart(), index, descriptorHandleIncrementSize));
 
 }
 void SpriteCommon::PreDraw()
 {
-	dxcommon_->GetCommandlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	dxcommon->GetCommandlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	dxcommon_->GetCommandlist()->SetPipelineState(pipelineState.Get());
+	dxcommon->GetCommandlist()->SetPipelineState(pipelineState.Get());
 
-	dxcommon_->GetCommandlist()->SetGraphicsRootSignature(rootSignature.Get());
+	dxcommon->GetCommandlist()->SetGraphicsRootSignature(rootSignature.Get());
 
 
 	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap.Get() };
-	dxcommon_->GetCommandlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	dxcommon->GetCommandlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
 void SpriteCommon::PostDraw() {}

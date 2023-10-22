@@ -135,7 +135,7 @@ protected: // 静的メンバ変数
 	// インデックスバッファ
 	static ComPtr<ID3D12Resource> indexBuff;
 	// テクスチャバッファ
-	static ComPtr<ID3D12Resource> texbuff;
+	static ComPtr<ID3D12Resource> texBuff;
 	// シェーダリソースビューのハンドル(CPU)
 	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
 	// シェーダリソースビューのハンドル(CPU)

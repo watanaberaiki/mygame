@@ -10,20 +10,20 @@ GameScene::~GameScene()
 {
 	delete spriteCommon;
 	//3dオブジェクト解放
-	delete sphereobj;
-	delete blockobj;
+	delete sphereObj;
+	delete blockObj;
 	for (Object3d*& object : objects) {
 		delete object;
 	}
-	for (WireObject*& wireobject : wireobjects) {
+	for (WireObject*& wireobject : wireObjects) {
 		delete wireobject;
 	}
 	////レベルデータ解放
 	//delete leveldata;
 	//delete floorobj;
 	//3Dモデル解放
-	delete spheremodel;
-	delete blockmodel;
+	delete sphereModel;
+	delete blockModel;
 	FBX_SAFE_DELETE(boneTestModel);
 	FBX_SAFE_DELETE(cube);
 	for (int i = 0; i < bonetestsize; i++) {
@@ -123,37 +123,37 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	spriteCommon->LoadTexture(6, "black1x1.png");
 	spriteCommon->LoadTexture(7, "white1x1.png");
 	//スプライトにテクスチャ割り当て
-	hitsprite->Initialize(spriteCommon, 0);
-	mariosprite->Initialize(spriteCommon, 1);
-	menu->Initialize(spriteCommon, 2);
-	title->Initialize(spriteCommon, 4);
-	startsprite->Initialize(spriteCommon, 5);
-	blacksprite->Initialize(spriteCommon, 6);
-	whitesprite->Initialize(spriteCommon, 7);
+	hitSprite->Initialize(spriteCommon, 0);
+	marioSprite->Initialize(spriteCommon, 1);
+	menuSprite->Initialize(spriteCommon, 2);
+	titleSprite->Initialize(spriteCommon, 4);
+	startSprite->Initialize(spriteCommon, 5);
+	blackSprite->Initialize(spriteCommon, 6);
+	whiteSprite->Initialize(spriteCommon, 7);
 
 	//スプライト初期位置
-	mariosprite->SetPosition({ 800,0 });
-	mariosprite->Update();
+	marioSprite->SetPosition({ 800,0 });
+	marioSprite->Update();
 
 	//画面遷移用スプライト
-	whitesprite->SetAnchorPoint(XMFLOAT2(0.5, 0.5));
-	whitesprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
+	whiteSprite->SetAnchorPoint(XMFLOAT2(0.5, 0.5));
+	whiteSprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
 
 	//3Dモデル
 	//モデルデータをマップに入れる
 	models.insert(std::make_pair("floor", resorcemanager->LoadObj("blackcube")));
 	models.insert(std::make_pair("line", resorcemanager->LoadObj("block")));
 
-	menu->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
-	menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+	menuSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 
 	////地面の配置(json読み込み)
 	//地面を繰り返し描画するために二つ読み込む(json読み込み)
 
 	// レベルデータの読み込み
-	floordata = LoadFile::LoadFileData("test");
+	floorData = LoadFile::LoadFileData("test");
 	// レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : floordata->objects) {
+	for (auto& objectData : floorData->objects) {
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
@@ -204,14 +204,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			newObject->SetScale(scale);
 
 			// 配列に登録
-			wireobjects.push_back(newObject);
+			wireObjects.push_back(newObject);
 		}
 	}
 
 	// レベルデータの読み込み
-	floordata = LoadFile::LoadFileData("test1");
+	floorData = LoadFile::LoadFileData("test1");
 	// レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : floordata->objects) {
+	for (auto& objectData : floorData->objects) {
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
@@ -262,7 +262,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			newObject->SetScale(scale);
 
 			// 配列に登録
-			wireobjects.push_back(newObject);
+			wireObjects.push_back(newObject);
 			lineEndScales.push_back(newObject->GetScale());
 		}
 	}
@@ -270,13 +270,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//地面の線
 	//ライン初期化
-	linemodel = new LineModel();
-	linemodel->Initialize(dxCommon->GetDevice(), 5.0f, -5.0f);
-	linemodel->SetImageData(XMFLOAT4(255, 255, 255, 1));
+	lineModel = new LineModel();
+	lineModel->Initialize(dxCommon->GetDevice(), 5.0f, -5.0f);
+	lineModel->SetImageData(XMFLOAT4(255, 255, 255, 1));
 	for (int i = 0; i < maxLine; i++) {
 		std::unique_ptr<LineObject>newobject = std::make_unique<LineObject>();
 		newobject->Initialize();
-		newobject->SetModel(linemodel);
+		newobject->SetModel(lineModel);
 		newobject->SetPosition(XMFLOAT3(0.0f, -1.8f, (float)20.0f * i + 20));
 		newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 		floorEndScale = newobject->GetScale();
@@ -314,9 +314,9 @@ void GameScene::Update()
 		}
 
 		//スプライト
-		title->Update();
+		titleSprite->Update();
 
-		startsprite->Update();
+		startSprite->Update();
 
 		//戻っている最中は押しても反応しない
 		if (isBackTransition) {
@@ -326,7 +326,7 @@ void GameScene::Update()
 		{
 			//ゲームシーンへのシーンチェンジ
 			if (input_->TriggerKey(DIK_SPACE)) {
-				isstart = true;
+				isStart = true;
 
 			}
 
@@ -340,37 +340,37 @@ void GameScene::Update()
 		}
 
 		//スタート演出
-		if (isstart) {
+		if (isStart) {
 			//スプライトのサイズ、座標変更
-			title->SetSize(
+			titleSprite->SetSize(
 				XMFLOAT2(
-					(float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX, totaltime),
-					(float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)
+					(float)easeOutQuad(startMaxTime, startSizeX, endSize - startSizeX, totalTime),
+					(float)easeOutQuad(startMaxTime, startSizeY, endSize - startSizeY, totalTime)
 				)
 			);
-			title->SetPosition(
+			titleSprite->SetPosition(
 				XMFLOAT2(
-					(float)easeOutQuad(startMaxTime, startpos, end - startpos, totaltime),
-					(float)easeOutQuad(startMaxTime, startpos, endposY - startpos, totaltime)
+					(float)easeOutQuad(startMaxTime, startPos, end - startPos, totalTime),
+					(float)easeOutQuad(startMaxTime, startPos, endPosY - startPos, totalTime)
 				)
 			);
 
-			startsprite->SetSize(
+			startSprite->SetSize(
 				XMFLOAT2(
-					(float)easeOutQuad(startMaxTime, startsizeX, endsize - startsizeX, totaltime),
-					(float)easeOutQuad(startMaxTime, startsizeY, endsize - startsizeY, totaltime)
+					(float)easeOutQuad(startMaxTime, startSizeX, endSize - startSizeX, totalTime),
+					(float)easeOutQuad(startMaxTime, startSizeY, endSize - startSizeY, totalTime)
 				)
 			);
-			startsprite->SetPosition(
-				XMFLOAT2((float)easeOutQuad(startMaxTime, startpos, end - startpos, totaltime),
-					(float)easeOutQuad(startMaxTime, startpos, endposY - startpos, totaltime)
+			startSprite->SetPosition(
+				XMFLOAT2((float)easeOutQuad(startMaxTime, startPos, end - startPos, totalTime),
+					(float)easeOutQuad(startMaxTime, startPos, endPosY - startPos, totalTime)
 				)
 			);
 
-			if (startMaxTime >= totaltime) {
-				totaltime += 1;
+			if (startMaxTime >= totalTime) {
+				totalTime += 1;
 			}
-			else if (startMaxTime < totaltime) {
+			else if (startMaxTime < totalTime) {
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
 				//スケールがだんだん元の大きさになる
@@ -392,7 +392,7 @@ void GameScene::Update()
 					lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, endscale.x - lineStartScale.x, directionTime);
 					lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, endscale.y - lineStartScale.y, directionTime);
 					lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, endscale.z - lineStartScale.z, directionTime);
-					for (auto& wireobject : wireobjects) {
+					for (auto& wireobject : wireObjects) {
 						if (endCount==wireCount) {
 							wireobject->SetScale(lineDirectionScale);
 						}
@@ -404,44 +404,44 @@ void GameScene::Update()
 
 
 				//プレイヤーが動かないように判定を送る
-				player->SetIsStart(isstart);
+				player->SetIsStart(isStart);
 				player->Update();
 				if (directionMaxTime >= directionTime) {
 					directionTime += 1;
 				}
 				else if (directionMaxTime < directionTime) {
 					scene = Game;
-					isstart = false;
+					isStart = false;
 				}
 			}
 		}
 		else {
 			//パーティクル生成
-			partpos = eye;
-			partpos.y = eye.y + 5;
-			partpos.z = eye.z + 2;
-			particletime++;
-			if (particleMaxtime <= particletime) {
-				TitleParticle(partpos);
-				particletime = 0;
+			partPos = eye;
+			partPos.y = eye.y + 5;
+			partPos.z = eye.z + 2;
+			particleTime++;
+			if (particleMaxTime <= particleTime) {
+				TitleParticle(partPos);
+				particleTime = 0;
 			}
 		}
 
 		break;
 	case Game:
 		if (isMenu) {
-			menu->Update();
+			menuSprite->Update();
 
 
 			//メニューから戻るとき
 			if (backMenu) {
-				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
+				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
 				if (backtime < maxTime) {
 					backtime++;
 				}
 			}
 			else {
-				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 				if (time < maxTime) {
 					time++;
 				}
@@ -464,7 +464,7 @@ void GameScene::Update()
 		else {
 			//メニュー
 			if (input_->TriggerKey(DIK_M)) {
-				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 				isMenu = true;
 				time = 0;
 			}
@@ -486,7 +486,7 @@ void GameScene::Update()
 					object->Update();
 				}
 				//地面の横の白線
-				for (auto& wireobject : wireobjects) {
+				for (auto& wireobject : wireObjects) {
 					wireobject->Update();
 				}
 				//地面の真ん中の白線
@@ -511,7 +511,7 @@ void GameScene::Update()
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
 				//プレイヤーが動くように判定を送る
-				player->SetIsStart(isstart);
+				player->SetIsStart(isStart);
 				player->Update();
 
 				//敵
@@ -564,18 +564,18 @@ void GameScene::Update()
 		//ボス戦
 	case BossFight:
 		if (isMenu) {
-			menu->Update();
+			menuSprite->Update();
 
 
 			//メニューから戻るとき
 			if (backMenu) {
-				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
+				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
 				if (backtime < maxTime) {
 					backtime++;
 				}
 			}
 			else {
-				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 				if (time < maxTime) {
 					time++;
 				}
@@ -598,7 +598,7 @@ void GameScene::Update()
 		else {
 			//メニュー
 			if (input_->TriggerKey(DIK_M)) {
-				menu->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
+				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 				isMenu = true;
 				time = 0;
 			}
@@ -611,7 +611,7 @@ void GameScene::Update()
 			for (auto& object : objects) {
 				object->Update();
 			}
-			for (auto& wireobject : wireobjects) {
+			for (auto& wireobject : wireObjects) {
 				wireobject->Update();
 			}
 			//地面の真ん中の白線
@@ -707,7 +707,7 @@ void GameScene::Draw()
 		player->WireDraw();
 
 		//地面の線
-		for (auto& wireobject : wireobjects) {
+		for (auto& wireobject : wireObjects) {
 			wireobject->Draw();
 		}
 
@@ -722,9 +722,9 @@ void GameScene::Draw()
 		//スプライト
 		spriteCommon->PreDraw();
 
-		title->Draw();
+		titleSprite->Draw();
 
-		startsprite->Draw();
+		startSprite->Draw();
 
 		spriteCommon->PostDraw();
 
@@ -759,7 +759,7 @@ void GameScene::Draw()
 			enemy->Draw();
 		}
 		//地面の線
-		for (auto& wireobject : wireobjects) {
+		for (auto& wireobject : wireObjects) {
 			wireobject->Draw();
 		}
 
@@ -784,11 +784,11 @@ void GameScene::Draw()
 		//スプライト描画
 		spriteCommon->PreDraw();
 		if (isMenu) {
-			menu->Draw();
+			menuSprite->Draw();
 		}
 
 		if (isHit) {
-			hitsprite->Draw();
+			hitSprite->Draw();
 		}
 
 		spriteCommon->PostDraw();
@@ -817,7 +817,7 @@ void GameScene::Draw()
 		boss->Draw();
 
 		//地面の線
-		for (auto& wireobject : wireobjects) {
+		for (auto& wireobject : wireObjects) {
 			wireobject->Draw();
 		}
 
@@ -838,11 +838,11 @@ void GameScene::Draw()
 		//スプライト描画
 		spriteCommon->PreDraw();
 		if (isMenu) {
-			menu->Draw();
+			menuSprite->Draw();
 		}
 
 		if (isHit) {
-			hitsprite->Draw();
+			hitSprite->Draw();
 		}
 
 		spriteCommon->PostDraw();
@@ -863,7 +863,7 @@ void GameScene::Draw()
 	spriteCommon->PreDraw();
 
 	//遷移演出
-	whitesprite->Draw();
+	whiteSprite->Draw();
 
 	spriteCommon->PostDraw();
 }
@@ -1130,16 +1130,16 @@ void GameScene::Transition(Scene nextScene_)
 	//遷移中
 	if (isTransition) {
 		//パーティクル座標
-		partpos = eye;
-		partpos.y = eye.y + 5;
-		partpos.z = eye.z;
+		partPos = eye;
+		partPos.y = eye.y + 5;
+		partPos.z = eye.z;
 
 		//パーティクル
-		TransitionParticle(partpos);
+		TransitionParticle(partPos);
 		if (MaxDelay <= delayTime) {
 			//白い画像の位置
-			whitesprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionStartPosY, transitionEndposY - transitionStartPosY, totalTransitionTime)));
-			whitesprite->Update();
+			whiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionStartPosY, transitionEndposY - transitionStartPosY, totalTransitionTime)));
+			whiteSprite->Update();
 
 			//トータルのタイムを増やす
 			if (MaxTransitionTime > totalTransitionTime) {
@@ -1160,23 +1160,23 @@ void GameScene::Transition(Scene nextScene_)
 	}
 	//遷移戻り
 	else if (isBackTransition) {
-		whitesprite->Update();
+		whiteSprite->Update();
 		if (MaxDelay <= delayTime) {
 			//パーティクルの位置
-			partpos = eye;
-			partpos.y = eye.y - 5;
-			partpos.z = eye.z;
+			partPos = eye;
+			partPos.y = eye.y - 5;
+			partPos.z = eye.z;
 			//後半は出ないようにしておく
 			if (totalTransitionTime > MaxTransitionTime - 40.0) {
 
 			}
 			else {
 				//パーティクル
-				TransitionBackParticle(partpos, (int)(MaxTransitionTime - totalTransitionTime * 2));
+				TransitionBackParticle(partPos, (int)(MaxTransitionTime - totalTransitionTime * 2));
 			}
 
 			//白い画像の位置
-			whitesprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionEndposY, transitionStartPosY - transitionEndposY, totalTransitionTime)));
+			whiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionEndposY, transitionStartPosY - transitionEndposY, totalTransitionTime)));
 
 			//トータルのタイムを増やす
 			if (MaxTransitionTime > totalTransitionTime) {
