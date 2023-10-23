@@ -15,7 +15,7 @@ GameScene::~GameScene()
 	for (Object3d*& object : objects) {
 		delete object;
 	}
-	for (WireObject*& wireobject : wireObjects) {
+	for (WireObject*& wireobject : heightWireObjects) {
 		delete wireobject;
 	}
 	////レベルデータ解放
@@ -142,7 +142,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//3Dモデル
 	//モデルデータをマップに入れる
 	models.insert(std::make_pair("floor", resorcemanager->LoadObj("blackcube")));
-	models.insert(std::make_pair("line", resorcemanager->LoadObj("block")));
+	models.insert(std::make_pair("heightLine", resorcemanager->LoadObj("block")));
+	models.insert(std::make_pair("widthLine", resorcemanager->LoadObj("block")));
+
+
 
 	menuSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
 	menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
@@ -151,7 +154,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//地面を繰り返し描画するために二つ読み込む(json読み込み)
 
 	// レベルデータの読み込み
-	floorData = LoadFile::LoadFileData("test");
+	floorData = LoadFile::LoadFileData("floor");
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : floorData->objects) {
 		// ファイル名から登録済みモデルを検索
@@ -184,7 +187,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			objects.push_back(newObject);
 		}
 		//ワイヤーで描画したいもの
-		else if (objectData.fileName == "line") {
+		else if (objectData.fileName == "heightLine") {
 			//3Dオブジェクトを生成
 			WireObject* newObject = WireObject::Create();
 			newObject->SetModel(model);
@@ -204,12 +207,36 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			newObject->SetScale(scale);
 
 			// 配列に登録
-			wireObjects.push_back(newObject);
+			heightWireObjects.push_back(newObject);
+			heightLineEndScale = (newObject->GetScale());
+		}
+		else if (objectData.fileName == "widthLine") {
+			//3Dオブジェクトを生成
+			WireObject* newObject = WireObject::Create();
+			newObject->SetModel(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
+
+			// 配列に登録
+			widthWireObjects.push_back(newObject);
+			widthLineEndScale = (newObject->GetScale());
 		}
 	}
 
 	// レベルデータの読み込み
-	floorData = LoadFile::LoadFileData("test1");
+	floorData = LoadFile::LoadFileData("floors");
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : floorData->objects) {
 		// ファイル名から登録済みモデルを検索
@@ -242,7 +269,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			objects.push_back(newObject);
 		}
 		//ワイヤーで描画したいもの
-		else if (objectData.fileName == "line") {
+		else if (objectData.fileName == "heightLine") {
 			//3Dオブジェクトを生成
 			WireObject* newObject = WireObject::Create();
 			newObject->SetModel(model);
@@ -262,8 +289,31 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			newObject->SetScale(scale);
 
 			// 配列に登録
-			wireObjects.push_back(newObject);
-			lineEndScales.push_back(newObject->GetScale());
+			heightWireObjects.push_back(newObject);
+			heightLineEndScale = (newObject->GetScale());
+		}
+		else if (objectData.fileName == "widthLine") {
+			//3Dオブジェクトを生成
+			WireObject* newObject = WireObject::Create();
+			newObject->SetModel(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
+
+			// 配列に登録
+			widthWireObjects.push_back(newObject);
+			widthLineEndScale=(newObject->GetScale());
 		}
 	}
 
@@ -385,21 +435,22 @@ void GameScene::Update()
 					lineobject->SetScale(floorDirectionScale);
 					lineobject->Update();
 				}
-				//横の壁の白線
-				int endCount = 0;
-				int wireCount = 0;
-				for (auto& endscale : lineEndScales) {
-					lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, endscale.x - lineStartScale.x, directionTime);
-					lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, endscale.y - lineStartScale.y, directionTime);
-					lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, endscale.z - lineStartScale.z, directionTime);
-					for (auto& wireobject : wireObjects) {
-						if (endCount==wireCount) {
-							wireobject->SetScale(lineDirectionScale);
-						}
-						wireobject->Update();
-						wireCount++;
-					}
-					endCount++;
+				//縦向きの白線
+				lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, heightLineEndScale.x - lineStartScale.x, directionTime);
+				lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, heightLineEndScale.y - lineStartScale.y, directionTime);
+				lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, heightLineEndScale.z - lineStartScale.z, directionTime);
+				for (auto& wireobject : heightWireObjects) {
+					wireobject->SetScale(lineDirectionScale);
+					wireobject->Update();
+				}
+
+				//横向きの白線
+				lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, widthLineEndScale.x - lineStartScale.x, directionTime);
+				lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, widthLineEndScale.y - lineStartScale.y, directionTime);
+				lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, widthLineEndScale.z - lineStartScale.z, directionTime);
+				for (auto& wireobject : widthWireObjects) {
+					wireobject->SetScale(lineDirectionScale);
+					wireobject->Update();
 				}
 
 
@@ -485,10 +536,15 @@ void GameScene::Update()
 				for (auto& object : objects) {
 					object->Update();
 				}
-				//地面の横の白線
-				for (auto& wireobject : wireObjects) {
+				//横向きの白線
+				for (auto& wireobject : heightWireObjects) {
 					wireobject->Update();
 				}
+				//縦向きの白線
+				for (auto& wireobject : widthWireObjects) {
+					wireobject->Update();
+				}
+
 				//地面の真ん中の白線
 				for (auto& lineobject : lineObjects) {
 					lineobject->Update();
@@ -611,7 +667,12 @@ void GameScene::Update()
 			for (auto& object : objects) {
 				object->Update();
 			}
-			for (auto& wireobject : wireObjects) {
+			//横向きの白線
+			for (auto& wireobject : heightWireObjects) {
+				wireobject->Update();
+			}
+			//縦向きの白線
+			for (auto& wireobject : widthWireObjects) {
 				wireobject->Update();
 			}
 			//地面の真ん中の白線
@@ -706,8 +767,12 @@ void GameScene::Draw()
 		//プレイヤー
 		player->WireDraw();
 
-		//地面の線
-		for (auto& wireobject : wireObjects) {
+		//縦向きの線
+		for (auto& wireobject : heightWireObjects) {
+			wireobject->Draw();
+		}
+		//横向きの白線
+		for (auto& wireobject : widthWireObjects) {
 			wireobject->Draw();
 		}
 
@@ -758,8 +823,12 @@ void GameScene::Draw()
 		{
 			enemy->Draw();
 		}
-		//地面の線
-		for (auto& wireobject : wireObjects) {
+		//縦向きの線
+		for (auto& wireobject : heightWireObjects) {
+			wireobject->Draw();
+		}
+		//横向きの白線
+		for (auto& wireobject : widthWireObjects) {
 			wireobject->Draw();
 		}
 
@@ -816,8 +885,12 @@ void GameScene::Draw()
 
 		boss->Draw();
 
-		//地面の線
-		for (auto& wireobject : wireObjects) {
+		//縦向きの線
+		for (auto& wireobject : heightWireObjects) {
+			wireobject->Draw();
+		}
+		//横向きの白線
+		for (auto& wireobject : widthWireObjects) {
 			wireobject->Draw();
 		}
 

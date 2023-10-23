@@ -116,7 +116,9 @@ private:
 	//配置オブジェクト情報
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
-	std::vector<WireObject*> wireObjects;
+	std::vector<WireObject*> heightWireObjects;
+	std::vector<WireObject*> widthWireObjects;
+
 
 	//敵
 	static const int enemysize = 10;
@@ -192,7 +194,10 @@ private:
 	XMFLOAT3 floorDirectionScale = {};
 	//横の壁の白線のスケール
 	XMFLOAT3 lineStartScale = { 0.0f,0.0f,0.0f };
-	std::list<XMFLOAT3>lineEndScales = {};
+	XMFLOAT3 heightLineEndScale = {};
+	XMFLOAT3 widthLineEndScale = {};
+
+
 	XMFLOAT3 lineDirectionScale = { 0.0f,0.0f,0.0f };
 
 
