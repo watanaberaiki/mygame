@@ -84,22 +84,13 @@
     <ClCompile Include="app\cpp\3D\WireObject.cpp">
       <Filter>ソースファイル\3D</Filter>
     </ClCompile>
-    <ClCompile Include="app\cpp\Base\Boss.cpp">
-      <Filter>ソースファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="app\cpp\Base\Camera.cpp">
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="app\cpp\Base\CSVLoader.cpp">
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="app\cpp\Base\Enemy.cpp">
-      <Filter>ソースファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="app\cpp\Base\DirectXCommon.cpp">
-      <Filter>ソースファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="app\cpp\Base\EnemyBullet.cpp">
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="app\cpp\Base\Input.cpp">
@@ -109,12 +100,6 @@
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="app\cpp\Base\main.cpp">
-      <Filter>ソースファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="app\cpp\Base\PlayerBullet.cpp">
-      <Filter>ソースファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="app\cpp\Base\Player.cpp">
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="app\cpp\Base\ResourceManager.cpp">
@@ -127,6 +112,21 @@
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="game\cpp\GameScene.cpp">
+      <Filter>ソースファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\Boss.cpp">
+      <Filter>ソースファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\Enemy.cpp">
+      <Filter>ソースファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\EnemyBullet.cpp">
+      <Filter>ソースファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\Player.cpp">
+      <Filter>ソースファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\PlayerBullet.cpp">
       <Filter>ソースファイル\Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -225,9 +225,6 @@
     <ClInclude Include="app\header\3D\LineModel.h">
       <Filter>ヘッダーファイル\3D</Filter>
     </ClInclude>
-    <ClInclude Include="app\header\Base\Boss.h">
-      <Filter>ヘッダーファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="app\header\Base\Camera.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
@@ -237,22 +234,10 @@
     <ClInclude Include="app\header\Base\DirectXCommon.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="app\header\Base\Enemy.h">
-      <Filter>ヘッダーファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="app\header\Base\EnemyBullet.h">
-      <Filter>ヘッダーファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="app\header\Base\Input.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="app\header\Base\LoadFile.h">
-      <Filter>ヘッダーファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="app\header\Base\Player.h">
-      <Filter>ヘッダーファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="app\header\Base\PlayerBullet.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="app\header\Base\ResourceManager.h">
@@ -265,6 +250,21 @@
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="game\header\GameScene.h">
+      <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\Player.h">
+      <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\PlayerBullet.h">
+      <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\EnemyBullet.h">
+      <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\Enemy.h">
+      <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\Boss.h">
       <Filter>ヘッダーファイル\Game</Filter>
     </ClInclude>
   </ItemGroup>
