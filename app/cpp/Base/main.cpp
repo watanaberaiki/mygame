@@ -12,7 +12,7 @@
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//　基盤システムの初期化
 	//ポインタ
-	Input* input = nullptr;
+	Input* input = Input::GetInstance();
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 
@@ -64,7 +64,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 
 	//入力の初期化
-	input = new Input();
 	input->Initialize(winApp);
 
 	//3Dオブジェクト静的初期化
@@ -75,7 +74,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	GameScene* gamescene = nullptr;
 	gamescene = new GameScene();
-	gamescene->Initialize(dxCommon,input);
+	gamescene->Initialize(dxCommon);
 
 
 	//最初のシーンの初期化
@@ -104,8 +103,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		dxCommon->PostDraw();
 		// 4.描画コマンドここまで
 	}
-	//入力開放
-	delete input;
 	//WindowsAPIの終了処理
 	winApp->Finalize();
 	//WindowsAPIの解放

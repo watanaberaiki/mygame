@@ -44,6 +44,8 @@ void Player::Initialize()
 	frontdepth = 10;
 	backdepth = 25;
 
+	input = Input::GetInstance();
+
 }
 
 void Player::Update()

@@ -32,10 +32,10 @@ GameScene::~GameScene()
 	delete enemycsv;
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
+void GameScene::Initialize(DirectXCommon* dxCommon)
 {
 	this->dxCommon_ = dxCommon;
-	this->input_ = input;
+	input_ = Input::GetInstance();
 
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
@@ -45,7 +45,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
 	//カメラ
 	camera = new Camera();
-	camera->Initialize(input_);
+	camera->Initialize();
 	camera->SetEye(eye);
 	camera->SetTarget(target);
 	camera->SetUp(up);
@@ -80,7 +80,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	resorcemanager->LoadObj("floor");
 
 	//プレイヤー
-	Player::SetInput(input);
 	Player::SetDxCommon(dxCommon);
 	player = new Player;
 	player->Initialize();

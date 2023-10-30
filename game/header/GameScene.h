@@ -45,7 +45,7 @@ public:
 	GameScene();
 	~GameScene();
 	//初期化
-	void Initialize(DirectXCommon* dxCommon, Input* input);
+	void Initialize(DirectXCommon* dxCommon);
 	//更新
 	void Update();
 	//描画

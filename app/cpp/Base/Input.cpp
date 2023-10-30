@@ -1,5 +1,13 @@
 #include "Input.h"
 
+Input::Input() {
+
+}
+
+Input::~Input()
+{
+}
+
 void Input::Initialize(WinApp* winApp_)
 {
 	//借りてきたWinAppのインスタンスを記録
@@ -66,4 +74,10 @@ bool Input::released(BYTE keyNumber)
 		return true; 
 	}
 	return false;
+}
+
+Input* Input::GetInstance()
+{
+	static Input instance;
+	return &instance;
 }
