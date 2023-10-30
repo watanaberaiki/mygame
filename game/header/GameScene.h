@@ -52,8 +52,8 @@ public:
 	void Draw();
 	//判定一覧
 	void AllCollision();
-	//敵のパーティクル処理
-	void EnemyParticle(XMFLOAT3 pos);
+	//パーティクル処理
+	void Particle(XMFLOAT3 pos);
 	//タイトルシーンのパーティクル処理
 	void TitleParticle(XMFLOAT3 pos);
 	//画面遷移時に使うパーティクル
@@ -81,6 +81,7 @@ private:
 	Sprite* startSprite = new Sprite();
 	Sprite* blackSprite = new Sprite();
 	Sprite* whiteSprite = new Sprite();
+	Sprite* gameOverSprite = new Sprite();
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -216,5 +217,15 @@ private:
 
 	int MaxDelay = 20;
 	int delayTime = 0;
+
+	//ゲームオーバー演出用
+	bool isGameOver = false;
+	bool lineLose = false;
+	int gameOverTime = 0;
+	const int gameOverMaxTime = 30;
+	const int nextSceneTime = 60;
+	//白線の消滅エフェクト用
+	float lineZ = 10;
+	XMFLOAT3 linepos = {};
 };
 

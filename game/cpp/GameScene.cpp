@@ -121,6 +121,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	spriteCommon->LoadTexture(5, "start.png");
 	spriteCommon->LoadTexture(6, "black1x1.png");
 	spriteCommon->LoadTexture(7, "white1x1.png");
+	spriteCommon->LoadTexture(8, "gameover.png");
 	//スプライトにテクスチャ割り当て
 	hitSprite->Initialize(spriteCommon, 0);
 	marioSprite->Initialize(spriteCommon, 1);
@@ -129,6 +130,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	startSprite->Initialize(spriteCommon, 5);
 	blackSprite->Initialize(spriteCommon, 6);
 	whiteSprite->Initialize(spriteCommon, 7);
+	gameOverSprite->Initialize(spriteCommon, 8);
 
 	//スプライト初期位置
 	marioSprite->SetPosition({ 800,0 });
@@ -312,7 +314,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 			// 配列に登録
 			widthWireObjects.push_back(newObject);
-			widthLineEndScale=(newObject->GetScale());
+			widthLineEndScale = (newObject->GetScale());
 		}
 	}
 
@@ -479,6 +481,38 @@ void GameScene::Update()
 
 		break;
 	case Game:
+		//ゲームオーバー演出
+		if (isGameOver) {
+			if (gameOverTime == 0) {
+				Particle(player->GetPosition());
+			}
+			gameOverTime++;
+			if (gameOverTime == gameOverMaxTime) {
+				//縦向きの白線
+				for (auto& wireobject : heightWireObjects) {
+					linepos = wireobject->GetPosition();
+					//linepos.z = lineZ;
+					Particle(linepos);
+				}
+				lineLose = true;
+			}
+			if (nextSceneTime == gameOverTime) {
+				for (std::unique_ptr<ParticleManager>& particle : particles)
+				{
+					particle->Update();
+				}
+				//戻っている最中は押しても反応しない
+				if (isBackTransition) {
+
+				}
+				else
+				{
+					isTransition = true;
+					nextScene = Dead;
+				}
+			}
+
+		}
 		if (isMenu) {
 			menuSprite->Update();
 
@@ -512,6 +546,7 @@ void GameScene::Update()
 
 		}
 		else {
+
 			//メニュー
 			if (input_->TriggerKey(DIK_M)) {
 				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
@@ -521,6 +556,10 @@ void GameScene::Update()
 			//仮のシーンチェンジ
 			if (input_->TriggerKey(DIK_RETURN)) {
 				scene = Title;
+			}
+			//仮のゲームオーバー
+			if (input_->TriggerKey(DIK_3)) {
+				isGameOver = true;
 			}
 
 			if (isEnemyAlive) {
@@ -575,7 +614,7 @@ void GameScene::Update()
 					enemy->Update();
 					//死んだ際のパーティクル
 					if (enemy->GetisDead()) {
-						EnemyParticle(enemy->GetPos());
+						Particle(enemy->GetPos());
 					}
 				}
 				//敵の死んだ処理
@@ -715,6 +754,8 @@ void GameScene::Update()
 
 		break;
 	case Dead:
+		//スプライト
+		gameOverSprite->Update();
 
 		for (std::unique_ptr<ParticleManager>& particle : particles)
 		{
@@ -796,8 +837,10 @@ void GameScene::Draw()
 	case Game:
 		//オブジェクト描画
 		Object3d::PreDraw(dxCommon_->GetCommandlist());
-		//プレイヤー
-		player->Draw();
+		if (!isGameOver) {
+			//プレイヤー
+			player->Draw();
+		}
 
 		////地面
 		for (auto& object : objects) {
@@ -812,25 +855,26 @@ void GameScene::Draw()
 
 		//ワイヤーオブジェクト描画
 		WireObject::PreDraw(dxCommon_->GetCommandlist());
-
-		//プレイヤー
-		player->WireDraw();
-
+		if (!isGameOver) {
+			//プレイヤー
+			player->WireDraw();
+		}
 
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys)
 		{
 			enemy->Draw();
 		}
-		//縦向きの線
-		for (auto& wireobject : heightWireObjects) {
-			wireobject->Draw();
+		if (!lineLose) {
+			//縦向きの線
+			for (auto& wireobject : heightWireObjects) {
+				wireobject->Draw();
+			}
+			//横向きの白線
+			for (auto& wireobject : widthWireObjects) {
+				wireobject->Draw();
+			}
 		}
-		//横向きの白線
-		for (auto& wireobject : widthWireObjects) {
-			wireobject->Draw();
-		}
-
 		WireObject::PostDraw();
 
 		//パーティクル
@@ -865,9 +909,10 @@ void GameScene::Draw()
 	case BossFight:
 		//オブジェクト描画
 		Object3d::PreDraw(dxCommon_->GetCommandlist());
-		//プレイヤー
-		player->Draw();
-
+		if (!isGameOver) {
+			//プレイヤー
+			player->Draw();
+		}
 		////地面
 		for (auto& object : objects) {
 			object->Draw();
@@ -883,16 +928,16 @@ void GameScene::Draw()
 		WireObject::PreDraw(dxCommon_->GetCommandlist());
 
 		boss->Draw();
-
-		//縦向きの線
-		for (auto& wireobject : heightWireObjects) {
-			wireobject->Draw();
+		if (!lineLose) {
+			//縦向きの線
+			for (auto& wireobject : heightWireObjects) {
+				wireobject->Draw();
+			}
+			//横向きの白線
+			for (auto& wireobject : widthWireObjects) {
+				wireobject->Draw();
+			}
 		}
-		//横向きの白線
-		for (auto& wireobject : widthWireObjects) {
-			wireobject->Draw();
-		}
-
 		WireObject::PostDraw();
 
 		//パーティクル
@@ -923,6 +968,14 @@ void GameScene::Draw()
 	case Clear:
 
 		break;
+	case Dead:
+
+		//スプライト描画
+		spriteCommon->PreDraw();
+		
+		gameOverSprite->Draw();
+
+		spriteCommon->PostDraw();
 	}
 
 	//パーティクル
@@ -938,6 +991,8 @@ void GameScene::Draw()
 	whiteSprite->Draw();
 
 	spriteCommon->PostDraw();
+
+	
 }
 
 void GameScene::AllCollision()
@@ -1015,10 +1070,10 @@ void GameScene::AllCollision()
 
 }
 
-void GameScene::EnemyParticle(XMFLOAT3 pos_)
+void GameScene::Particle(XMFLOAT3 pos_)
 {
 	XMFLOAT3 posA = pos_;
-	posA.z += 5;
+	//posA.z += 5;
 	//パーティクル
 	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	newparticle->Initialize("line.png");
