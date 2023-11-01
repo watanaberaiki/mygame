@@ -657,6 +657,7 @@ void GameScene::Update()
 		break;
 		//ボス戦
 	case BossFight:
+		//メニュー画面
 		if (isMenu) {
 			menuSprite->Update();
 
@@ -1072,12 +1073,12 @@ void GameScene::AllCollision()
 
 void GameScene::Particle(XMFLOAT3 pos_)
 {
-	XMFLOAT3 posA = pos_;
+	//XMFLOAT3 posA = pos_;
 	//posA.z += 5;
 	//パーティクル
 	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(posA);
+	newparticle->SetEmitterPos(pos_);
 	for (int i = 0; i < 50; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 1.0f;

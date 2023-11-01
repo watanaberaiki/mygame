@@ -27,6 +27,9 @@ public:
 
 	//コマンドリスト取得
 	ID3D12GraphicsCommandList* GetCommandlist()const { return commandList.Get(); }
+	//バックバッファの数を取得
+	size_t GetBackBufferCount()const { return backBuffers.size(); }
+
 
 private://関数
 	//デバイスの初期化

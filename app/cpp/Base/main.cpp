@@ -3,8 +3,8 @@
 #include"DirectXCommon.h"
 #include"Camera.h"
 #include"FbxLoader.h"
-
 #include"GameScene.h"
+#include"ImGuiManager.h"
 
 #pragma comment (lib,"d3dcompiler.lib")
 
@@ -66,6 +66,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//入力の初期化
 	input->Initialize(winApp);
 
+	//ImGuiの初期化
+	ImguiManager* imgui = new ImguiManager();
+	imgui->Initialize(winApp,dxCommon);
+
 	//3Dオブジェクト静的初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 	WireObject::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
@@ -78,7 +82,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 
 	//最初のシーンの初期化
-
 #ifdef _DEBUG
 
 #endif
@@ -91,8 +94,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		}
 		//入力の更新
 		input->Update();
-		//ゲームシーン
+		//ゲームシーン更新
 		gamescene->Update();
+		
+
+		//imgui更新
+		imgui->Begin();
+		//表示項目
+		ImGui::Text("Hello, world %d", 123);
+		//ボタンを押したら
+		if (ImGui::Button("Save")) {
+
+		}
+		//デモウィンドウ
+		ImGui::ShowDemoWindow();
+
+		imgui->End();
 		//// 4.描画コマンドここから
 
 		dxCommon->PreDraw();
@@ -100,11 +117,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//ゲームシーン
 		gamescene->Draw();
 
+		//imgui
+		imgui->Draw();
+
 		dxCommon->PostDraw();
 		// 4.描画コマンドここまで
 	}
 	//WindowsAPIの終了処理
 	winApp->Finalize();
+	//imguiの終了処理
+	imgui->Finalize();
 	//WindowsAPIの解放
 	delete winApp;
 	//DirectX解放
