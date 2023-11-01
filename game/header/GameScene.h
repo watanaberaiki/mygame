@@ -25,6 +25,7 @@
 #include"EnemyBullet.h"
 #include"CSVLoader.h"
 #include"Boss.h"
+#include"ImguiManager.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
@@ -45,7 +46,7 @@ public:
 	GameScene();
 	~GameScene();
 	//初期化
-	void Initialize(DirectXCommon* dxCommon);
+	void Initialize(DirectXCommon* dxCommon,ImguiManager*imgui);
 	//更新
 	void Update();
 	//描画
@@ -67,6 +68,7 @@ private:
 	//ポインタ
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
+	ImguiManager* imgui_ = nullptr;
 
 	//パーティクル
 	std::list<std::unique_ptr<ParticleManager>> particles;

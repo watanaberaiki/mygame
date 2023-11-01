@@ -78,7 +78,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	GameScene* gamescene = nullptr;
 	gamescene = new GameScene();
-	gamescene->Initialize(dxCommon);
+	gamescene->Initialize(dxCommon,imgui);
 
 
 	//最初のシーンの初期化
@@ -97,19 +97,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//ゲームシーン更新
 		gamescene->Update();
 		
-
-		//imgui更新
-		imgui->Begin();
-		//表示項目
-		ImGui::Text("Hello, world %d", 123);
-		//ボタンを押したら
-		if (ImGui::Button("Save")) {
-
-		}
-		//デモウィンドウ
-		ImGui::ShowDemoWindow();
-
-		imgui->End();
 		//// 4.描画コマンドここから
 
 		dxCommon->PreDraw();

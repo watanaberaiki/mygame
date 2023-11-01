@@ -32,10 +32,12 @@ GameScene::~GameScene()
 	delete enemycsv;
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon)
+void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 {
-	this->dxCommon_ = dxCommon;
+	dxCommon_ = dxCommon;
 	input_ = Input::GetInstance();
+
+	imgui_ = imgui;
 
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
@@ -568,7 +570,6 @@ void GameScene::Update()
 				camera->SetEye(eye);
 				camera->SetTarget(target);
 				camera->Update();
-				matView = camera->GetmatView();
 
 				//地面
 				for (auto& object : objects) {
@@ -642,7 +643,6 @@ void GameScene::Update()
 				camera->SetEye(eye);
 				camera->SetTarget(target);
 				camera->Update();
-				matView = camera->GetmatView();
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
 				player->Update();
@@ -723,9 +723,14 @@ void GameScene::Update()
 			{
 				particle->Update();
 			}
-
+			//カメラ更新
+			camera->Update();
+			//プレイヤー更新
+			player->SetIsStart(isStart);
 			player->Update();
+			//ボス更新
 			boss->Update();
+			//判定
 			AllCollision();
 
 			//ボスの死亡
@@ -776,7 +781,19 @@ void GameScene::Update()
 		break;
 	}
 
+	//imgui更新
+	imgui_->Begin();
+	//表示項目
+	ImGui::Text("eye:%f",eye.z);
+	ImGui::Text("player:%f", player->GetPosition().z);
+	//ボタンを押したら
+	if (ImGui::Button("Save")) {
 
+	}
+	//デモウィンドウ
+	ImGui::ShowDemoWindow();
+
+	imgui_->End();
 }
 
 void GameScene::Draw()
@@ -927,6 +944,11 @@ void GameScene::Draw()
 
 		//ワイヤーオブジェクト描画
 		WireObject::PreDraw(dxCommon_->GetCommandlist());
+
+		if (!isGameOver) {
+			//プレイヤー
+			player->WireDraw();
+		}
 
 		boss->Draw();
 		if (!lineLose) {
