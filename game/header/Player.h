@@ -43,7 +43,6 @@ public://メンバ関数
 	void SetScale(XMFLOAT3 scale_) { this->scale = scale_; }
 	void SetRotation(XMFLOAT3 rotation_) { this->rotation = rotation_; }
 	void SetIsStart(bool isstart_) { this->isStart = isstart_; }
-	static void SetInput(Input* input_) { Player::input = input_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Player::dxcommon = dxcommon_; }
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }

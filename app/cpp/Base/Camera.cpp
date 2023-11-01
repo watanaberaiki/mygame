@@ -1,13 +1,13 @@
 #include "Camera.h"
 #include"WinApp.h"
-void Camera::Initialize(Input* input_) {
+void Camera::Initialize() {
 	//透視投影変換行列の計算
 	matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),
 		(float)WinApp::window_width / WinApp::window_height,
 		0.1f, 1000.0f
 	);
-	this->input = input_;
+	input = Input::GetInstance();
 }
 
 void Camera::Update() {

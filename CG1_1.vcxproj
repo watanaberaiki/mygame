@@ -103,8 +103,8 @@
     <ClCompile Include="app\cpp\3D\CubeModel.cpp" />
     <ClCompile Include="app\cpp\3D\CubeObject3D.cpp" />
     <ClCompile Include="app\cpp\Base\DirectXCommon.cpp" />
-    <ClCompile Include="app\cpp\Base\Enemy.cpp" />
-    <ClCompile Include="app\cpp\Base\EnemyBullet.cpp" />
+    <ClCompile Include="game\cpp\Enemy.cpp" />
+    <ClCompile Include="game\cpp\EnemyBullet.cpp" />
     <ClCompile Include="app\cpp\3D\FbxLoader.cpp" />
     <ClCompile Include="app\cpp\3D\FbxModel.cpp" />
     <ClCompile Include="app\cpp\3D\FbxObject3D.cpp" />
@@ -117,15 +117,15 @@
     <ClCompile Include="app\cpp\3D\Model.cpp" />
     <ClCompile Include="app\cpp\3D\Object3d.cpp" />
     <ClCompile Include="app\cpp\2D\ParticleManager.cpp" />
-    <ClCompile Include="app\cpp\Base\Player.cpp" />
-    <ClCompile Include="app\cpp\Base\PlayerBullet.cpp" />
+    <ClCompile Include="game\cpp\Player.cpp" />
+    <ClCompile Include="game\cpp\PlayerBullet.cpp" />
     <ClCompile Include="app\cpp\Base\ResourceManager.cpp" />
     <ClCompile Include="app\cpp\2D\Sprite.cpp" />
     <ClCompile Include="app\cpp\2D\SpriteCommon.cpp" />
     <ClCompile Include="app\cpp\Base\Vector3.cpp" />
     <ClCompile Include="app\cpp\Base\WinApp.cpp" />
     <ClCompile Include="app\cpp\3D\WireObject.cpp" />
-    <ClCompile Include="app\cpp\Base\Boss.cpp" />
+    <ClCompile Include="game\cpp\Boss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicGS.hlsl">
@@ -237,16 +237,16 @@
     <ClInclude Include="app\header\3D\Model.h" />
     <ClInclude Include="app\header\3D\Object3d.h" />
     <ClInclude Include="app\header\3D\WireObject.h" />
-    <ClInclude Include="app\header\Base\Boss.h" />
+    <ClInclude Include="game\header\Boss.h" />
     <ClInclude Include="app\header\Base\Camera.h" />
     <ClInclude Include="app\header\Base\CSVLoader.h" />
     <ClInclude Include="app\header\Base\DirectXCommon.h" />
-    <ClInclude Include="app\header\Base\Enemy.h" />
-    <ClInclude Include="app\header\Base\EnemyBullet.h" />
+    <ClInclude Include="game\header\Enemy.h" />
+    <ClInclude Include="game\header\EnemyBullet.h" />
     <ClInclude Include="app\header\Base\Input.h" />
     <ClInclude Include="app\header\Base\LoadFile.h" />
-    <ClInclude Include="app\header\Base\Player.h" />
-    <ClInclude Include="app\header\Base\PlayerBullet.h" />
+    <ClInclude Include="game\header\Player.h" />
+    <ClInclude Include="game\header\PlayerBullet.h" />
     <ClInclude Include="app\header\Base\ResourceManager.h" />
     <ClInclude Include="app\header\Base\Vector3.h" />
     <ClInclude Include="app\header\Base\WinApp.h" />
