@@ -64,6 +64,10 @@ public:
 	void Transition(Scene nextScene);
 	//イージング
 	double easeOutQuad(double time,double start,double difference,double totaltime);
+	//クリア演出
+	void ClearTransition();
+	//クリアバック
+	void ClearBackTransition();
 private:
 	//ポインタ
 	Input* input_ = nullptr;
@@ -82,8 +86,10 @@ private:
 	Sprite* titleSprite = new Sprite();
 	Sprite* startSprite = new Sprite();
 	Sprite* blackSprite = new Sprite();
-	Sprite* whiteSprite = new Sprite();
+	Sprite* transitionWhiteSprite = new Sprite();
 	Sprite* gameOverSprite = new Sprite();
+	Sprite* clearWhiteSprite = new Sprite();
+	Sprite* clearSprite = new Sprite();
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -229,5 +235,14 @@ private:
 	//白線の消滅エフェクト用
 	float lineZ = 10;
 	XMFLOAT3 linepos = {};
+
+	//クリア演出用
+	bool isClearBack = false;
+	int clearTime = 0;
+	int clearBackTime = 0;
+	const int clearMaxTime = 60;
+	const int clearChangeSceneTime = 80;
+
+
 };
 

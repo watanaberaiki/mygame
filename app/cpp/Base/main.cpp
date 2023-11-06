@@ -82,9 +82,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 
 	//最初のシーンの初期化
-#ifdef _DEBUG
-
-#endif
+	// 
 	//ゲームループ
 	while (true) {
 		//メッセージがある？
@@ -103,10 +101,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		
 		//ゲームシーン
 		gamescene->Draw();
+#ifdef _DEBUG
 
 		//imgui
 		imgui->Draw();
 
+#endif
 		dxCommon->PostDraw();
 		// 4.描画コマンドここまで
 	}
