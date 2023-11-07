@@ -129,6 +129,9 @@
     <ClCompile Include="game\cpp\PlayerBullet.cpp">
       <Filter>ソースファイル\Game</Filter>
     </ClCompile>
+    <ClCompile Include="app\cpp\2D\ImguiManager.cpp">
+      <Filter>ソースファイル\2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -266,6 +269,9 @@
     </ClInclude>
     <ClInclude Include="game\header\Boss.h">
       <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="app\header\2D\ImguiManager.h">
+      <Filter>ヘッダーファイル\2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

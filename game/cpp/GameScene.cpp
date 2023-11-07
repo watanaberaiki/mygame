@@ -32,10 +32,12 @@ GameScene::~GameScene()
 	delete enemycsv;
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon)
+void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 {
-	this->dxCommon_ = dxCommon;
+	dxCommon_ = dxCommon;
 	input_ = Input::GetInstance();
+
+	imgui_ = imgui;
 
 	//モデル名を指定してファイル読み込み
 	/*FbxLoader::GetInstance()->LoadModelFromFile("cube");*/
@@ -122,6 +124,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	spriteCommon->LoadTexture(6, "black1x1.png");
 	spriteCommon->LoadTexture(7, "white1x1.png");
 	spriteCommon->LoadTexture(8, "gameover.png");
+	spriteCommon->LoadTexture(9, "clear.png");
 	//スプライトにテクスチャ割り当て
 	hitSprite->Initialize(spriteCommon, 0);
 	marioSprite->Initialize(spriteCommon, 1);
@@ -129,16 +132,22 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	titleSprite->Initialize(spriteCommon, 4);
 	startSprite->Initialize(spriteCommon, 5);
 	blackSprite->Initialize(spriteCommon, 6);
-	whiteSprite->Initialize(spriteCommon, 7);
+	transitionWhiteSprite->Initialize(spriteCommon, 7);
 	gameOverSprite->Initialize(spriteCommon, 8);
+	clearWhiteSprite->Initialize(spriteCommon, 7);
+	clearSprite->Initialize(spriteCommon, 9);
 
 	//スプライト初期位置
 	marioSprite->SetPosition({ 800,0 });
 	marioSprite->Update();
 
 	//画面遷移用スプライト
-	whiteSprite->SetAnchorPoint(XMFLOAT2(0.5, 0.5));
-	whiteSprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
+	transitionWhiteSprite->SetAnchorPoint(XMFLOAT2(0.5, 0.5));
+	transitionWhiteSprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
+
+	//クリア用スプライト
+	clearWhiteSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	clearWhiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, WinApp::window_height / 2));
 
 	//3Dモデル
 	//モデルデータをマップに入れる
@@ -568,7 +577,6 @@ void GameScene::Update()
 				camera->SetEye(eye);
 				camera->SetTarget(target);
 				camera->Update();
-				matView = camera->GetmatView();
 
 				//地面
 				for (auto& object : objects) {
@@ -642,7 +650,6 @@ void GameScene::Update()
 				camera->SetEye(eye);
 				camera->SetTarget(target);
 				camera->Update();
-				matView = camera->GetmatView();
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
 				player->Update();
@@ -657,6 +664,7 @@ void GameScene::Update()
 		break;
 		//ボス戦
 	case BossFight:
+		//メニュー画面
 		if (isMenu) {
 			menuSprite->Update();
 
@@ -722,14 +730,19 @@ void GameScene::Update()
 			{
 				particle->Update();
 			}
-
+			//カメラ更新
+			camera->Update();
+			//プレイヤー更新
+			player->SetIsStart(isStart);
 			player->Update();
+			//ボス更新
 			boss->Update();
+			//判定
 			AllCollision();
 
 			//ボスの死亡
 			if (boss->GetisDead()) {
-				scene = Clear;
+				ClearTransition();
 			}
 		}
 		break;
@@ -750,7 +763,10 @@ void GameScene::Update()
 				nextScene = Title;
 			}
 		}
+		//戻り演出
+		ClearBackTransition();
 
+		clearSprite->Update();
 
 		break;
 	case Dead:
@@ -775,7 +791,19 @@ void GameScene::Update()
 		break;
 	}
 
+	//imgui更新
+	imgui_->Begin();
+	//表示項目
+	ImGui::Text("eye:%f", eye.z);
+	ImGui::Text("player:%f", player->GetPosition().z);
+	//ボタンを押したら
+	if (ImGui::Button("Save")) {
 
+	}
+	//デモウィンドウ
+	ImGui::ShowDemoWindow();
+
+	imgui_->End();
 }
 
 void GameScene::Draw()
@@ -927,6 +955,11 @@ void GameScene::Draw()
 		//ワイヤーオブジェクト描画
 		WireObject::PreDraw(dxCommon_->GetCommandlist());
 
+		if (!isGameOver) {
+			//プレイヤー
+			player->WireDraw();
+		}
+
 		boss->Draw();
 		if (!lineLose) {
 			//縦向きの線
@@ -962,17 +995,31 @@ void GameScene::Draw()
 			hitSprite->Draw();
 		}
 
+		//クリア演出用
+		if (boss->GetisDead()) {
+			clearWhiteSprite->Draw();
+		}
+
 		spriteCommon->PostDraw();
 		break;
 
 	case Clear:
+		//スプライト描画
+		spriteCommon->PreDraw();
 
+		//演出白背景
+		clearWhiteSprite->Draw();
+
+		//クリア
+		clearSprite->Draw();
+
+		spriteCommon->PostDraw();
 		break;
 	case Dead:
 
 		//スプライト描画
 		spriteCommon->PreDraw();
-		
+
 		gameOverSprite->Draw();
 
 		spriteCommon->PostDraw();
@@ -988,11 +1035,11 @@ void GameScene::Draw()
 	spriteCommon->PreDraw();
 
 	//遷移演出
-	whiteSprite->Draw();
+	transitionWhiteSprite->Draw();
 
 	spriteCommon->PostDraw();
 
-	
+
 }
 
 void GameScene::AllCollision()
@@ -1072,12 +1119,12 @@ void GameScene::AllCollision()
 
 void GameScene::Particle(XMFLOAT3 pos_)
 {
-	XMFLOAT3 posA = pos_;
+	//XMFLOAT3 posA = pos_;
 	//posA.z += 5;
 	//パーティクル
 	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(posA);
+	newparticle->SetEmitterPos(pos_);
 	for (int i = 0; i < 50; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 1.0f;
@@ -1265,8 +1312,8 @@ void GameScene::Transition(Scene nextScene_)
 		TransitionParticle(partPos);
 		if (MaxDelay <= delayTime) {
 			//白い画像の位置
-			whiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionStartPosY, transitionEndposY - transitionStartPosY, totalTransitionTime)));
-			whiteSprite->Update();
+			transitionWhiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionStartPosY, transitionEndposY - transitionStartPosY, totalTransitionTime)));
+			transitionWhiteSprite->Update();
 
 			//トータルのタイムを増やす
 			if (MaxTransitionTime > totalTransitionTime) {
@@ -1287,7 +1334,7 @@ void GameScene::Transition(Scene nextScene_)
 	}
 	//遷移戻り
 	else if (isBackTransition) {
-		whiteSprite->Update();
+		transitionWhiteSprite->Update();
 		if (MaxDelay <= delayTime) {
 			//パーティクルの位置
 			partPos = eye;
@@ -1303,7 +1350,7 @@ void GameScene::Transition(Scene nextScene_)
 			}
 
 			//白い画像の位置
-			whiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionEndposY, transitionStartPosY - transitionEndposY, totalTransitionTime)));
+			transitionWhiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, (float)easeOutQuad(MaxTransitionTime, transitionEndposY, transitionStartPosY - transitionEndposY, totalTransitionTime)));
 
 			//トータルのタイムを増やす
 			if (MaxTransitionTime > totalTransitionTime) {
@@ -1332,4 +1379,59 @@ double GameScene::easeOutQuad(double time_, double start_, double difference, do
 	double v = 1 - (1 - x) * (1 - x);
 	double ret = difference * v + start_;
 	return ret;
+}
+
+void GameScene::ClearTransition()
+{
+	float startSize = 0.0f;
+	float sizeX = 0.0f;
+	float sizeY = 0.0f;
+	//	遷移中
+	if (clearTime <= clearMaxTime) {
+		//イージング
+		sizeX = (float)easeOutQuad(clearMaxTime, startSize, WinApp::window_width - sizeX, clearTime);
+		sizeY = (float)easeOutQuad(clearMaxTime, startSize, WinApp::window_height - sizeY, clearTime);
+		//座標代入
+		clearWhiteSprite->SetSize(XMFLOAT2(sizeX, sizeY));
+
+		//タイム
+		clearTime++;
+
+	}
+	//遷移後のシーンチェンジの時間
+	else if (clearTime >= clearChangeSceneTime) {
+		scene = Clear;
+		isClearBack = true;
+	}
+	else {
+		//タイム
+		clearTime++;
+	}
+
+
+
+	clearWhiteSprite->Update();
+
+}
+
+void GameScene::ClearBackTransition()
+{
+	float sizeX = 0.0f;
+	float sizeY = 0.0f;
+	//戻り
+	if (isClearBack) {
+		if (clearBackTime <= clearMaxTime) {
+			//イージング
+			sizeX = (float)easeOutQuad(clearMaxTime, WinApp::window_width, sizeX - WinApp::window_width, clearBackTime);
+			sizeY = (float)easeOutQuad(clearMaxTime, WinApp::window_height, sizeY - WinApp::window_height, clearBackTime);
+			//座標代入
+			clearWhiteSprite->SetSize(XMFLOAT2(sizeX, sizeY));
+			//タイム
+			clearBackTime++;
+		}
+		else {
+			isClearBack = false;
+		}
+	}
+	clearWhiteSprite->Update();
 }
