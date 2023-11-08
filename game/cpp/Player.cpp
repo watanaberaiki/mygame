@@ -152,26 +152,26 @@ void Player::Move()
 {
 	if (isStart == false) {
 		//キーボードでの移動
-		if (input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
-			if (input->PushKey(DIK_W)) {
+		if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->LStickUp() || input->LStickDown()) {
+			if (input->PushKey(DIK_W) || input->LStickUp()) {
 				if (position.y < 1.5) {
 					position.y += 0.1f;
 				}
 			}
-			else if (input->PushKey(DIK_S)) {
+			else if (input->PushKey(DIK_S) || input->LStickDown()) {
 				if (position.y > -1.5) {
 					position.y -= 0.1f;
 				}
 			}
 		}
 
-		if (input->PushKey(DIK_A) || input->PushKey(DIK_D)) {
-			if (input->PushKey(DIK_A)) {
+		if (input->PushKey(DIK_A) || input->PushKey(DIK_D) || input->LStickLeft() || input->LStickRight()) {
+			if (input->PushKey(DIK_A) || input->LStickLeft()) {
 				if (position.x > -2.5) {
 					position.x -= 0.1f;
 				}
 			}
-			else if (input->PushKey(DIK_D)) {
+			else if (input->PushKey(DIK_D) || input->LStickRight()) {
 				if (position.x < 2.5) {
 					position.x += 0.1f;
 				}
@@ -186,21 +186,21 @@ void Player::Move()
 
 void Player::MoveReticle()
 {
-	//キーボードでの移動
-	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)) {
-		if (input->PushKey(DIK_UP)) {
+	//レティクルの移動
+	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)||input->RStickUp()||input->RStickDown()) {
+		if (input->PushKey(DIK_UP)|| input->RStickUp()) {
 			backReticlepos.y += 0.3f;
 		}
-		else if (input->PushKey(DIK_DOWN)) {
+		else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
 			backReticlepos.y -= 0.3f;
 		}
 	}
 
-	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT)) {
-		if (input->PushKey(DIK_LEFT)) {
+	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
+		if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
 			backReticlepos.x -= 0.3f;
 		}
-		else if (input->PushKey(DIK_RIGHT)) {
+		else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
 			backReticlepos.x += 0.3f;
 		}
 	}
@@ -209,7 +209,7 @@ void Player::MoveReticle()
 void Player::Fire()
 {
 	velocity = XMFLOAT3(reticleVec.x, reticleVec.y, reticleVec.z);
-	if (input->TriggerKey(DIK_SPACE)) {
+	if (input->TriggerKey(DIK_SPACE)||input->TriggerRButton()) {
 		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
 		newObject->Initialize(dxcommon, resource, velocity);
 		newObject->SetPosition(position);

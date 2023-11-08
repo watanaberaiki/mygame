@@ -6,7 +6,9 @@
 #define DIRECTINPUT_VERSION     0x0800   // DirectInputのバージョン指定
 #include <dinput.h>
 #include <wrl.h>
+#include<Xinput.h>
 
+#pragma comment(lib,"xinput.lib")
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
@@ -39,7 +41,43 @@ public://メンバ関数
 	//キートリガーチェック
 	bool TriggerKey(BYTE keyNumber);
 	//キーリリースチェック
-	bool released(BYTE keyNumber);
+	bool ReleasedKey(BYTE keyNumber);
+
+	//パッド(ボタン)
+	//プッシュチェック
+	bool PushPadButton(WORD Button);
+	//トリガーチェック
+	bool TriggerPadButton(WORD Button);
+	//リリースチェック
+	bool ReleasedPadButton(WORD Button);
+
+	//LRボタン
+	bool TriggerLButton();
+	bool TriggerRButton();
+
+	//パッド押下情報(左右スティック)
+	//左スティック
+	//左
+	bool LStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//右
+	bool LStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//上
+	bool LStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//下
+	bool LStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+
+	//右スティック
+	//左
+	bool RStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	//右
+	bool RStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	//上
+	bool RStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	//下
+	bool RStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+
+
+
 	//インスタンス取得
 	static Input* GetInstance();
 
@@ -51,5 +89,10 @@ private://メンバ変数
 	ComPtr<IDirectInputDevice8> keyboard=nullptr;
 	//WindowsAPI
 	WinApp* winApp = nullptr;
+
+	//パッドデータ
+	XINPUT_STATE padState = {};
+	XINPUT_STATE oldPadState = {};
+
 };
 

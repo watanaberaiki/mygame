@@ -72,6 +72,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)WIRE$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -89,6 +90,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -97,6 +99,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)WIRE$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -105,6 +108,7 @@
     <ClCompile Include="app\cpp\3D\CubeModel.cpp" />
     <ClCompile Include="app\cpp\3D\CubeObject3D.cpp" />
     <ClCompile Include="app\cpp\Base\DirectXCommon.cpp" />
+    <ClCompile Include="app\cpp\Base\DxInput.cpp" />
     <ClCompile Include="game\cpp\Enemy.cpp" />
     <ClCompile Include="game\cpp\EnemyBullet.cpp" />
     <ClCompile Include="app\cpp\3D\FbxLoader.cpp" />
@@ -240,6 +244,7 @@
     <ClInclude Include="app\header\3D\Model.h" />
     <ClInclude Include="app\header\3D\Object3d.h" />
     <ClInclude Include="app\header\3D\WireObject.h" />
+    <ClInclude Include="app\header\Base\DxInput.h" />
     <ClInclude Include="game\header\Boss.h" />
     <ClInclude Include="app\header\Base\Camera.h" />
     <ClInclude Include="app\header\Base\CSVLoader.h" />

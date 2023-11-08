@@ -88,22 +88,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 
 
 
-	//敵読み込み
+	//敵
 	enemycsv = new CSVLoader();
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
 	Enemy::SetPlayer(player);
 	Enemy::SetDxCommon(dxCommon);
-	for (int i = 0; i < enemysize; i++) {
-		std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-		newObject->Initialize();
-		newObject->SetPosition(enemycsv->GetPosition(i));
-		newObject->SetRotation(enemycsv->GetRotation(i));
-		newObject->SetScale(enemycsv->GetScale(i));
-		newObject->SetType(enemycsv->Getmove(i));
-		newObject->Update();
-		enemys.push_back(std::move(newObject));
-	}
-
+	
+	//ボス
 	Boss::SetPlayer(player);
 	Boss::SetDxCommon(dxCommon);
 	boss = new Boss();
@@ -346,27 +337,24 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 
 void GameScene::Update()
 {
-	//デバッグ用
-	if (scene != Clear && scene != Dead) {
-		if (input_->TriggerKey(DIK_1)) {
-			isTransition = true;
-			nextScene = Clear;
-		}
-		if (input_->TriggerKey(DIK_2)) {
-			isTransition = true;
-			nextScene = Dead;
-		}
-	}
 
+	//遷移演出用
 	if (isTransition || isBackTransition) {
 		Transition(nextScene);
 	}
 
+	//パッド更新
+	dxinput->Update();
 
 
 	switch (scene)
 	{
 	case Title:
+		eye = eyeReset;
+		target = targetReset;
+		camera->SetEye(eye);
+		camera->SetTarget(target);
+		camera->Update();
 
 		//地面
 		for (auto& object : objects) {
@@ -385,13 +373,20 @@ void GameScene::Update()
 		else
 		{
 			//ゲームシーンへのシーンチェンジ
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE)||input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isStart = true;
-
+				//敵読み込み
+				for (int i = 0; i < enemysize; i++) {
+					std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
+					newObject->Initialize();
+					newObject->SetPosition(enemycsv->GetPosition(i));
+					newObject->SetRotation(enemycsv->GetRotation(i));
+					newObject->SetScale(enemycsv->GetScale(i));
+					newObject->SetType(enemycsv->Getmove(i));
+					newObject->Update();
+					enemys.push_back(std::move(newObject));
+				}
 			}
-
-
-
 		}
 		//パーティクル更新処理
 		for (std::unique_ptr<ParticleManager>& particle : particles)
@@ -473,6 +468,8 @@ void GameScene::Update()
 				else if (directionMaxTime < directionTime) {
 					scene = Game;
 					isStart = false;
+					totalTime = 0;
+					directionTime = 0;
 				}
 			}
 		}
@@ -786,6 +783,7 @@ void GameScene::Update()
 			if (input_->TriggerKey(DIK_SPACE)) {
 				isTransition = true;
 				nextScene = Title;
+
 			}
 		}
 		break;

@@ -62,13 +62,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 #endif 
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 
-
-	//入力の初期化
-	input->Initialize(winApp);
-
 	//ImGuiの初期化
 	ImguiManager* imgui = new ImguiManager();
 	imgui->Initialize(winApp,dxCommon);
+
+	//入力の初期化
+	input->Initialize(winApp);
 
 	//3Dオブジェクト静的初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);

@@ -26,6 +26,7 @@
 #include"CSVLoader.h"
 #include"Boss.h"
 #include"ImguiManager.h"
+#include"DxInput.h"
 #pragma warning(push)
 #pragma warning(disable:4267)
 #include<map>
@@ -243,6 +244,11 @@ private:
 	const int clearMaxTime = 60;
 	const int clearChangeSceneTime = 80;
 
+	//リセット用
+	XMFLOAT3 eyeReset = { 0,0,5 };
+	XMFLOAT3 targetReset = { 0,0,10 };
+
+	DxInput* dxinput = new DxInput();
 
 };
 

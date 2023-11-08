@@ -132,6 +132,9 @@
     <ClCompile Include="app\cpp\2D\ImguiManager.cpp">
       <Filter>ソースファイル\2D</Filter>
     </ClCompile>
+    <ClCompile Include="app\cpp\Base\DxInput.cpp">
+      <Filter>ソースファイル\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -272,6 +275,9 @@
     </ClInclude>
     <ClInclude Include="app\header\2D\ImguiManager.h">
       <Filter>ヘッダーファイル\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="app\header\Base\DxInput.h">
+      <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
