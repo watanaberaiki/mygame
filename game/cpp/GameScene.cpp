@@ -366,6 +366,65 @@ void GameScene::Update()
 
 		startSprite->Update();
 
+		//スタート演出
+		//スプライトのサイズ、座標変更
+		titleSprite->SetSize(
+			XMFLOAT2(
+				(float)easeOutQuad(startMaxTime, startSizeX, endSize - startSizeX, totalTime),
+				(float)easeOutQuad(startMaxTime, startSizeY, endSize - startSizeY, totalTime)
+			)
+		);
+		titleSprite->SetPosition(
+			XMFLOAT2(
+				(float)easeOutQuad(startMaxTime, startPos, end - startPos, totalTime),
+				(float)easeOutQuad(startMaxTime, startPos, endPosY - startPos, totalTime)
+			)
+		);
+
+		startSprite->SetSize(
+			XMFLOAT2(
+				(float)easeOutQuad(startMaxTime, startSizeX, endSize - startSizeX, totalTime),
+				(float)easeOutQuad(startMaxTime, startSizeY, endSize - startSizeY, totalTime)
+			)
+		);
+		startSprite->SetPosition(
+			XMFLOAT2((float)easeOutQuad(startMaxTime, startPos, end - startPos, totalTime),
+				(float)easeOutQuad(startMaxTime, startPos, endPosY - startPos, totalTime)
+			)
+		);
+
+		//スケールがだんだん元の大きさになる
+		//プレイヤー
+		playerDirectionScale = (float)easeOutQuad(directionMaxTime, playerStartScale, playerEndScale - playerStartScale, directionTime);
+		player->SetScale(XMFLOAT3(playerDirectionScale, playerDirectionScale, playerDirectionScale));
+		player->Update();
+		//地面の白線
+		floorDirectionScale.x = (float)easeOutQuad(directionMaxTime, floorStartScale.x, floorEndScale.x - floorStartScale.x, directionTime);
+		floorDirectionScale.y = (float)easeOutQuad(directionMaxTime, floorStartScale.y, floorEndScale.y - floorStartScale.y, directionTime);
+		floorDirectionScale.z = (float)easeOutQuad(directionMaxTime, floorStartScale.z, floorEndScale.z - floorStartScale.z, directionTime);
+		for (auto& lineobject : lineObjects) {
+			lineobject->SetScale(floorDirectionScale);
+			lineobject->Update();
+		}
+		//縦向きの白線
+		lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, heightLineEndScale.x - lineStartScale.x, directionTime);
+		lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, heightLineEndScale.y - lineStartScale.y, directionTime);
+		lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, heightLineEndScale.z - lineStartScale.z, directionTime);
+		for (auto& wireobject : heightWireObjects) {
+			wireobject->SetScale(lineDirectionScale);
+			wireobject->Update();
+		}
+
+		//横向きの白線
+		lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, widthLineEndScale.x - lineStartScale.x, directionTime);
+		lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, widthLineEndScale.y - lineStartScale.y, directionTime);
+		lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, widthLineEndScale.z - lineStartScale.z, directionTime);
+		for (auto& wireobject : widthWireObjects) {
+			wireobject->SetScale(lineDirectionScale);
+			wireobject->Update();
+		}
+
+
 		//戻っている最中は押しても反応しない
 		if (isBackTransition) {
 
@@ -375,6 +434,7 @@ void GameScene::Update()
 			//ゲームシーンへのシーンチェンジ
 			if (input_->TriggerKey(DIK_SPACE)||input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isStart = true;
+				isEnemyAlive = true;
 				//敵読み込み
 				for (int i = 0; i < enemysize; i++) {
 					std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
@@ -396,72 +456,20 @@ void GameScene::Update()
 
 		//スタート演出
 		if (isStart) {
-			//スプライトのサイズ、座標変更
-			titleSprite->SetSize(
-				XMFLOAT2(
-					(float)easeOutQuad(startMaxTime, startSizeX, endSize - startSizeX, totalTime),
-					(float)easeOutQuad(startMaxTime, startSizeY, endSize - startSizeY, totalTime)
-				)
-			);
-			titleSprite->SetPosition(
-				XMFLOAT2(
-					(float)easeOutQuad(startMaxTime, startPos, end - startPos, totalTime),
-					(float)easeOutQuad(startMaxTime, startPos, endPosY - startPos, totalTime)
-				)
-			);
-
-			startSprite->SetSize(
-				XMFLOAT2(
-					(float)easeOutQuad(startMaxTime, startSizeX, endSize - startSizeX, totalTime),
-					(float)easeOutQuad(startMaxTime, startSizeY, endSize - startSizeY, totalTime)
-				)
-			);
-			startSprite->SetPosition(
-				XMFLOAT2((float)easeOutQuad(startMaxTime, startPos, end - startPos, totalTime),
-					(float)easeOutQuad(startMaxTime, startPos, endPosY - startPos, totalTime)
-				)
-			);
-
+			
+			//時間を増やす
 			if (startMaxTime >= totalTime) {
 				totalTime += 1;
 			}
+			//スタート演出
 			else if (startMaxTime < totalTime) {
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
-				//スケールがだんだん元の大きさになる
-				//プレイヤー
-				playerDirectionScale = (float)easeOutQuad(directionMaxTime, playerStartScale, playerEndScale - playerStartScale, directionTime);
-				player->SetScale(XMFLOAT3(playerDirectionScale, playerDirectionScale, playerDirectionScale));
-				//地面の白線
-				floorDirectionScale.x = (float)easeOutQuad(directionMaxTime, floorStartScale.x, floorEndScale.x - floorStartScale.x, directionTime);
-				floorDirectionScale.y = (float)easeOutQuad(directionMaxTime, floorStartScale.y, floorEndScale.y - floorStartScale.y, directionTime);
-				floorDirectionScale.z = (float)easeOutQuad(directionMaxTime, floorStartScale.z, floorEndScale.z - floorStartScale.z, directionTime);
-				for (auto& lineobject : lineObjects) {
-					lineobject->SetScale(floorDirectionScale);
-					lineobject->Update();
-				}
-				//縦向きの白線
-				lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, heightLineEndScale.x - lineStartScale.x, directionTime);
-				lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, heightLineEndScale.y - lineStartScale.y, directionTime);
-				lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, heightLineEndScale.z - lineStartScale.z, directionTime);
-				for (auto& wireobject : heightWireObjects) {
-					wireobject->SetScale(lineDirectionScale);
-					wireobject->Update();
-				}
-
-				//横向きの白線
-				lineDirectionScale.x = (float)easeOutQuad(directionMaxTime, lineStartScale.x, widthLineEndScale.x - lineStartScale.x, directionTime);
-				lineDirectionScale.y = (float)easeOutQuad(directionMaxTime, lineStartScale.y, widthLineEndScale.y - lineStartScale.y, directionTime);
-				lineDirectionScale.z = (float)easeOutQuad(directionMaxTime, lineStartScale.z, widthLineEndScale.z - lineStartScale.z, directionTime);
-				for (auto& wireobject : widthWireObjects) {
-					wireobject->SetScale(lineDirectionScale);
-					wireobject->Update();
-				}
-
 
 				//プレイヤーが動かないように判定を送る
 				player->SetIsStart(isStart);
 				player->Update();
+				//時間を増やす
 				if (directionMaxTime >= directionTime) {
 					directionTime += 1;
 				}
@@ -489,10 +497,13 @@ void GameScene::Update()
 	case Game:
 		//ゲームオーバー演出
 		if (isGameOver) {
+			//死んだ瞬間
 			if (gameOverTime == 0) {
 				Particle(player->GetPosition());
 			}
+			//時間を増やす
 			gameOverTime++;
+			//横の白線が散る演出
 			if (gameOverTime == gameOverMaxTime) {
 				//縦向きの白線
 				for (auto& wireobject : heightWireObjects) {
@@ -515,10 +526,13 @@ void GameScene::Update()
 				{
 					isTransition = true;
 					nextScene = Dead;
+					isGameOver = false;
+					gameOverTime = 0;
 				}
 			}
 
 		}
+		//メニュー画面
 		if (isMenu) {
 			menuSprite->Update();
 
@@ -559,15 +573,7 @@ void GameScene::Update()
 				isMenu = true;
 				time = 0;
 			}
-			//仮のシーンチェンジ
-			if (input_->TriggerKey(DIK_RETURN)) {
-				scene = Title;
-			}
-			//仮のゲームオーバー
-			if (input_->TriggerKey(DIK_3)) {
-				isGameOver = true;
-			}
-
+			//雑魚敵が生きてる
 			if (isEnemyAlive) {
 				eye.z += 0.05f;
 				target.z = eye.z + 1;
@@ -654,7 +660,7 @@ void GameScene::Update()
 				//ボス
 				boss->SetPosition(player->GetPosition());
 				boss->SetPositionZ(player->GetPosition().z + 10.0f);
-
+				boss->Reset();
 			}
 
 		}
@@ -1400,6 +1406,7 @@ void GameScene::ClearTransition()
 	else if (clearTime >= clearChangeSceneTime) {
 		scene = Clear;
 		isClearBack = true;
+		clearTime = 0;
 	}
 	else {
 		//タイム
@@ -1429,6 +1436,7 @@ void GameScene::ClearBackTransition()
 		}
 		else {
 			isClearBack = false;
+			clearBackTime = 0;
 		}
 	}
 	clearWhiteSprite->Update();

@@ -29,6 +29,8 @@ public://メンバ関数
 	void Fire();
 	//コールバック関数
 	void OnCollision();
+	//リセット
+	void Reset();
 
 	//セッター
 	void SetPosition(XMFLOAT3 position_) { this->position = position_; }

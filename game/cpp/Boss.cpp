@@ -118,3 +118,9 @@ void Boss::OnCollision()
 {
 	life--;
 }
+
+void Boss::Reset()
+{
+	life = 10;
+	isdead = false;
+}
