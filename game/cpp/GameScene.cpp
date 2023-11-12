@@ -397,6 +397,8 @@ void GameScene::Update()
 		//プレイヤー
 		playerDirectionScale = (float)easeOutQuad(directionMaxTime, playerStartScale, playerEndScale - playerStartScale, directionTime);
 		player->SetScale(XMFLOAT3(playerDirectionScale, playerDirectionScale, playerDirectionScale));
+		//プレイヤーが動かないように判定を送る
+		player->SetIsStart(isStart);
 		player->Update();
 		//地面の白線
 		floorDirectionScale.x = (float)easeOutQuad(directionMaxTime, floorStartScale.x, floorEndScale.x - floorStartScale.x, directionTime);
@@ -465,10 +467,6 @@ void GameScene::Update()
 			else if (startMaxTime < totalTime) {
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
-
-				//プレイヤーが動かないように判定を送る
-				player->SetIsStart(isStart);
-				player->Update();
 				//時間を増やす
 				if (directionMaxTime >= directionTime) {
 					directionTime += 1;
@@ -874,6 +872,12 @@ void GameScene::Draw()
 			player->Draw();
 		}
 
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys)
+		{
+			enemy->Draw();
+		}
+
 		////地面
 		for (auto& object : objects) {
 			object->Draw();
@@ -883,6 +887,9 @@ void GameScene::Draw()
 		for (auto& lineobject : lineObjects) {
 			lineobject->Draw(dxCommon_->GetCommandlist());
 		}
+
+		
+
 		Object3d::PostDraw();
 
 		//ワイヤーオブジェクト描画
@@ -895,7 +902,7 @@ void GameScene::Draw()
 		//敵
 		for (std::unique_ptr<Enemy>& enemy : enemys)
 		{
-			enemy->Draw();
+			enemy->WireDraw();
 		}
 		if (!lineLose) {
 			//縦向きの線

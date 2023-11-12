@@ -51,7 +51,7 @@ private://メンバ変数
 	//3Dモデル
 	Model* bulletModel = nullptr;
 	//3Dオブジェクト
-	WireObject* bulletObj = nullptr;
+	Object3d* bulletObj = nullptr;
 
 
 	//スピード

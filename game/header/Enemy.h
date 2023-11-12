@@ -27,6 +27,8 @@ public://メンバ関数
 	//更新処理
 	void Update();
 	//描画処理
+	void WireDraw();
+	//描画
 	void Draw();
 	//当たり判定
 	void DebugDraw(ID3D12GraphicsCommandList* cmdList);

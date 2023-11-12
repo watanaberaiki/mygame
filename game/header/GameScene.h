@@ -131,7 +131,7 @@ private:
 
 
 	//敵
-	static const int enemysize = 10;
+	static const int enemysize = 20;
 	std::list<std::unique_ptr<Enemy>>enemys;
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー

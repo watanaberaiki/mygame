@@ -208,12 +208,14 @@ void Player::MoveReticle()
 
 void Player::Fire()
 {
-	velocity = XMFLOAT3(reticleVec.x, reticleVec.y, reticleVec.z);
-	if (input->TriggerKey(DIK_SPACE)||input->TriggerRButton()) {
-		std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
-		newObject->Initialize(dxcommon, resource, velocity);
-		newObject->SetPosition(position);
-		bullets.push_back(std::move(newObject));
+	if (isStart == false) {
+		velocity = XMFLOAT3(reticleVec.x, reticleVec.y, reticleVec.z);
+		if (input->TriggerKey(DIK_SPACE) || input->TriggerRButton()) {
+			std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
+			newObject->Initialize(dxcommon, resource, velocity);
+			newObject->SetPosition(position);
+			bullets.push_back(std::move(newObject));
+		}
 	}
 }
 

@@ -80,7 +80,7 @@ void Enemy::Update()
 	collisionBox->Update();
 }
 
-void Enemy::Draw()
+void Enemy::WireDraw()
 {
 	//fbx
 	//enemyfbxobj->Draw(cmdList);
@@ -88,12 +88,15 @@ void Enemy::Draw()
 	////オブジェクト
 	enemyObj->Draw();
 
+}
+
+void Enemy::Draw()
+{
 	//弾
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
 	{
 		bullet->Draw();
 	}
-
 }
 
 void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)

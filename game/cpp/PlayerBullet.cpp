@@ -9,7 +9,7 @@ void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource
 	bulletFbxObj->SetModel(bulletFbxModel);
 
 	//3dオブジェクト
-	bulletModel = resource->LoadObj("blackcube");
+	bulletModel = resource->LoadObj("bluecube");
 	bulletObj = Object3d::Create();
 	bulletObj->SetModel(bulletModel);
 
