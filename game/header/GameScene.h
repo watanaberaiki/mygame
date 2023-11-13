@@ -131,7 +131,7 @@ private:
 
 
 	//敵
-	static const int enemysize = 20;
+	static const int enemysize = 11;
 	std::list<std::unique_ptr<Enemy>>enemys;
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
@@ -178,7 +178,8 @@ private:
 	XMFLOAT3 partPos = {};
 	int particleTime = 0;
 	const int particleMaxTime = 5;
-
+	//タイトル判定
+	bool isTitle = false;
 	//スタート演出用
 	bool isStart = false;
 	double totalTime = 0.0;

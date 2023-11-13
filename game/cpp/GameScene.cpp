@@ -347,9 +347,12 @@ void GameScene::Update()
 	dxinput->Update();
 
 
+
+
 	switch (scene)
 	{
 	case Title:
+		isTitle = true;
 		eye = eyeReset;
 		target = targetReset;
 		camera->SetEye(eye);
@@ -398,7 +401,7 @@ void GameScene::Update()
 		playerDirectionScale = (float)easeOutQuad(directionMaxTime, playerStartScale, playerEndScale - playerStartScale, directionTime);
 		player->SetScale(XMFLOAT3(playerDirectionScale, playerDirectionScale, playerDirectionScale));
 		//プレイヤーが動かないように判定を送る
-		player->SetIsStart(isStart);
+		player->SetIsTitle(isTitle);
 		player->Update();
 		//地面の白線
 		floorDirectionScale.x = (float)easeOutQuad(directionMaxTime, floorStartScale.x, floorEndScale.x - floorStartScale.x, directionTime);
@@ -435,6 +438,7 @@ void GameScene::Update()
 		{
 			//ゲームシーンへのシーンチェンジ
 			if (input_->TriggerKey(DIK_SPACE)||input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
+				isGameOver = false;
 				isStart = true;
 				isEnemyAlive = true;
 				//敵読み込み
@@ -476,6 +480,7 @@ void GameScene::Update()
 					isStart = false;
 					totalTime = 0;
 					directionTime = 0;
+					isTitle = false;
 				}
 			}
 		}
@@ -493,43 +498,6 @@ void GameScene::Update()
 
 		break;
 	case Game:
-		//ゲームオーバー演出
-		if (isGameOver) {
-			//死んだ瞬間
-			if (gameOverTime == 0) {
-				Particle(player->GetPosition());
-			}
-			//時間を増やす
-			gameOverTime++;
-			//横の白線が散る演出
-			if (gameOverTime == gameOverMaxTime) {
-				//縦向きの白線
-				for (auto& wireobject : heightWireObjects) {
-					linepos = wireobject->GetPosition();
-					//linepos.z = lineZ;
-					Particle(linepos);
-				}
-				lineLose = true;
-			}
-			if (nextSceneTime == gameOverTime) {
-				for (std::unique_ptr<ParticleManager>& particle : particles)
-				{
-					particle->Update();
-				}
-				//戻っている最中は押しても反応しない
-				if (isBackTransition) {
-
-				}
-				else
-				{
-					isTransition = true;
-					nextScene = Dead;
-					isGameOver = false;
-					gameOverTime = 0;
-				}
-			}
-
-		}
 		//メニュー画面
 		if (isMenu) {
 			menuSprite->Update();
@@ -564,6 +532,44 @@ void GameScene::Update()
 
 		}
 		else {
+			//ゲームオーバー演出
+			if (isGameOver) {
+				//死んだ瞬間
+				if (gameOverTime == 0) {
+					Particle(player->GetPosition());
+				}
+				//時間を増やす
+				gameOverTime++;
+				//横の白線が散る演出
+				if (gameOverTime == gameOverMaxTime) {
+					//縦向きの白線
+					for (auto& wireobject : heightWireObjects) {
+						linepos = wireobject->GetPosition();
+						//linepos.z = lineZ;
+						Particle(linepos);
+					}
+					lineLose = true;
+				}
+				if (nextSceneTime == gameOverTime) {
+					for (std::unique_ptr<ParticleManager>& particle : particles)
+					{
+						particle->Update();
+					}
+					//戻っている最中は押しても反応しない
+					if (isBackTransition) {
+
+					}
+					else
+					{
+						isTransition = true;
+						nextScene = Dead;
+						isGameOver = false;
+						gameOverTime = 0;
+					}
+				}
+
+			}
+
 
 			//メニュー
 			if (input_->TriggerKey(DIK_M)) {
@@ -614,8 +620,12 @@ void GameScene::Update()
 				//プレイヤー
 				player->SetPositionZ(eye.z + 4.0f);
 				//プレイヤーが動くように判定を送る
-				player->SetIsStart(isStart);
+				player->SetIsTitle(isTitle);
 				player->Update();
+				//死んだ判定
+				if (player->GetIsDead()) {
+					isGameOver = true;
+				}
 
 				//敵
 				for (std::unique_ptr<Enemy>& enemy : enemys)
@@ -699,6 +709,44 @@ void GameScene::Update()
 
 		}
 		else {
+			//ゲームオーバー演出
+			if (isGameOver) {
+				//死んだ瞬間
+				if (gameOverTime == 0) {
+					Particle(player->GetPosition());
+				}
+				//時間を増やす
+				gameOverTime++;
+				//横の白線が散る演出
+				if (gameOverTime == gameOverMaxTime) {
+					//縦向きの白線
+					for (auto& wireobject : heightWireObjects) {
+						linepos = wireobject->GetPosition();
+						//linepos.z = lineZ;
+						Particle(linepos);
+					}
+					lineLose = true;
+				}
+				if (nextSceneTime == gameOverTime) {
+					for (std::unique_ptr<ParticleManager>& particle : particles)
+					{
+						particle->Update();
+					}
+					//戻っている最中は押しても反応しない
+					if (isBackTransition) {
+
+					}
+					else
+					{
+						isTransition = true;
+						nextScene = Dead;
+						isGameOver = false;
+						gameOverTime = 0;
+					}
+				}
+
+			}
+
 			//メニュー
 			if (input_->TriggerKey(DIK_M)) {
 				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
@@ -734,8 +782,12 @@ void GameScene::Update()
 			//カメラ更新
 			camera->Update();
 			//プレイヤー更新
-			player->SetIsStart(isStart);
+			player->SetIsTitle(isTitle);
 			player->Update();
+			//死んだ判定
+			if (player->GetIsDead()) {
+				isGameOver = true;
+			}
 			//ボス更新
 			boss->Update();
 			//判定
@@ -759,9 +811,10 @@ void GameScene::Update()
 		}
 		else
 		{
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE)||input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isTransition = true;
 				nextScene = Title;
+				player->Reset();
 			}
 		}
 		//戻り演出
@@ -784,10 +837,10 @@ void GameScene::Update()
 		}
 		else
 		{
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE)|| input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isTransition = true;
 				nextScene = Title;
-
+				player->Reset();
 			}
 		}
 		break;
@@ -952,6 +1005,9 @@ void GameScene::Draw()
 			//プレイヤー
 			player->Draw();
 		}
+
+		boss->Draw();
+
 		////地面
 		for (auto& object : objects) {
 			object->Draw();
@@ -971,7 +1027,7 @@ void GameScene::Draw()
 			player->WireDraw();
 		}
 
-		boss->Draw();
+		boss->WireDraw();
 		if (!lineLose) {
 			//縦向きの線
 			for (auto& wireobject : heightWireObjects) {

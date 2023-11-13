@@ -37,17 +37,20 @@ public://メンバ関数
 	void Fire();
 	//コールバック関数
 	void OnCollision();
+	//リセット
+	void Reset();
 	//セッター
 	void SetPosition(XMFLOAT3 position_) { this->position = position_; }
 	void SetPositionZ(float positionz_) { this->position.z = positionz_; }
 	void SetScale(XMFLOAT3 scale_) { this->scale = scale_; }
 	void SetRotation(XMFLOAT3 rotation_) { this->rotation = rotation_; }
-	void SetIsStart(bool isstart_) { this->isStart = isstart_; }
+	void SetIsTitle(bool isTitle_) { this->isTitle = isTitle_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Player::dxcommon = dxcommon_; }
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
 	XMFLOAT3 GetPosition() { return position; }
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullet() { return bullets; }
+	bool GetIsDead() { return isDead; }
 private://静的メンバ変数
 	//キーボード
 	static Input* input;
@@ -98,7 +101,13 @@ private://メンバ変数
 	Vector3 backVec = {};
 	XMFLOAT3 velocity = {};
 
-	//スタート演出中に動かせないようにする
-	bool isStart = false;
+	//タイトル画面に動かせないようにする
+	bool isTitle = false;
+
+	//hp
+	int life = 5;
+
+	//死んでる判定
+	bool isDead = false;
 };
 

@@ -50,6 +50,13 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	if (life <= 0) {
+		isDead = true;
+	}
+	else {
+		isDead = false;
+	}
+
 	//デスフラグの立った球を削除
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		return bullet->GetIsDeath();
@@ -150,7 +157,7 @@ void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 void Player::Move()
 {
-	if (isStart == false) {
+	if (isTitle == false) {
 		//キーボードでの移動
 		if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->LStickUp() || input->LStickDown()) {
 			if (input->PushKey(DIK_W) || input->LStickUp()) {
@@ -208,7 +215,7 @@ void Player::MoveReticle()
 
 void Player::Fire()
 {
-	if (isStart == false) {
+	if (isTitle == false) {
 		velocity = XMFLOAT3(reticleVec.x, reticleVec.y, reticleVec.z);
 		if (input->TriggerKey(DIK_SPACE) || input->TriggerRButton()) {
 			std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
@@ -221,4 +228,11 @@ void Player::Fire()
 
 void Player::OnCollision()
 {
+	life--;
+}
+
+void Player::Reset()
+{
+	life = 5;
+	position = { 0,0,0 };
 }

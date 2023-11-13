@@ -72,7 +72,7 @@ void Boss::Update()
 
 }
 
-void Boss::Draw()
+void Boss::WireDraw()
 {
 	//fbx
 	//enemyfbxobj->Draw(cmdList);
@@ -80,6 +80,11 @@ void Boss::Draw()
 	////オブジェクト
 	bossObj->Draw();
 
+	
+}
+
+void Boss::Draw()
+{
 	//弾
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
 	{
