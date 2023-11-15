@@ -52,8 +52,15 @@ public://メンバ関数
 	bool ReleasedPadButton(WORD Button);
 
 	//LRボタン
+	//プッシュ
+	bool PushLButton();
+	bool PushRButton();
+
+	//トリガー
 	bool TriggerLButton();
 	bool TriggerRButton();
+
+
 
 	//パッド押下情報(左右スティック)
 	//左スティック

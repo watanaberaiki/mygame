@@ -111,6 +111,16 @@ bool Input::ReleasedPadButton(WORD Button)
 	return (oldPadState.Gamepad.wButtons & Button) && ((padState.Gamepad.wButtons & Button) != Button);
 }
 
+bool Input::PushLButton()
+{
+	return (padState.Gamepad.bLeftTrigger > 0);
+}
+
+bool Input::PushRButton()
+{
+	return  (padState.Gamepad.bRightTrigger > 0);
+}
+
 bool Input::TriggerLButton()
 {
 	return (padState.Gamepad.bLeftTrigger>0)&&(oldPadState.Gamepad.bLeftTrigger==0);

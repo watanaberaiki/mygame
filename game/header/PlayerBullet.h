@@ -8,11 +8,13 @@
 #include"CubeModel.h"
 #include"CubeObject3D.h"
 #include"ResourceManager.h"
+#include"WireObject.h"
+
 class PlayerBullet
 {
 public://メンバ関数
 	//初期化
-	void Initialize(DirectXCommon* dxcommon,ResourceManager* resource,XMFLOAT3 velocity);
+	void Initialize(DirectXCommon* dxcommon,ResourceManager* resource,XMFLOAT3 velocity,float bulletRotation_);
 	//更新処理
 	void Update();
 	//描画処理
@@ -57,6 +59,8 @@ private://メンバ変数
 	//スピード
 	float speed = 0.4f;
 	XMFLOAT3 velocity = {};
+	//回転用
+	float bulletRotation=0.0f;
 	//フラグ
 	bool isFire = false;
 	bool isDeath = false;

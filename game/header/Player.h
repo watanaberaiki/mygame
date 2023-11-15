@@ -66,6 +66,12 @@ private://メンバ変数
 	XMFLOAT3 backReticlepos = { 0,0,0 };
 	float frontdepth = 0.0f;
 	float backdepth = 0.0f;
+	//レティクル制限
+	const float reticleUpLimit = 6.0f;
+	const float reticleDownLimit = 1.5f;
+	const float reticleLeftLimit = 3.0f;
+	const float reticleRightLimit = 3.0f;
+
 
 
 	//FBXモデル
@@ -87,6 +93,14 @@ private://メンバ変数
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>>bullets;
+	const int bulletDireyMaxTime = 10;
+	int bulletDireyTime = 0;
+	//弾の回転用
+	Vector3 bulletFrontVec = { 0,0,0 };
+	float lengthFrontVec = 0.0f;
+	float lengthreticleVec = 0.0f;
+	float bulletRotation = 0.0f;
+
 
 	//リソース
 	ResourceManager* resource = nullptr;

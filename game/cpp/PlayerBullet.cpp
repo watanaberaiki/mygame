@@ -1,6 +1,6 @@
 #include "PlayerBullet.h"
 
-void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource, XMFLOAT3 velocity_)
+void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource, XMFLOAT3 velocity_,float bulletRotation_)
 {
 
 	bulletFbxModel = resource->LoadFbx("boneTest");
@@ -9,7 +9,7 @@ void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource
 	bulletFbxObj->SetModel(bulletFbxModel);
 
 	//3dオブジェクト
-	bulletModel = resource->LoadObj("bluecube");
+	bulletModel = resource->LoadObj("playerBullet");
 	bulletObj = Object3d::Create();
 	bulletObj->SetModel(bulletModel);
 
@@ -26,6 +26,8 @@ void PlayerBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource
 	collisionBox->SetScale(scale);
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
+
+	bulletRotation = bulletRotation_;
 
 	velocity_ = XMFLOAT3(velocity_.x*speed, velocity_.y * speed, velocity_.z * speed);
 	this->velocity = velocity_;
@@ -46,6 +48,8 @@ void PlayerBullet::Update()
 		isDeath = true;
 	}
 
+	rotation.x = bulletRotation;
+	rotation.y = bulletRotation;
 	//オブジェクト
 	bulletObj->SetPosition(position);
 	bulletObj->SetScale(scale);

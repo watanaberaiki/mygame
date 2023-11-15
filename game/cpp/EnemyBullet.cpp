@@ -8,7 +8,7 @@ void EnemyBullet::Initialize(DirectXCommon* dxcommon, ResourceManager* resource,
 	bulletFbxObj->SetModel(bulletFbxModel);
 
 	//3dオブジェクト
-	bulletModel = resource->LoadObj("redcube");
+	bulletModel = resource->LoadObj("enemyBullet");
 	bulletObj = Object3d::Create();
 	bulletObj->SetModel(bulletModel);
 

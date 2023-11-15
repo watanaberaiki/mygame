@@ -95,8 +95,17 @@ void Player::Update()
 	collisionBox->Update();
 
 
+	//弾の回転用
+	bulletFrontVec = { position.x - position.x,position.y - position.y,backReticlepos.z - position.z };
+
 	//レティクル
 	reticleVec = { backReticlepos.x - (position.x), backReticlepos.y - (position.y), backReticlepos.z - position.z };
+
+	//弾の回転用
+	lengthFrontVec = bulletFrontVec.length();
+	lengthreticleVec = reticleVec.length();
+	bulletRotation = acos(bulletFrontVec.dot(reticleVec) / (lengthFrontVec * lengthreticleVec));
+
 	//正規化
 	reticleVec.normalize();
 	//手前レティクル
@@ -196,32 +205,49 @@ void Player::MoveReticle()
 	//レティクルの移動
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)||input->RStickUp()||input->RStickDown()) {
 		if (input->PushKey(DIK_UP)|| input->RStickUp()) {
-			backReticlepos.y += 0.3f;
+			if (backReticlepos.y< reticleUpLimit) {
+				backReticlepos.y += 0.3f;
+			}
 		}
 		else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
-			backReticlepos.y -= 0.3f;
+			if (backReticlepos.y >-reticleDownLimit ) {
+				backReticlepos.y -= 0.3f;
+			}
 		}
 	}
 
 	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
 		if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
-			backReticlepos.x -= 0.3f;
+			if (backReticlepos.x > -reticleLeftLimit) {
+				backReticlepos.x -= 0.3f;
+			}
 		}
 		else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
-			backReticlepos.x += 0.3f;
+			if (backReticlepos.x < reticleRightLimit) {
+				backReticlepos.x += 0.3f;
+			}
 		}
 	}
 }
 
 void Player::Fire()
 {
+	//弾のフルオートの間隔
+	if (bulletDireyMaxTime > bulletDireyTime) {
+		bulletDireyTime++;
+	}
+
 	if (isTitle == false) {
 		velocity = XMFLOAT3(reticleVec.x, reticleVec.y, reticleVec.z);
-		if (input->TriggerKey(DIK_SPACE) || input->TriggerRButton()) {
-			std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
-			newObject->Initialize(dxcommon, resource, velocity);
-			newObject->SetPosition(position);
-			bullets.push_back(std::move(newObject));
+		if (input->PushKey(DIK_SPACE) || input->PushRButton()) {
+			//弾フルオート
+			if (bulletDireyTime >= bulletDireyMaxTime) {
+				std::unique_ptr<PlayerBullet>newObject = std::make_unique<PlayerBullet>();
+				newObject->Initialize(dxcommon, resource, velocity, bulletRotation);
+				newObject->SetPosition(position);
+				bullets.push_back(std::move(newObject));
+				bulletDireyTime = 0;
+			}
 		}
 	}
 }
