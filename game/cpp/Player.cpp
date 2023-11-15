@@ -30,7 +30,7 @@ void Player::Initialize()
 	//ライン初期化
 	lineModel = new LineModel();
 	lineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
-	lineModel->SetImageData(XMFLOAT4(255, 255, 255, 1));
+	lineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
 	for (int i = 0; i < 4; i++) {
 		lineObject[i] = new LineObject();
 		lineObject[i]->Initialize();
