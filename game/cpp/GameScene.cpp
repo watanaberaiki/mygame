@@ -57,6 +57,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	WireObject::SetCamera(camera);
 	//オブジェクト3dカメラ
 	Object3d::SetCamera(camera);
+	//パーティクルマネージャカメラセット
+	ParticleManager::SetCamera(camera);
+
 
 	//当たり判定キューブオブジェクト
 	CubeObject3D::SetCamera(camera);
@@ -93,7 +96,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
 	Enemy::SetPlayer(player);
 	Enemy::SetDxCommon(dxCommon);
-	
+
 	//ボス
 	Boss::SetPlayer(player);
 	Boss::SetDxCommon(dxCommon);
@@ -333,6 +336,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 		floorEndScale = newobject->GetScale();
 		lineObjects.push_back(std::move(newobject));
 	}
+
+	//パーティクル
+	particles = new ParticleManager();
+	particles->Initialize("line.png");
 }
 
 void GameScene::Update()
@@ -437,7 +444,7 @@ void GameScene::Update()
 		else
 		{
 			//ゲームシーンへのシーンチェンジ
-			if (input_->TriggerKey(DIK_SPACE)||input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
+			if (input_->TriggerKey(DIK_SPACE) || input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isGameOver = false;
 				isStart = true;
 				isEnemyAlive = true;
@@ -455,14 +462,11 @@ void GameScene::Update()
 			}
 		}
 		//パーティクル更新処理
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Update();
-		}
+		particles->Update();
 
 		//スタート演出
 		if (isStart) {
-			
+
 			//時間を増やす
 			if (startMaxTime >= totalTime) {
 				totalTime += 1;
@@ -551,10 +555,7 @@ void GameScene::Update()
 					lineLose = true;
 				}
 				if (nextSceneTime == gameOverTime) {
-					for (std::unique_ptr<ParticleManager>& particle : particles)
-					{
-						particle->Update();
-					}
+					particles->Update();
 					//戻っている最中は押しても反応しない
 					if (isBackTransition) {
 
@@ -642,10 +643,7 @@ void GameScene::Update()
 					});
 
 				//パーティクル
-				for (std::unique_ptr<ParticleManager>& particle : particles)
-				{
-					particle->Update();
-				}
+				particles->Update();
 				AllCollision();
 
 				//敵の全滅判定
@@ -728,10 +726,7 @@ void GameScene::Update()
 					lineLose = true;
 				}
 				if (nextSceneTime == gameOverTime) {
-					for (std::unique_ptr<ParticleManager>& particle : particles)
-					{
-						particle->Update();
-					}
+					particles->Update();
 					//戻っている最中は押しても反応しない
 					if (isBackTransition) {
 
@@ -775,10 +770,7 @@ void GameScene::Update()
 				lineobject->Update();
 			}
 			//パーティクル
-			for (std::unique_ptr<ParticleManager>& particle : particles)
-			{
-				particle->Update();
-			}
+			particles->Update();
 			//カメラ更新
 			camera->Update();
 			//プレイヤー更新
@@ -801,17 +793,14 @@ void GameScene::Update()
 		break;
 	case Clear:
 
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Update();
-		}
+		particles->Update();
 		//戻っている最中は押しても反応しない
 		if (isBackTransition) {
 
 		}
 		else
 		{
-			if (input_->TriggerKey(DIK_SPACE)||input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
+			if (input_->TriggerKey(DIK_SPACE) || input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isTransition = true;
 				nextScene = Title;
 				player->Reset();
@@ -827,17 +816,16 @@ void GameScene::Update()
 		//スプライト
 		gameOverSprite->Update();
 
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Update();
-		}
+
+			particles->Update();
+		
 		//戻っている最中は押しても反応しない
 		if (isBackTransition) {
 
 		}
 		else
 		{
-			if (input_->TriggerKey(DIK_SPACE)|| input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
+			if (input_->TriggerKey(DIK_SPACE) || input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
 				isTransition = true;
 				nextScene = Title;
 				player->Reset();
@@ -902,10 +890,9 @@ void GameScene::Draw()
 		WireObject::PostDraw();
 
 		//パーティクル
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Draw();
-		}
+
+			particles->Draw();
+		
 
 		//スプライト
 		spriteCommon->PreDraw();
@@ -941,7 +928,7 @@ void GameScene::Draw()
 			lineobject->Draw(dxCommon_->GetCommandlist());
 		}
 
-		
+
 
 		Object3d::PostDraw();
 
@@ -970,10 +957,9 @@ void GameScene::Draw()
 		WireObject::PostDraw();
 
 		//パーティクル
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Draw();
-		}
+	
+			particles->Draw();
+		
 
 		//デバッグ表示
 		//プレイヤー
@@ -1041,10 +1027,8 @@ void GameScene::Draw()
 		WireObject::PostDraw();
 
 		//パーティクル
-		for (std::unique_ptr<ParticleManager>& particle : particles)
-		{
-			particle->Draw();
-		}
+			particles->Draw();
+		
 
 		//デバッグ表示
 		//プレイヤー
@@ -1093,10 +1077,9 @@ void GameScene::Draw()
 	}
 
 	//パーティクル
-	for (std::unique_ptr<ParticleManager>& particle : particles)
-	{
-		particle->Draw();
-	}
+
+		particles->Draw();
+	
 
 	//スプライト描画
 	spriteCommon->PreDraw();
@@ -1119,6 +1102,7 @@ void GameScene::AllCollision()
 	{
 		if (player->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
 			player->OnCollision();
+			Particle(player->GetPosition());
 		}
 	}
 
@@ -1128,6 +1112,8 @@ void GameScene::AllCollision()
 			if (player->GetCubeObject()->CheakCollision(enemybullet->GetCubeObject())) {
 				enemybullet->OnCollision();
 				player->OnCollision();
+				Particle(player->GetPosition());
+
 			}
 		}
 
@@ -1161,6 +1147,8 @@ void GameScene::AllCollision()
 		if (player->GetCubeObject()->CheakCollision(bossybullet->GetCubeObject())) {
 			bossybullet->OnCollision();
 			player->OnCollision();
+			Particle(player->GetPosition());
+
 		}
 	}
 
@@ -1189,9 +1177,11 @@ void GameScene::Particle(XMFLOAT3 pos_)
 	//XMFLOAT3 posA = pos_;
 	//posA.z += 5;
 	//パーティクル
-	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
-	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(pos_);
+	//std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	//newparticle->Initialize("line.png");
+	
+	//パーティクル
+	particles->SetEmitterPos(pos_);
 	for (int i = 0; i < 50; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 1.0f;
@@ -1219,18 +1209,18 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		//追加
-		newparticle->Add(20, pos, vel, acc, 1.0f, 0.0f, color);
+		particles->Add(20, pos, vel, acc, 1.0f, 0.0f, color);
 	}
-	newparticle->Update();
-	particles.push_back(std::move(newparticle));
+	particles->Update();
 }
 
 void GameScene::TitleParticle(XMFLOAT3 pos_)
 {
 	//パーティクル
-	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
-	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(pos_);
+	/*std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");*/
+	//パーティクル
+	particles->SetEmitterPos(pos_);
 	for (int i = 0; i < 3; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 20.0f;
@@ -1266,18 +1256,17 @@ void GameScene::TitleParticle(XMFLOAT3 pos_)
 		life += 20;
 
 		//追加
-		newparticle->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
 	}
-	newparticle->Update();
-	particles.push_back(std::move(newparticle));
+	particles->Update();
 }
 
 void GameScene::TransitionParticle(XMFLOAT3 pos_)
 {
 	//パーティクル
-	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
-	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(pos_);
+	/*std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");*/
+	particles->SetEmitterPos(pos_);
 	for (int i = 0; i < 30; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 20.0f;
@@ -1313,18 +1302,17 @@ void GameScene::TransitionParticle(XMFLOAT3 pos_)
 		life += 20;
 
 		//追加
-		newparticle->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
 	}
-	newparticle->Update();
-	particles.push_back(std::move(newparticle));
+	particles->Update();
 }
 
 void GameScene::TransitionBackParticle(XMFLOAT3 pos_, int num)
 {
 	//パーティクル
-	std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
-	newparticle->Initialize("line.png");
-	newparticle->SetEmitterPos(pos_);
+	/*std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
+	newparticle->Initialize("line.png");*/
+	particles->SetEmitterPos(pos_);
 	for (int i = 0; i < num; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos = 20.0f;
@@ -1360,10 +1348,9 @@ void GameScene::TransitionBackParticle(XMFLOAT3 pos_, int num)
 		life += 20;
 
 		//追加
-		newparticle->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
 	}
-	newparticle->Update();
-	particles.push_back(std::move(newparticle));
+	particles->Update();
 }
 
 void GameScene::Transition(Scene nextScene_)
@@ -1373,7 +1360,7 @@ void GameScene::Transition(Scene nextScene_)
 		//パーティクル座標
 		partPos = eye;
 		partPos.y = eye.y + 5;
-		partPos.z = eye.z;
+		partPos.z = eye.z+10;
 
 		//パーティクル
 		TransitionParticle(partPos);
@@ -1406,7 +1393,7 @@ void GameScene::Transition(Scene nextScene_)
 			//パーティクルの位置
 			partPos = eye;
 			partPos.y = eye.y - 5;
-			partPos.z = eye.z;
+			partPos.z = eye.z+10;
 			//後半は出ないようにしておく
 			if (totalTransitionTime > MaxTransitionTime - 40.0) {
 
@@ -1434,10 +1421,8 @@ void GameScene::Transition(Scene nextScene_)
 		delayTime++;
 	}
 
-	for (std::unique_ptr<ParticleManager>& particle : particles)
-	{
-		particle->Update();
-	}
+		particles->Update();
+	
 }
 
 double GameScene::easeOutQuad(double time_, double start_, double difference, double totaltime_)

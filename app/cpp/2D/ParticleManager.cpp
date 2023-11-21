@@ -39,6 +39,7 @@ XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
 ////unsigned short ParticleManager::indices[indexCount];
 std::string ParticleManager::kDefaultTextureDirectoryPath = "Resources/";
 DirectXCommon* ParticleManager::dxcommon = nullptr;
+Camera* ParticleManager::camera;
 
 //XMFLOAt3同士の加算処理
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs) {
@@ -718,7 +719,7 @@ void ParticleManager::Update()
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = matView * matProjection;
+	constMap->mat = camera->GetmatView() * matProjection;
 	constMap->matBillboard = matBillboard;	// 行列の合成
 	constBuff->Unmap(0, nullptr);
 }

@@ -9,6 +9,7 @@
 #include <d3dx12.h>
 #include <forward_list>
 #include "DirectXCommon.h"
+#include "Camera.h"
 
 using namespace Microsoft::WRL;
 
@@ -140,6 +141,10 @@ public: // 静的メンバ関数
 	//エミッターのセット
 	void SetEmitterPos(XMFLOAT3 pos) { emitterPos = pos; }
 
+	//カメラのセット
+	static void SetCamera(Camera* camera_) { camera = camera_; }
+
+
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
@@ -170,7 +175,8 @@ private: // 静的メンバ変数
 
 	static DirectXCommon* dxcommon;
 
-
+	//カメラ
+	static Camera* camera;
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -207,6 +213,7 @@ private:// 静的メンバ関数
 	/// ビュー行列を更新
 	/// </summary>
 	static void UpdateViewMatrix();
+
 
 public: // メンバ関数
 	bool Initialize(const std::string& fileName);
@@ -249,4 +256,6 @@ private: // メンバ変数
 
 	//エミッター用座標
 	XMFLOAT3 emitterPos = {};
+
+	
 };

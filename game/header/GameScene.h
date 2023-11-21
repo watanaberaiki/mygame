@@ -76,7 +76,7 @@ private:
 	ImguiManager* imgui_ = nullptr;
 
 	//パーティクル
-	std::list<std::unique_ptr<ParticleManager>> particles;
+	ParticleManager* particles=nullptr;
 
 	//スプライト共通部
 	SpriteCommon* spriteCommon = nullptr;
