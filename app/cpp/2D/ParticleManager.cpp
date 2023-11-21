@@ -1,6 +1,7 @@
 #include "ParticleManager.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
+#include <random>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -294,6 +295,11 @@ void ParticleManager::InitializeGraphicsPipeline()
 
 		{  //スケール
 			"TEXCOORD",0,DXGI_FORMAT_R32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		},
+		{  //回転
+			"ROTATION",0,DXGI_FORMAT_R32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		},
@@ -692,6 +698,17 @@ void ParticleManager::Update()
 		//スケールの線形補完
 		it->scale = (it->e_scale - it->s_scale) * f;
 		it->scale += it->s_scale;
+		//回転
+		if (it->isRotation) {
+			//回転の向きランダム
+			if (it->direction == 0) {
+				it->rotation++;
+			}
+			else if(it->direction == 1){
+				it->rotation--;
+			}
+
+		}
 
 	}
 
@@ -711,6 +728,8 @@ void ParticleManager::Update()
 			vertMap++;
 			//スケール
 			vertMap->scale = it->scale;
+			//回転
+			vertMap->rotation = it->rotation;
 			////色
 			//constMapMaterial->color = it->color;
 		}
@@ -761,7 +780,7 @@ void ParticleManager::Draw()
 
 }
 
-void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT3 accel, float start_scale, float end_scale, XMFLOAT4 color)
+void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT3 accel, float start_scale, float end_scale, XMFLOAT4 color, bool isRotation_)
 {
 	//リストに要素を追加
 	particles.emplace_front();
@@ -775,4 +794,8 @@ void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT
 	p.color = color;
 	p.s_scale = start_scale;
 	p.e_scale = end_scale;
+	p.isRotation = isRotation_;
+	std::random_device ram_dev;
+	std::mt19937 ram(ram_dev());
+	p.direction = ram()%2;
 }

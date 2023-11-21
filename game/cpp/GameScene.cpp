@@ -448,6 +448,7 @@ void GameScene::Update()
 				isGameOver = false;
 				isStart = true;
 				isEnemyAlive = true;
+				lineLose = false;
 				//敵読み込み
 				for (int i = 0; i < enemysize; i++) {
 					std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
@@ -1209,7 +1210,7 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		//追加
-		particles->Add(20, pos, vel, acc, 1.0f, 0.0f, color);
+		particles->Add(20, pos, vel, acc, 1.0f, 0.0f, color,true);
 	}
 	particles->Update();
 }
@@ -1256,7 +1257,7 @@ void GameScene::TitleParticle(XMFLOAT3 pos_)
 		life += 20;
 
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color,false);
 	}
 	particles->Update();
 }
@@ -1302,7 +1303,7 @@ void GameScene::TransitionParticle(XMFLOAT3 pos_)
 		life += 20;
 
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color,false);
 	}
 	particles->Update();
 }
@@ -1348,7 +1349,7 @@ void GameScene::TransitionBackParticle(XMFLOAT3 pos_, int num)
 		life += 20;
 
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color,false);
 	}
 	particles->Update();
 }

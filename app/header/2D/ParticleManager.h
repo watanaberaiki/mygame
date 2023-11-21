@@ -30,6 +30,7 @@ public: // サブクラス
 	{
 		XMFLOAT3 pos; // xyz座標
 		float scale;
+		float rotation;
 	};
 
 	// 定数バッファ用データ構造体
@@ -62,6 +63,12 @@ public: // サブクラス
 		float s_scale = 1.0f;
 		//最終値
 		float e_scale = 0.0f;
+		//回転
+		float rotation = 0.0f;
+		//回転するか
+		bool isRotation = false;
+		//回転の向き
+		int direction = 0;
 		//色
 		XMFLOAT4 color = {};
 	};
@@ -72,7 +79,7 @@ private: // 定数
 	const float prizmHeight = 8.0f;			// 柱の高さ
 	const int planeCount = division * 2 + division * 2;		// 面の数
 
-	static const int vertexCount = 1024;		// 頂点数
+	static const int vertexCount = 2048;		// 頂点数
 
 public: // 静的メンバ関数
 
@@ -228,7 +235,7 @@ public: // メンバ関数
 	void Draw();
 
 	//パーティクルの追加
-	void Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT3 accel, float start_scale, float end_scale, XMFLOAT4 color);
+	void Add(int life, XMFLOAT3 position, XMFLOAT3 velociy, XMFLOAT3 accel, float start_scale, float end_scale, XMFLOAT4 color,bool isRotation_);
 
 private: // メンバ変数
 
@@ -256,6 +263,5 @@ private: // メンバ変数
 
 	//エミッター用座標
 	XMFLOAT3 emitterPos = {};
-
 	
 };

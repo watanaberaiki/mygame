@@ -35,6 +35,7 @@ static const float2 uv_array[vnum] =
 	float2(1,1), //右下
 	float2(1,0)  //右上
 };
+
 //点の入力から四角形を出力
 [maxvertexcount(vnum)]
 void main(
@@ -48,6 +49,17 @@ void main(
         //中心からのオフセットをスケーリング
         float4 offset;
         offset = offset_array[i] * input[0].scale;
+        //回転
+        half c=cos(input[0].rotation);
+        half s=sin(input[0].rotation);
+
+        half4x4 rotationMatrixZ=half4x4(
+        c,-s,0,0,
+        s,c,0,0,
+        0,0,1,0,
+        0,0,0,0);
+        
+        offset=mul(rotationMatrixZ,offset);
         //中心からのオフセットをビルボード回転(モデル座標)
         offset = mul(matBillboard, offset);
 
