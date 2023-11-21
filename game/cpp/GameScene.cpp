@@ -1198,9 +1198,9 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc = 0.001f;
+		//const float rnd_acc = 0.001f;
 		XMFLOAT3 acc{};
-		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+		//acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 		//色
 		const float rnd_color = 1.0f;
@@ -1209,8 +1209,13 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
 		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		//時間
+		const int rnd_life = 40;
+		int life = 0;
+		life = rand() % rnd_life + 1;
+		life += 20;
 		//追加
-		particles->Add(20, pos, vel, acc, 1.0f, 0.0f, color,true);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.0f, color,true);
 	}
 	particles->Update();
 }
