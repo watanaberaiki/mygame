@@ -340,6 +340,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	//パーティクル
 	particles = new ParticleManager();
 	particles->Initialize("line.png");
+
+	redParticles = new ParticleManager();
+	redParticles->Initialize("redline.png");
 }
 
 void GameScene::Update()
@@ -635,7 +638,7 @@ void GameScene::Update()
 					enemy->Update();
 					//死んだ際のパーティクル
 					if (enemy->GetisDead()) {
-						Particle(enemy->GetPos());
+						EnemyParticle(enemy->GetPos());
 					}
 				}
 				//敵の死んだ処理
@@ -645,6 +648,8 @@ void GameScene::Update()
 
 				//パーティクル
 				particles->Update();
+				redParticles->Update();
+				//当たり判定
 				AllCollision();
 
 				//敵の全滅判定
@@ -772,6 +777,7 @@ void GameScene::Update()
 			}
 			//パーティクル
 			particles->Update();
+			redParticles->Update();
 			//カメラ更新
 			camera->Update();
 			//プレイヤー更新
@@ -891,8 +897,7 @@ void GameScene::Draw()
 		WireObject::PostDraw();
 
 		//パーティクル
-
-			particles->Draw();
+		particles->Draw();
 		
 
 		//スプライト
@@ -958,9 +963,8 @@ void GameScene::Draw()
 		WireObject::PostDraw();
 
 		//パーティクル
-	
-			particles->Draw();
-		
+		particles->Draw();
+		redParticles->Draw();
 
 		//デバッグ表示
 		//プレイヤー
@@ -1028,8 +1032,8 @@ void GameScene::Draw()
 		WireObject::PostDraw();
 
 		//パーティクル
-			particles->Draw();
-		
+		particles->Draw();
+		redParticles->Draw();
 
 		//デバッグ表示
 		//プレイヤー
@@ -1168,6 +1172,7 @@ void GameScene::AllCollision()
 		if (playerbullet->GetCubeObject()->CheakCollision(boss->GetCubeObject())) {
 			playerbullet->OnCollision();
 			boss->OnCollision();
+			EnemyParticle(boss->GetPos());
 		}
 	}
 
@@ -1218,6 +1223,47 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		particles->Add(life, pos, vel, acc, 0.5f, 0.0f, color,true);
 	}
 	particles->Update();
+}
+
+void GameScene::EnemyParticle(XMFLOAT3 pos_)
+{
+	//パーティクル
+	redParticles->SetEmitterPos(pos_);
+	for (int i = 0; i < 50; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 1.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		//const float rnd_acc = 0.001f;
+		XMFLOAT3 acc{};
+		//acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		//色
+		const float rnd_color = 1.0f;
+		XMFLOAT4 color{  };
+		color.x = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.y = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.z = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		color.w = (float)rand() / RAND_MAX * rnd_color - rnd_color / 2.0f;
+		//時間
+		const int rnd_life = 40;
+		int life = 0;
+		life = rand() % rnd_life + 1;
+		life += 20;
+		//追加
+		redParticles->Add(life, pos, vel, acc, 0.5f, 0.0f, color, true);
+	}
+	redParticles->Update();
 }
 
 void GameScene::TitleParticle(XMFLOAT3 pos_)

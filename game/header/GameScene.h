@@ -56,6 +56,8 @@ public:
 	void AllCollision();
 	//パーティクル処理
 	void Particle(XMFLOAT3 pos);
+	//敵のパーティクル
+	void EnemyParticle(XMFLOAT3 pos);
 	//タイトルシーンのパーティクル処理
 	void TitleParticle(XMFLOAT3 pos);
 	//画面遷移時に使うパーティクル
@@ -77,7 +79,7 @@ private:
 
 	//パーティクル
 	ParticleManager* particles=nullptr;
-
+	ParticleManager* redParticles = nullptr;
 	//スプライト共通部
 	SpriteCommon* spriteCommon = nullptr;
 	//スプライト
