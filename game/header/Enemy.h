@@ -38,7 +38,9 @@ public://メンバ関数
 	void Fire();
 	//コールバック関数
 	void OnCollision();
-	
+	//イージング
+	double easeOutQuad(double time_, double start_, double difference, double totaltime_);
+
 	//セッター
 	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
 	void SetScale(const XMFLOAT3 scale_) { this->scale = scale_; }
@@ -61,7 +63,7 @@ private://静的メンバ変数
 private://メンバ変数
 	//位置、大きさ、回転
 	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 scale = { (float)0.1,(float)0.1,(float)0.1 };
+	XMFLOAT3 scale = { (float)0.2,(float)0.2,(float)0.2 };
 	XMFLOAT3 rotation = { 0,0,0 };
 
 
@@ -104,6 +106,17 @@ private://メンバ変数
 	//自機を狙う弾用
 	Vector3 velocityVec = {};
 	XMFLOAT3 velocity = {};
+
+	//登場演出
+	//登場演出中かの判定
+	bool isAppearanceDirection = false;
+	//登場演出に一度入ったかの判定
+	bool isAppearance = false;
+	const int directionMaxTime = 20;
+	float startScale = 0.0f;
+	float endScale = 0.2f;
+	float directionScale = 0.0f;
+	int directionTime = 0;
 
 };
 

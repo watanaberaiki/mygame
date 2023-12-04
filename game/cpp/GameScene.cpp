@@ -452,6 +452,8 @@ void GameScene::Update()
 				isStart = true;
 				isEnemyAlive = true;
 				lineLose = false;
+
+				enemys.clear();
 				//敵読み込み
 				for (int i = 0; i < enemysize; i++) {
 					std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
@@ -462,6 +464,17 @@ void GameScene::Update()
 					newObject->SetType(enemycsv->Getmove(i));
 					newObject->Update();
 					enemys.push_back(std::move(newObject));
+				}
+				//白線を元の位置に戻す
+				lineObjects.clear();
+				for (int i = 0; i < maxLine; i++) {
+					std::unique_ptr<LineObject>newobject = std::make_unique<LineObject>();
+					newobject->Initialize();
+					newobject->SetModel(lineModel);
+					newobject->SetPosition(XMFLOAT3(0.0f, -1.8f, (float)20.0f * i + 20));
+					newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+					floorEndScale = newobject->GetScale();
+					lineObjects.push_back(std::move(newobject));
 				}
 			}
 		}
@@ -586,8 +599,20 @@ void GameScene::Update()
 			if (isEnemyAlive) {
 				eye.z += 0.05f;
 				target.z = eye.z + 1;
+				//デバッグ
+				debugEye = target;
+				debugEye.x += 10.0f;
+				debugEye.z += 3;
+				debugTarget = target;
+				debugTarget.z += 3;
+
 				camera->SetEye(eye);
 				camera->SetTarget(target);
+				//デバッグ
+				if (input_->PushKey(DIK_4)) {
+					camera->SetEye(debugEye);
+					camera->SetTarget(debugTarget);
+				}
 				camera->Update();
 
 				//地面
@@ -976,11 +1001,6 @@ void GameScene::Draw()
 			enemy->DebugDraw(dxCommon_->GetCommandlist());
 		}
 
-		////敵
-		//for (std::unique_ptr<Enemy>& enemy : enemys)
-		//{
-		//	enemy->DebugDraw(dxCommon_->GetCommandlist());
-		//}
 
 		//スプライト描画
 		spriteCommon->PreDraw();

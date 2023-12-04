@@ -31,9 +31,30 @@ void Enemy::Initialize()
 
 void Enemy::Update()
 {
+	//登場演出
+	//プレイヤー
+	if (isAppearanceDirection) {
+		if (directionMaxTime == directionTime) {
+			isAppearanceDirection = false;
+		}
+		else {
+			directionTime++;
+			directionScale = (float)easeOutQuad(directionMaxTime, startScale, endScale - startScale, directionTime);
+		}
+	}
+	scale = XMFLOAT3(directionScale, directionScale, directionScale);
+	//演出の入る条件
+	if (!isAppearance) {
+		if (position.z - player->GetPosition().z <= 35.0f) {
+			isAppearance = true;
+			isAppearanceDirection = true;
+		}
+	}
+
+	//動き
 	Move();
 
-	if (player->GetPosition().z -position.z>=10.0f) {
+	if (player->GetPosition().z - position.z >= 10.0f) {
 		isdead = true;
 	}
 
@@ -48,7 +69,8 @@ void Enemy::Update()
 	if (time >= MaxTime) {
 		//プレイヤーの裏に行ったら弾を撃たなくなる
 		if (player->GetPosition().z < position.z) {
-			if (position.z- player->GetPosition().z<=40.0f) {
+			//距離の差が特定の値を越したら撃ち始める
+			if (position.z - player->GetPosition().z <= 30.0f) {
 				Fire();
 				time = 0;
 			}
@@ -75,7 +97,7 @@ void Enemy::Update()
 
 	//判定
 	collisionBox->SetPosition(position);
-	collisionBox->SetScale(XMFLOAT3(scale.x * 3, scale.y * 3, scale.z * 3));
+	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 }
@@ -221,4 +243,13 @@ void Enemy::Fire()
 void Enemy::OnCollision()
 {
 	isdead = true;
+	isAppearance = false;
+}
+
+double Enemy::easeOutQuad(double time_, double start_, double difference, double totaltime_)
+{
+	double x = totaltime_ / time_;
+	double v = 1 - (1 - x) * (1 - x);
+	double ret = difference * v + start_;
+	return ret;
 }

@@ -311,4 +311,5 @@ void Player::Reset()
 {
 	life = maxLife;
 	position = { 0,0,0 };
+	playerObj->SetModel(playerModel_hp[maxLife - life]);
 }

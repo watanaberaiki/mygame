@@ -253,5 +253,9 @@ private:
 
 	DxInput* dxinput = new DxInput();
 
+	//デバッグ
+	XMFLOAT3 debugEye = { 0,0,0 };
+	XMFLOAT3 debugTarget = { 0,0,0 };
+
 };
 
