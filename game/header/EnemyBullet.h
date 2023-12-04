@@ -26,9 +26,9 @@ public://メンバ関数
 	//判定
 	void OnCollision();
 	//セッター
-	void SetPosition(XMFLOAT3 position_) { this->position = position_; }
-	void SetScale(XMFLOAT3 scale_) { this->position = scale_; }
-	void SetRotation(XMFLOAT3 rotation_) { this->position = rotation_; }
+	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
+	void SetScale(const XMFLOAT3 scale_) { this->position = scale_; }
+	void SetRotation(const XMFLOAT3 rotation_) { this->position = rotation_; }
 	void SetIsFire(bool isfire_) { this->isFire = isfire_; }
 
 	//ゲッター
@@ -40,7 +40,7 @@ private://静的メンバ変数
 private://メンバ変数
 	//位置、大きさ、回転
 	XMFLOAT3 position = { 0,0,0 };
-	XMFLOAT3 scale = { (float)0.1,(float)0.1,(float)0.1 };
+	XMFLOAT3 scale = { (float)0.05,(float)0.05,(float)0.05 };
 	XMFLOAT3 rotation = { 0,0,0 };
 
 
@@ -73,4 +73,3 @@ private://メンバ変数
 	XMFLOAT3 velocity = {};
 
 };
-

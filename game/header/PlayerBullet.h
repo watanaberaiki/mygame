@@ -26,9 +26,9 @@ public://メンバ関数
 	//判定
 	void OnCollision();
 	//セッター
-	void SetPosition(XMFLOAT3 position_) { this->position = position_; }
-	void SetScale(XMFLOAT3 scale_) { this->position = scale_; }
-	void SetRotation(XMFLOAT3 rotation_) { this->position = rotation_; }
+	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
+	void SetScale(const XMFLOAT3 scale_) { this->position = scale_; }
+	void SetRotation(const XMFLOAT3 rotation_) { this->position = rotation_; }
 	void SetIsFire(bool isfire_) { this->isFire = isfire_; }
 
 	//ゲッター
@@ -57,7 +57,7 @@ private://メンバ変数
 
 
 	//スピード
-	float speed = 0.4f;
+	float speed = 1.0f;
 	XMFLOAT3 velocity = {};
 	//回転用
 	float bulletRotation=0.0f;

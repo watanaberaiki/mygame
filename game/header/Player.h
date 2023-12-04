@@ -40,10 +40,10 @@ public://メンバ関数
 	//リセット
 	void Reset();
 	//セッター
-	void SetPosition(XMFLOAT3 position_) { this->position = position_; }
-	void SetPositionZ(float positionz_) { this->position.z = positionz_; }
-	void SetScale(XMFLOAT3 scale_) { this->scale = scale_; }
-	void SetRotation(XMFLOAT3 rotation_) { this->rotation = rotation_; }
+	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
+	void SetPositionZ(const float positionz_) { this->position.z = positionz_; }
+	void SetScale(const XMFLOAT3 scale_) { this->scale = scale_; }
+	void SetRotation(const XMFLOAT3 rotation_) { this->rotation = rotation_; }
 	void SetIsTitle(bool isTitle_) { this->isTitle = isTitle_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Player::dxcommon = dxcommon_; }
 	//ゲッター
@@ -63,14 +63,18 @@ private://メンバ変数
 
 	//レティクルの位置
 	XMFLOAT3 frontReticlepos = { 0,0,0 };
+	XMFLOAT3 frontBackReticlepos = { 0,0,0 };
+	XMFLOAT3 backFrontReticlepos = { 0,0,0 };
 	XMFLOAT3 backReticlepos = { 0,0,0 };
+
+
 	float frontdepth = 0.0f;
 	float backdepth = 0.0f;
 	//レティクル制限
-	const float reticleUpLimit = 6.0f;
-	const float reticleDownLimit = 1.5f;
-	const float reticleLeftLimit = 3.0f;
-	const float reticleRightLimit = 3.0f;
+	const float reticleUpLimit = 7.0f;
+	const float reticleDownLimit = 2.5f;
+	const float reticleLeftLimit = 4.0f;
+	const float reticleRightLimit = 4.0f;
 
 
 
@@ -80,7 +84,7 @@ private://メンバ変数
 	FbxObject3D* playerFbxObj = nullptr;
 
 	//3Dモデル
-	Model* playerModel = nullptr;
+	Model* playerModel_hp[4] = {};
 	//3Dオブジェクト
 	WireObject* playerObj = nullptr;
 
@@ -107,11 +111,14 @@ private://メンバ変数
 
 	//ライン
 	LineModel* lineModel = nullptr;
-	LineObject* lineObject[4] = {};
+	static const int maxLine = 8;
+	LineObject* lineObject[maxLine] = {};
 
 	//レティクル用ベクトル
 	Vector3 reticleVec = {};
 	Vector3 frontVec = {};
+	Vector3 frontBackVec = {};
+	Vector3 backFrontVec = {};
 	Vector3 backVec = {};
 	XMFLOAT3 velocity = {};
 
@@ -119,9 +126,15 @@ private://メンバ変数
 	bool isTitle = false;
 
 	//hp
-	int life = 5;
+	const int maxLife = 4;
+	int life = 4;
 
 	//死んでる判定
 	bool isDead = false;
+
+	//当たった後の無敵時間
+	bool isInvincible = false;
+	int maxInvincibleTime = 20;
+	int invincibleTime = 0;
 };
 

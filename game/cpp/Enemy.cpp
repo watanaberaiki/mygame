@@ -75,7 +75,7 @@ void Enemy::Update()
 
 	//判定
 	collisionBox->SetPosition(position);
-	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
+	collisionBox->SetScale(XMFLOAT3(scale.x * 3, scale.y * 3, scale.z * 3));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 }
@@ -116,11 +116,11 @@ void Enemy::Move()
 	{
 		//z方向のみ
 	case Move_z:
-		position.z -= speedZ;
+		//position.z -= speedZ;
 		break;
 		//xz方向
 	case Move_xz:
-		position.z -= speedZ;
+		//position.z -= speedZ;
 
 		if (plusX) {
 			if (position.x < MoveX) {
@@ -141,7 +141,7 @@ void Enemy::Move()
 		break;
 		//yz方向
 	case Move_yz:
-		position.z -= speedZ;
+		//position.z -= speedZ;
 		if (plusY) {
 			if (position.y < MoveY) {
 				position.y += speedY;
@@ -164,7 +164,7 @@ void Enemy::Move()
 		break;
 		//xyz方向
 	case Move_xyz:
-		position.z -= speedZ;
+		//position.z -= speedZ;
 
 		if (plusX) {
 			if (position.x < MoveX) {

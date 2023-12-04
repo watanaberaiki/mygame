@@ -20,8 +20,8 @@ public:
 	//初期化
 	void Initialize();
 	//読み込み
-	FbxModel* LoadFbx(const string modelName);
-	Model* LoadObj(const string modelName);
+	FbxModel* LoadFbx(const string& modelName);
+	Model* LoadObj(const string& modelName);
 
 	//インスタンス取得
 	static ResourceManager* Getinstance() { if (instance == NULL)instance = new ResourceManager(); return instance; }

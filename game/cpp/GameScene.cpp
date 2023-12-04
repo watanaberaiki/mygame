@@ -970,6 +970,12 @@ void GameScene::Draw()
 		//プレイヤー
 		player->DebugDraw(dxCommon_->GetCommandlist());
 
+		//敵
+		for (std::unique_ptr<Enemy>& enemy : enemys)
+		{
+			enemy->DebugDraw(dxCommon_->GetCommandlist());
+		}
+
 		////敵
 		//for (std::unique_ptr<Enemy>& enemy : enemys)
 		//{
@@ -1220,7 +1226,7 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		life = rand() % rnd_life + 1;
 		life += 20;
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.0f, color,true);
+		particles->Add(life, pos, vel, acc, 0.2f, 0.0f, color,true);
 	}
 	particles->Update();
 }

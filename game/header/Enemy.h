@@ -40,9 +40,9 @@ public://メンバ関数
 	void OnCollision();
 	
 	//セッター
-	void SetPosition(XMFLOAT3 position_) { this->position = position_; }
-	void SetScale(XMFLOAT3 scale_) { this->scale = scale_; }
-	void SetRotation(XMFLOAT3 rotation_) { this->rotation = rotation_; }
+	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
+	void SetScale(const XMFLOAT3 scale_) { this->scale = scale_; }
+	void SetRotation(const XMFLOAT3 rotation_) { this->rotation = rotation_; }
 	void SetType(int type_) { this->type = type_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Enemy::dxcommon = dxcommon_; }
 	static void SetPlayer(Player* player_) { Enemy::player = player_; }

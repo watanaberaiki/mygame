@@ -3,7 +3,7 @@
 #include "sstream"
 #include "stdio.h"
 
-void CSVLoader::LoadCSV(const std::string fileName)
+void CSVLoader::LoadCSV(const std::string& fileName)
 {
 	position.clear();
 	scale.clear();

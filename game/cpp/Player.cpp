@@ -13,9 +13,13 @@ void Player::Initialize()
 
 
 	//3dオブジェクト
-	playerModel = Model::LoadFromObj("block");
+	playerModel_hp[0] = Model::LoadFromObj("player_hp1");
+	playerModel_hp[1] = Model::LoadFromObj("player_hp2");
+	playerModel_hp[2] = Model::LoadFromObj("player_hp3");
+	playerModel_hp[3] = Model::LoadFromObj("player_hp4");
+	
 	playerObj = WireObject::Create();
-	playerObj->SetModel(playerModel);
+	playerObj->SetModel(playerModel_hp[0]);
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
@@ -31,18 +35,21 @@ void Player::Initialize()
 	lineModel = new LineModel();
 	lineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
 	lineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < maxLine; i++) {
 		lineObject[i] = new LineObject();
 		lineObject[i]->Initialize();
 		lineObject[i]->SetModel(lineModel);
+		if (i%2== 0) {
+			lineObject[i]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+		}
 	}
-	//XMConvertToDegrees
-	lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
-	lineObject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+	////XMConvertToDegrees
+	//lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+	//lineObject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 
 	//レティクルの位置
-	frontdepth = 10;
-	backdepth = 25;
+	frontdepth = 5;
+	backdepth = 30;
 
 	input = Input::GetInstance();
 
@@ -50,11 +57,23 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	//死んでる判定
 	if (life <= 0) {
 		isDead = true;
 	}
 	else {
 		isDead = false;
+	}
+
+	//ダメージを食らった後の無敵時間
+	if (isInvincible) {
+		if (maxInvincibleTime > invincibleTime) {
+			invincibleTime++;
+		}
+		else {
+			invincibleTime = 0;
+			isInvincible = false;
+		}
 	}
 
 	//デスフラグの立った球を削除
@@ -110,17 +129,34 @@ void Player::Update()
 	reticleVec.normalize();
 	//手前レティクル
 	frontVec = reticleVec * frontdepth;
-	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);	
+	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);
+	//手前の後ろ
+	frontBackVec = reticleVec * ((backdepth-frontdepth)/2);
+	frontBackReticlepos = XMFLOAT3(frontBackVec.x + position.x, frontBackVec.y + position.y, frontBackVec.z + position.z);
+	//奥側の前
+	backFrontVec = reticleVec * ((backdepth - frontdepth)/2+frontdepth);
+	backFrontReticlepos= XMFLOAT3(backFrontVec.x + position.x, backFrontVec.y + position.y, backFrontVec.z + position.z);
+
 	//奥側のレティクル
 	//backVec= reticleVec * backdepth;
 	//backReticlepos= XMFLOAT3(backVec.x, backVec.y, backVec.z);
 	backReticlepos.z = backdepth+position.z;
 
-	for (int i = 0; i < 4; i++) {
-		if (i < 2) {
+	for (int i = 0; i < maxLine; i++) {
+		//手前
+		if (i==0||i==1) {
 			lineObject[i]->SetPosition(frontReticlepos);
 		}
-		else {
+		//手前の後ろ
+		else if (i == 2 || i == 3) {
+			lineObject[i]->SetPosition(frontBackReticlepos);
+		}
+		//奥側の前
+		else if (i == 4 || i == 5) {
+			lineObject[i]->SetPosition(backFrontReticlepos);
+		}
+		//奥側
+		else if (i == 6 || i == 7) {
 			lineObject[i]->SetPosition(backReticlepos);
 		}
 		lineObject[i]->Update();
@@ -145,8 +181,11 @@ void Player::Draw()
 
 void Player::WireDraw()
 {
-	//オブジェクト
-	playerObj->Draw();
+	//無敵の時の点滅
+	if (invincibleTime % 2 == 0) {
+		//オブジェクト
+		playerObj->Draw();
+	}
 }
 
 void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
@@ -159,7 +198,7 @@ void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 	//collisionBox->Draw(cmdList);
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < maxLine; i++) {
 		lineObject[i]->Draw(cmdList);
 	}
 }
@@ -254,11 +293,22 @@ void Player::Fire()
 
 void Player::OnCollision()
 {
-	life--;
+	if (!isInvincible) {
+		life--;
+		isInvincible = true;
+		if (life != 0) {
+			playerObj->SetModel(playerModel_hp[maxLife - life]);
+		}
+	}
+	else {
+
+	}
+	
+
 }
 
 void Player::Reset()
 {
-	life = 5;
+	life = maxLife;
 	position = { 0,0,0 };
 }

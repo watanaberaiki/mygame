@@ -17,7 +17,7 @@ private:	//エイリアス
 
 public:
 	//csvファイルを読み込んで変数に代入する
-	void LoadCSV(const std::string fileName);
+	void LoadCSV(const std::string& fileName);
 
 
 	//ゲッター

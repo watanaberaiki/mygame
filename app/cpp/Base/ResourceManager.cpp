@@ -5,7 +5,7 @@ void ResourceManager::Initialize()
 {
 }
 
-FbxModel* ResourceManager::LoadFbx(const string modelName)
+FbxModel* ResourceManager::LoadFbx(const string& modelName)
 {
 	//読み込まれたテクスチャを参照
 	auto it = fbxModels.find(modelName);
@@ -19,7 +19,7 @@ FbxModel* ResourceManager::LoadFbx(const string modelName)
 	return model;
 }
 
-Model* ResourceManager::LoadObj(const string modelName)
+Model* ResourceManager::LoadObj(const string& modelName)
 {
 	//読み込まれたテクスチャを参照
 	auto it = objModels.find(modelName);
