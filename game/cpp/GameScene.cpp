@@ -685,18 +685,18 @@ void GameScene::Update()
 			}
 			else {
 				scene = BossFight;
-				eye.z += 10.0f;
-				target.z = eye.z + 1;
-				camera->SetEye(eye);
-				camera->SetTarget(target);
-				camera->Update();
-				//プレイヤー
-				player->SetPositionZ(eye.z + 4.0f);
-				player->Update();
+
+				//eye.z += 10.0f;
+				//target.z = eye.z + 1;
+				//camera->SetEye(eye);
+				//camera->SetTarget(target);
+				//camera->Update();
+				////プレイヤー
+				//player->SetPositionZ(eye.z + 4.0f);
+				//player->Update();
 
 				//ボス
-				boss->SetPosition(player->GetPosition());
-				boss->SetPositionZ(player->GetPosition().z + 10.0f);
+				boss->SetPositionZ(player->GetPosition().z + 12.0f);
 				boss->Reset();
 			}
 
@@ -1108,8 +1108,7 @@ void GameScene::Draw()
 	}
 
 	//パーティクル
-
-		particles->Draw();
+	particles->Draw();
 	
 
 	//スプライト描画
