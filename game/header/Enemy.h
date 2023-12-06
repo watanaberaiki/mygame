@@ -118,5 +118,12 @@ private://メンバ変数
 	float directionScale = 0.0f;
 	int directionTime = 0;
 
+	//敵の位置を横の壁に表示のライン
+	LineModel* posLineModel = nullptr;
+	LineObject* posLineObject[2] = {};
+	const float widthSpace = 4.0f;
+	XMFLOAT3 lineScale = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 startLineScale = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 endLineScale= { 0.01f,1.0f,1.0f };
 };
 

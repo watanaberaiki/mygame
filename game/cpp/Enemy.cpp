@@ -27,6 +27,16 @@ void Enemy::Initialize()
 	collisionBox->SetModel(cubeModel);
 	collisionBox->Update();
 
+	//レティクルの位置を横の壁でわかりやすく
+	posLineModel = new LineModel();
+	posLineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	posLineModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
+	for (int i = 0; i < 2; i++) {
+		posLineObject[i] = new LineObject();
+		posLineObject[i]->Initialize();
+		posLineObject[i]->SetModel(posLineModel);
+	}
+
 }
 
 void Enemy::Update()
@@ -39,7 +49,13 @@ void Enemy::Update()
 		}
 		else {
 			directionTime++;
+			//敵のスケール
 			directionScale = (float)easeOutQuad(directionMaxTime, startScale, endScale - startScale, directionTime);
+
+			//ライン
+			lineScale.x = (float)easeOutQuad(directionMaxTime, startLineScale.x, endLineScale.x - startLineScale.x, directionTime);
+			lineScale.y = (float)easeOutQuad(directionMaxTime, startLineScale.y, endLineScale.y - startLineScale.y, directionTime);
+			lineScale.z = (float)easeOutQuad(directionMaxTime, startLineScale.z, endLineScale.z - startLineScale.z, directionTime);
 		}
 	}
 	scale = XMFLOAT3(directionScale, directionScale, directionScale);
@@ -81,6 +97,23 @@ void Enemy::Update()
 	{
 		bullet->Update();
 	}
+
+	//位置を横に表示
+	for (int i = 0; i < 2; i++) {
+		XMFLOAT3 pos = position;
+		pos.x = 0;
+		pos.y = -0.5;
+		if (i == 0) {
+			pos.x += widthSpace;
+		}
+		else if (i==1) {
+			pos.x -= widthSpace;
+		}
+		posLineObject[i]->SetPosition(pos);
+		posLineObject[i]->SetScale(lineScale);
+		posLineObject[i]->Update();
+	}
+
 
 	////fbx
 	//enemyfbxobj->SetPosition(position);
@@ -130,6 +163,10 @@ void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	collisionBox->Draw(cmdList);
+
+	for (int i = 0; i < 2; i++) {
+		posLineObject[i]->Draw(cmdList);
+	}
 }
 
 void Enemy::Move()

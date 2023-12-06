@@ -31,18 +31,29 @@ void Player::Initialize()
 	collisionBox->SetModel(cubeModel);
 	collisionBox->Update();
 
-	//ライン初期化
-	lineModel = new LineModel();
-	lineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
-	lineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
+	//レティクル初期化
+	reticleModel = new LineModel();
+	reticleModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	reticleModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
 	for (int i = 0; i < maxLine; i++) {
-		lineObject[i] = new LineObject();
-		lineObject[i]->Initialize();
-		lineObject[i]->SetModel(lineModel);
+		reticleObject[i] = new LineObject();
+		reticleObject[i]->Initialize();
+		reticleObject[i]->SetModel(reticleModel);
 		if (i%2== 0) {
-			lineObject[i]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
+			reticleObject[i]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 		}
 	}
+
+	//レティクルの位置を横の壁でわかりやすく
+	reticleLineModel = new LineModel();
+	reticleLineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	reticleLineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
+	for (int i = 0; i < maxWidthLine;i++) {
+		reticleLineObject[i] = new LineObject();
+		reticleLineObject[i]->Initialize();
+		reticleLineObject[i]->SetModel(reticleLineModel);
+	}
+
 	////XMConvertToDegrees
 	//lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 	//lineObject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
@@ -145,21 +156,38 @@ void Player::Update()
 	for (int i = 0; i < maxLine; i++) {
 		//手前
 		if (i==0||i==1) {
-			lineObject[i]->SetPosition(frontReticlepos);
+			reticleObject[i]->SetPosition(frontReticlepos);
 		}
 		//手前の後ろ
 		else if (i == 2 || i == 3) {
-			lineObject[i]->SetPosition(frontBackReticlepos);
+			reticleObject[i]->SetPosition(frontBackReticlepos);
 		}
 		//奥側の前
 		else if (i == 4 || i == 5) {
-			lineObject[i]->SetPosition(backFrontReticlepos);
+			reticleObject[i]->SetPosition(backFrontReticlepos);
 		}
 		//奥側
 		else if (i == 6 || i == 7) {
-			lineObject[i]->SetPosition(backReticlepos);
+			reticleObject[i]->SetPosition(backReticlepos);
 		}
-		lineObject[i]->Update();
+		reticleObject[i]->Update();
+	}
+
+	//レティクルの横の壁に表示
+	for (int i = 0; i < maxWidthLine;i++) {
+		XMFLOAT3 pos = {};
+		pos = reticleObject[i]->GetPosition();
+		pos.y = -0.5f;
+		pos.x = 0;
+		if (i%2==0) {
+			pos.x += widthSpace;
+		}
+		else {
+			pos.x -= widthSpace;
+		}
+
+		reticleLineObject[i]->SetPosition(pos);
+		reticleLineObject[i]->Update();
 	}
 }
 
@@ -198,8 +226,13 @@ void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 	//collisionBox->Draw(cmdList);
 
+	//レティクル
 	for (int i = 0; i < maxLine; i++) {
-		lineObject[i]->Draw(cmdList);
+		reticleObject[i]->Draw(cmdList);
+	}
+	//レティクルの横の壁
+	for (int i = 0; i < maxWidthLine; i++) {
+		reticleLineObject[i]->Draw(cmdList);
 	}
 }
 

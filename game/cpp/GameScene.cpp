@@ -103,7 +103,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	boss = new Boss();
 	boss->Initialize();
 	boss->SetRotation(XMFLOAT3(0, 0, 0));
-	boss->SetScale(XMFLOAT3(0.1f, 0.4f, 0.1f));
+	boss->SetScale(XMFLOAT3(0.2f, 0.4f, 0.2f));
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
@@ -1064,8 +1064,10 @@ void GameScene::Draw()
 		//デバッグ表示
 		//プレイヤー
 		player->DebugDraw(dxCommon_->GetCommandlist());
-
-
+		//ボス
+		boss->DebugDraw(dxCommon_->GetCommandlist());
+		//ライン
+		boss->LineDraw(dxCommon_->GetCommandlist());
 
 		//スプライト描画
 		spriteCommon->PreDraw();

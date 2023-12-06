@@ -27,6 +27,17 @@ void Boss::Initialize()
 	collisionBox->Initialize();
 	collisionBox->SetModel(cubeModel);
 	collisionBox->Update();
+
+	//レティクルの位置を横の壁でわかりやすく
+	posLineModel = new LineModel();
+	posLineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	posLineModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
+	for (int i = 0; i < 2; i++) {
+		posLineObject[i] = new LineObject();
+		posLineObject[i]->Initialize();
+		posLineObject[i]->SetModel(posLineModel);
+	}
+
 }
 
 void Boss::Update()
@@ -43,48 +54,65 @@ void Boss::Update()
 		return bullet->GetIsDeath();
 		});
 
-	//弾の発射
-	targetShotTime++;
-	if (targetShotTime >= targetShotMaxTime) {
-		//弾の発射パターンランダム
-		count = ram() % TARGETSHOT::targetShot_end;
-		//変換
-		targetShot = static_cast<TARGETSHOT>(count);
-		TargetShot();
-		targetShotTime = 0;
-	}
+	if (!isdead) {
 
-	//固定撃ち
-	fixedShotTime++;
-	if (fixedShotTime >= fixedShotMaxTime) {
-		//パターンランダム
-		count = ram() % FIXEDSHOT::fixedShot_end;
-		//変換
-		fixedShot = static_cast<FIXEDSHOT>(count);
-		//縦
-		FixedShotHeight();
-		//横
-		FixedShotWidth();
-		fixedShotTime = 0;
-	}
+		//弾の発射
+		targetShotTime++;
+		if (targetShotTime >= targetShotMaxTime) {
+			//弾の発射パターンランダム
+			count = ram() % TARGETSHOT::targetShot_end;
+			//変換
+			targetShot = static_cast<TARGETSHOT>(count);
+			TargetShot();
+			targetShotTime = 0;
+		}
 
-	//弾更新処理
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
-	{
-		bullet->Update();
-	}
+		//固定撃ち
+		fixedShotTime++;
+		if (fixedShotTime >= fixedShotMaxTime) {
+			//パターンランダム
+			count = ram() % FIXEDSHOT::fixedShot_end;
+			//変換
+			fixedShot = static_cast<FIXEDSHOT>(count);
+			//縦
+			FixedShotHeight();
+			//横
+			FixedShotWidth();
+			fixedShotTime = 0;
+		}
 
-	//動き
-	moveTime++;
-	if (moveTime > moveMaxTime) {
-		//ランダム
-		count = ram() % MOVE::move_end;
-		//変換
-		move = static_cast<MOVE>(count);
-		moveTime = 0;
-	}
-	Move();
+		//弾更新処理
+		for (std::unique_ptr<EnemyBullet>& bullet : bullets)
+		{
+			bullet->Update();
+		}
 
+		//動き
+		moveTime++;
+		if (moveTime > moveMaxTime) {
+			//ランダム
+			count = ram() % MOVE::move_end;
+			//変換
+			move = static_cast<MOVE>(count);
+			moveTime = 0;
+		}
+		Move();
+
+		//位置を横に表示
+		for (int i = 0; i < 2; i++) {
+			XMFLOAT3 pos = position;
+			pos.x = 0;
+			pos.y = -0.5;
+			if (i == 0) {
+				pos.x += widthSpace;
+			}
+			else if (i == 1) {
+				pos.x -= widthSpace;
+			}
+			posLineObject[i]->SetPosition(pos);
+			posLineObject[i]->Update();
+		}
+	}
 	////fbx
 	//enemyfbxobj->SetPosition(position);
 	//enemyfbxobj->SetScale(scale);
@@ -139,6 +167,13 @@ void Boss::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	collisionBox->Draw(cmdList);
+}
+
+void Boss::LineDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	for (int i = 0; i < 2; i++) {
+		posLineObject[i]->Draw(cmdList);
+	}
 }
 
 void Boss::Move()

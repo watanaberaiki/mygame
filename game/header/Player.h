@@ -109,10 +109,16 @@ private://メンバ変数
 	//リソース
 	ResourceManager* resource = nullptr;
 
-	//ライン
-	LineModel* lineModel = nullptr;
+	//レティクル
+	LineModel* reticleModel = nullptr;
 	static const int maxLine = 8;
-	LineObject* lineObject[maxLine] = {};
+	LineObject* reticleObject[maxLine] = {};
+
+	//レティクルの位置を横の壁に表示のライン
+	LineModel* reticleLineModel = nullptr;
+	static const int maxWidthLine = 8;
+	LineObject* reticleLineObject[maxWidthLine] = {};
+	const float widthSpace = 4.0f;
 
 	//レティクル用ベクトル
 	Vector3 reticleVec = {};

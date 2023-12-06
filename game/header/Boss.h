@@ -51,6 +51,8 @@ public://メンバ関数
 	void Draw();
 	//当たり判定
 	void DebugDraw(ID3D12GraphicsCommandList* cmdList);
+	//ライン描画
+	void LineDraw(ID3D12GraphicsCommandList* cmdList);
 	//コールバック関数
 	void OnCollision();
 	//リセット
@@ -151,5 +153,10 @@ private://メンバ変数
 	int fixedShotTime = 0;
 	const float spaceX = 0.5f;
 	const float spaceY = 0.5f;
+
+	//敵の位置を横の壁に表示のライン
+	LineModel* posLineModel = nullptr;
+	LineObject* posLineObject[2] = {};
+	const float widthSpace = 4.0f;
 };
 
