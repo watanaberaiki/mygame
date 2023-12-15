@@ -34,6 +34,8 @@ public:
 	void CreateBuffers(ID3D12Device* device,float upY,float downY);
 	//頂点生成
 	void CreateVertex(float upY, float downY);
+	//頂点座標変更
+	void VertexUpdate(XMFLOAT3 start,XMFLOAT3 end);
 	//色設定
 	void SetImageData(XMFLOAT4 color);
 	//更新

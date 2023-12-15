@@ -257,5 +257,8 @@ private:
 	XMFLOAT3 debugEye = { 0,0,0 };
 	XMFLOAT3 debugTarget = { 0,0,0 };
 
+	//地面の繰り返し描画処理用
+	int floorCount = 0;
+
 };
 

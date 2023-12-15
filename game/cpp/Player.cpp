@@ -54,6 +54,15 @@ void Player::Initialize()
 		reticleLineObject[i]->SetModel(reticleLineModel);
 	}
 
+	//まっすぐのレティクル
+	reticleLineModelStraight = new LineModel();
+	reticleLineModelStraight->Initialize(dxcommon->GetDevice(), 0.0f, 0.0f);
+	reticleLineModelStraight->SetImageData(XMFLOAT4(0, 255, 0, 0.5f));
+	reticleLineObjectStraight = new LineObject();
+	reticleLineObjectStraight->Initialize();
+	reticleLineObjectStraight->SetModel(reticleLineModelStraight);
+	reticleLineObjectStraight->SetPosition({ 0.0f,0.0f,0.0f });
+
 	////XMConvertToDegrees
 	//lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 	//lineObject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
@@ -189,6 +198,11 @@ void Player::Update()
 		reticleLineObject[i]->SetPosition(pos);
 		reticleLineObject[i]->Update();
 	}
+
+	//まっすぐのレティクル
+	reticleLineModelStraight->VertexUpdate(position, backReticlepos);
+	reticleLineModelStraight->Update();
+	reticleLineObjectStraight->Update();
 }
 
 void Player::Draw()
@@ -234,6 +248,8 @@ void Player::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 	for (int i = 0; i < maxWidthLine; i++) {
 		reticleLineObject[i]->Draw(cmdList);
 	}
+	//まっすぐレティクル
+	reticleLineObjectStraight->Draw(cmdList);
 }
 
 void Player::Move()

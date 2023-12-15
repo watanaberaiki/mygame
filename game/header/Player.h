@@ -119,6 +119,8 @@ private://メンバ変数
 	static const int maxWidthLine = 8;
 	LineObject* reticleLineObject[maxWidthLine] = {};
 	const float widthSpace = 4.0f;
+	LineModel* reticleLineModelStraight = nullptr;
+	LineObject* reticleLineObjectStraight;
 
 	//レティクル用ベクトル
 	Vector3 reticleVec = {};

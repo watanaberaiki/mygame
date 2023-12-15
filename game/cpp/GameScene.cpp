@@ -1064,8 +1064,8 @@ void GameScene::Draw()
 		//デバッグ表示
 		//プレイヤー
 		player->DebugDraw(dxCommon_->GetCommandlist());
-		//ボス
-		boss->DebugDraw(dxCommon_->GetCommandlist());
+		////ボス
+		//boss->DebugDraw(dxCommon_->GetCommandlist());
 		//ライン
 		boss->LineDraw(dxCommon_->GetCommandlist());
 
