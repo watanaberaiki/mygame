@@ -38,13 +38,21 @@ void LineObject::Update()
 	matRot *= XMMatrixRotationZ(rotation.z);
 	matRot *= XMMatrixRotationX(rotation.x);
 	matRot *= XMMatrixRotationY(rotation.y);
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	matTrans = XMMatrixTranslation(startPosition.x, startPosition.y, startPosition.z);
 
 	//ワールド行列の生成
 	matWorld = XMMatrixIdentity();
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
+
+	matTrans = XMMatrixTranslation(endPosition.x, endPosition.y, endPosition.z);
+
+	//ワールド行列の生成
+	matWorld2 = XMMatrixIdentity();
+	matWorld2 *= matScale;
+	matWorld2 *= matRot;
+	matWorld2 *= matTrans;
 
 	//ビュープロジェクション行列
 	const XMMATRIX& matViewProjection = camera->GetmatViewProjection();
@@ -61,6 +69,7 @@ void LineObject::Update()
 	{
 		constMap->viewproj = matViewProjection;
 		constMap->world = matWorld;
+		constMap->world2 = matWorld2;
 		constMap->cameraPos = cameraPos;
 		constMap->scale = scale2;
 		constBuffTransform->Unmap(0, nullptr);
@@ -150,28 +159,28 @@ void LineObject::CreateGraphicsPipeline()
 		exit(1);
 	}
 
-	//// ジオメトリシェーダ読み込みとコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Resources/shaders/BasicGS.hlsl",   // シェーダファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-	//	"main", "gs_5_0",    // エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-	//	0,
-	//	&gsBlob, &errorBlob);
-	//if (FAILED(result)) {
-	//	// errorBlobからエラー内容をstring型にコピー
-	//	std::string errstr;
-	//	errstr.resize(errorBlob->GetBufferSize());
+	// ジオメトリシェーダ読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicGS.hlsl",   // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "gs_5_0",    // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&gsBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
 
-	//	std::copy_n((char*)errorBlob->GetBufferPointer(),
-	//		errorBlob->GetBufferSize(),
-	//		errstr.begin());
-	//	errstr += "\n";
-	//	// エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(errstr.c_str());
-	//	exit(1);
-	//}
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -220,7 +229,7 @@ void LineObject::CreateGraphicsPipeline()
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	/*gpipeline.GS= CD3DX12_SHADER_BYTECODE(gsBlob.Get());*/
+	gpipeline.GS= CD3DX12_SHADER_BYTECODE(gsBlob.Get());
 	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
 
 	// サンプルマスク

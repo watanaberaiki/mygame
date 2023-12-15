@@ -61,7 +61,7 @@ void Player::Initialize()
 	reticleLineObjectStraight = new LineObject();
 	reticleLineObjectStraight->Initialize();
 	reticleLineObjectStraight->SetModel(reticleLineModelStraight);
-	reticleLineObjectStraight->SetPosition({ 0.0f,0.0f,0.0f });
+	reticleLineObjectStraight->SetStartPosition({ 0.0f,0.0f,0.0f });
 
 	////XMConvertToDegrees
 	//lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
@@ -165,19 +165,19 @@ void Player::Update()
 	for (int i = 0; i < maxLine; i++) {
 		//手前
 		if (i==0||i==1) {
-			reticleObject[i]->SetPosition(frontReticlepos);
+			reticleObject[i]->SetStartPosition(frontReticlepos);
 		}
 		//手前の後ろ
 		else if (i == 2 || i == 3) {
-			reticleObject[i]->SetPosition(frontBackReticlepos);
+			reticleObject[i]->SetStartPosition(frontBackReticlepos);
 		}
 		//奥側の前
 		else if (i == 4 || i == 5) {
-			reticleObject[i]->SetPosition(backFrontReticlepos);
+			reticleObject[i]->SetStartPosition(backFrontReticlepos);
 		}
 		//奥側
 		else if (i == 6 || i == 7) {
-			reticleObject[i]->SetPosition(backReticlepos);
+			reticleObject[i]->SetStartPosition(backReticlepos);
 		}
 		reticleObject[i]->Update();
 	}
@@ -195,13 +195,13 @@ void Player::Update()
 			pos.x -= widthSpace;
 		}
 
-		reticleLineObject[i]->SetPosition(pos);
+		reticleLineObject[i]->SetStartPosition(pos);
 		reticleLineObject[i]->Update();
 	}
 
 	//まっすぐのレティクル
-	reticleLineModelStraight->VertexUpdate(position, backReticlepos);
-	reticleLineModelStraight->Update();
+	reticleLineObjectStraight->SetStartPosition(position);
+	reticleLineObjectStraight->SetEndPosition(backReticlepos);
 	reticleLineObjectStraight->Update();
 }
 

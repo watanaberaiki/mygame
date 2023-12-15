@@ -8,7 +8,7 @@ VSOutput main(VSInput input)
 	//ピクセルシェーダに渡す値
 	VSOutput output;
 	//行列による座標返還
-	output.svpos = mul(mul(viewproj, world), input.pos);
+	output.svpos = input.pos;
 	//ワールド法線を次のステージに渡す
 	output.normal = wnormal.xyz;
 	//入力値をそのまま次のステージ渡す

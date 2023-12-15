@@ -2,6 +2,7 @@ cbuffer cbuff0 : register(b0)
 {
     matrix viewproj; //ビュープロジェクション行列
     matrix world; //ワールド行列
+    matrix world2;//2つ目の座標のワールド行列
     float3 cameraPos; //カメラ座標
     float2 scale;   //スケール
 }

@@ -109,7 +109,7 @@ void Enemy::Update()
 		else if (i==1) {
 			pos.x -= widthSpace;
 		}
-		posLineObject[i]->SetPosition(pos);
+		posLineObject[i]->SetStartPosition(pos);
 		posLineObject[i]->SetScale(lineScale);
 		posLineObject[i]->Update();
 	}

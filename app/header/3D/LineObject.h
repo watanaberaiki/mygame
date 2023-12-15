@@ -30,6 +30,7 @@ class LineObject
 		{
 			XMMATRIX viewproj;
 			XMMATRIX world;
+			XMMATRIX world2;
 			XMFLOAT3 cameraPos;
 			XMFLOAT2 scale;
 		};
@@ -56,11 +57,12 @@ class LineObject
 		//グラフィックスパイプラインの生成
 		static void CreateGraphicsPipeline();
 		//セッター
-		void SetPosition(XMFLOAT3 pos) { position = pos; }
+		void SetStartPosition(XMFLOAT3 pos) { startPosition = pos; }
+		void SetEndPosition(XMFLOAT3 pos) { endPosition = pos; }
 		void SetScale(XMFLOAT3 sca) { scale = sca; }
 		void SetRotation(XMFLOAT3 rot) { rotation = rot; }
 		//ゲッター
-		XMFLOAT3 GetPosition() { return position; }
+		XMFLOAT3 GetPosition() { return startPosition; }
 		XMFLOAT3 GetRotation() { return rotation; }
 		XMFLOAT3 GetScale() { return scale; }
 		LineModel* GetModel() { return model; }
@@ -79,9 +81,12 @@ class LineObject
 		//X,Y,Z軸回りのローカル行列
 		XMFLOAT3 rotation = { 0,0,0 };
 		//ローカル座標
-		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT3 startPosition = { 0,0,0 };
+		//ローカル座標
+		XMFLOAT3 endPosition = { 0,0,0 };
 		//ローカルワールド変換行列
 		XMMATRIX matWorld = {};
+		XMMATRIX matWorld2 = {};
 		//モデル
 		LineModel* model = nullptr;
 		//判定用
