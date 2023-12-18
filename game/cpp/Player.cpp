@@ -33,7 +33,7 @@ void Player::Initialize()
 
 	//レティクル初期化
 	reticleModel = new LineModel();
-	reticleModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	reticleModel->Initialize(dxcommon->GetDevice(), 0, 0);
 	reticleModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
 	for (int i = 0; i < maxLine; i++) {
 		reticleObject[i] = new LineObject();
@@ -46,7 +46,7 @@ void Player::Initialize()
 
 	//レティクルの位置を横の壁でわかりやすく
 	reticleLineModel = new LineModel();
-	reticleLineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	reticleLineModel->Initialize(dxcommon->GetDevice(), 0, 0);
 	reticleLineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
 	for (int i = 0; i < maxWidthLine;i++) {
 		reticleLineObject[i] = new LineObject();
@@ -163,21 +163,78 @@ void Player::Update()
 	backReticlepos.z = backdepth+position.z;
 
 	for (int i = 0; i < maxLine; i++) {
+		XMFLOAT3 reticlePos = {};
 		//手前
-		if (i==0||i==1) {
-			reticleObject[i]->SetStartPosition(frontReticlepos);
+		if (i == 0 || i == 1) {
+			reticlePos = frontReticlepos;
+			if (i == 1) {
+				reticlePos.x -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = frontReticlepos;
+				reticlePos.x += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
+			else {
+				reticlePos.y -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = frontReticlepos;
+				reticlePos.y += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
 		}
 		//手前の後ろ
 		else if (i == 2 || i == 3) {
-			reticleObject[i]->SetStartPosition(frontBackReticlepos);
+			reticlePos = frontBackReticlepos;
+			if (i == 2) {
+				reticlePos.x -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = frontBackReticlepos;
+				reticlePos.x += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
+			else {
+				reticlePos.y -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = frontBackReticlepos;
+				reticlePos.y += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
 		}
 		//奥側の前
 		else if (i == 4 || i == 5) {
-			reticleObject[i]->SetStartPosition(backFrontReticlepos);
+			reticlePos = backFrontReticlepos;
+			if (i == 4) {
+				reticlePos.x -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = backFrontReticlepos;
+				reticlePos.x += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
+			else {
+				reticlePos.y -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = backFrontReticlepos;
+				reticlePos.y += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
 		}
 		//奥側
 		else if (i == 6 || i == 7) {
-			reticleObject[i]->SetStartPosition(backReticlepos);
+			reticlePos = backReticlepos;
+			if (i == 6) {
+				reticlePos.x -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = backReticlepos;
+				reticlePos.x += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
+			else {
+				reticlePos.y -= linePos;
+				reticleObject[i]->SetStartPosition(reticlePos);
+				reticlePos = backReticlepos;
+				reticlePos.y += linePos;
+				reticleObject[i]->SetEndPosition(reticlePos);
+			}
 		}
 		reticleObject[i]->Update();
 	}
@@ -185,18 +242,37 @@ void Player::Update()
 	//レティクルの横の壁に表示
 	for (int i = 0; i < maxWidthLine;i++) {
 		XMFLOAT3 pos = {};
-		pos = reticleObject[i]->GetPosition();
+		pos = reticleObject[i]->GetStartPosition();
 		pos.y = -0.5f;
 		pos.x = 0;
+		XMFLOAT3 widthLinePos = {};
 		if (i%2==0) {
 			pos.x += widthSpace;
+			widthLinePos = pos;
+			widthLinePos.y += linePos;
+			reticleLineObject[i]->SetStartPosition(widthLinePos);
+			widthLinePos = pos;
+			widthLinePos.y -= linePos;
+			reticleLineObject[i]->SetEndPosition(widthLinePos);
 		}
 		else {
 			pos.x -= widthSpace;
+			widthLinePos = pos;
+			widthLinePos.y += linePos;
+			reticleLineObject[i]->SetStartPosition(widthLinePos);
+			widthLinePos = pos;
+			widthLinePos.y -= linePos;
+			reticleLineObject[i]->SetEndPosition(widthLinePos);
 		}
-
-		reticleLineObject[i]->SetStartPosition(pos);
 		reticleLineObject[i]->Update();
+	}
+
+	//判定
+	if (isEnemyReticleCol) {
+		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 0, 255, 0.5f));
+	}
+	else {
+		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 255, 0, 0.5f));
 	}
 
 	//まっすぐのレティクル

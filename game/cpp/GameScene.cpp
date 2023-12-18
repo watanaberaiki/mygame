@@ -325,13 +325,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	//地面の線
 	//ライン初期化
 	lineModel = new LineModel();
-	lineModel->Initialize(dxCommon->GetDevice(), 5.0f, -5.0f);
+	lineModel->Initialize(dxCommon->GetDevice(), 0, 0);
 	lineModel->SetImageData(XMFLOAT4(255, 255, 255, 1));
 	for (int i = 0; i < maxLine; i++) {
 		std::unique_ptr<LineObject>newobject = std::make_unique<LineObject>();
 		newobject->Initialize();
 		newobject->SetModel(lineModel);
-		newobject->SetStartPosition(XMFLOAT3(0.0f, -1.8f, (float)20.0f * i + 20));
+		newobject->SetStartPosition(XMFLOAT3(0, -1.8f, (float)20.0f * i + 20));
+		newobject->SetEndPosition(XMFLOAT3(0, -1.8f, (float)20.0f * i + 20));
 		newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 		floorEndScale = newobject->GetScale();
 		lineObjects.push_back(std::move(newobject));
@@ -414,11 +415,10 @@ void GameScene::Update()
 		player->SetIsTitle(isTitle);
 		player->Update();
 		//地面の白線
-		floorDirectionScale.x = (float)easeOutQuad(directionMaxTime, floorStartScale.x, floorEndScale.x - floorStartScale.x, directionTime);
-		floorDirectionScale.y = (float)easeOutQuad(directionMaxTime, floorStartScale.y, floorEndScale.y - floorStartScale.y, directionTime);
-		floorDirectionScale.z = (float)easeOutQuad(directionMaxTime, floorStartScale.z, floorEndScale.z - floorStartScale.z, directionTime);
+		floorDirectionPosX = (float)easeOutQuad(directionMaxTime, floorStartPosX, floorEndPosX - floorStartPosX, directionTime);
 		for (auto& lineobject : lineObjects) {
-			lineobject->SetScale(floorDirectionScale);
+			lineobject->SetStartPositionX(floorDirectionPosX);
+			lineobject->SetEndPositionX(-floorDirectionPosX);
 			lineobject->Update();
 		}
 		//縦向きの白線
@@ -471,7 +471,8 @@ void GameScene::Update()
 					std::unique_ptr<LineObject>newobject = std::make_unique<LineObject>();
 					newobject->Initialize();
 					newobject->SetModel(lineModel);
-					newobject->SetStartPosition(XMFLOAT3(0.0f, -1.8f, (float)20.0f * i + 20));
+					newobject->SetStartPosition(XMFLOAT3(linePos, -1.8f, (float)20.0f * i + 20));
+					newobject->SetEndPosition(XMFLOAT3(-linePos, -1.8f, (float)20.0f * i + 20));
 					newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 					floorEndScale = newobject->GetScale();
 					lineObjects.push_back(std::move(newobject));
@@ -632,18 +633,20 @@ void GameScene::Update()
 				for (auto& lineobject : lineObjects) {
 					lineobject->Update();
 					//カメラより後ろに行ったら一番後ろの白線の続きの座標になる
-					if (lineobject->GetPosition().z <= eye.z) {
+					if (lineobject->GetStartPosition().z <= eye.z) {
 						//一時的な変数
 						XMFLOAT3 pos = {};
 						//一番後ろの座標の続きの座標
 						for (auto& searchlineobject : lineObjects) {
-							if (pos.z <= searchlineobject->GetPosition().z) {
-								pos = searchlineobject->GetPosition();
+							if (pos.z <= searchlineobject->GetStartPosition().z) {
+								pos = searchlineobject->GetStartPosition();
 							}
 						}
 						//pos = lineObjects.back().get()->GetPosition();
 						pos.z += 20.0f;
 						lineobject->SetStartPosition(pos);
+						pos.x = -linePos;
+						lineobject->SetEndPosition(pos);
 					}
 				}
 
@@ -849,8 +852,8 @@ void GameScene::Update()
 		gameOverSprite->Update();
 
 
-			particles->Update();
-		
+		particles->Update();
+
 		//戻っている最中は押しても反応しない
 		if (isBackTransition) {
 
@@ -923,7 +926,7 @@ void GameScene::Draw()
 
 		//パーティクル
 		particles->Draw();
-		
+
 
 		//スプライト
 		spriteCommon->PreDraw();
@@ -1111,7 +1114,7 @@ void GameScene::Draw()
 
 	//パーティクル
 	particles->Draw();
-	
+
 
 	//スプライト描画
 	spriteCommon->PreDraw();
@@ -1203,6 +1206,59 @@ void GameScene::AllCollision()
 		}
 	}
 
+	//レティクルと敵の当たり判定
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), enemy->GetPos(), enemy->GetScale())) {
+			player->SetIsEnemyReticleCol(true);
+			break;
+		}
+		else {
+			player->SetIsEnemyReticleCol(false);
+		}
+	}
+
+}
+
+bool GameScene::EnemyLineCollision(XMFLOAT3 lineStartPos, XMFLOAT3 lineEndPos, XMFLOAT3 enemyPos, XMFLOAT3 enemyScale)
+{
+	// 線分の方向ベクトル
+	Vector3 dir = { lineEndPos.x - lineStartPos.x, lineEndPos.y - lineStartPos.y, lineEndPos.z - lineStartPos.z };
+
+	// 線分の始点から球の中心までのベクトル
+	Vector3 lineToSphere = { enemyPos.x - lineStartPos.x, enemyPos.y - lineStartPos.y, enemyPos.z - lineStartPos.z };
+
+	// 線分の方向ベクトルの長さの二乗
+	float dirLengthSq = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
+
+	// 線分の方向ベクトルがゼロベクトルでないか確認
+	if (dirLengthSq > 0.0f) {
+		// 線分の始点から球の中心へのベクトルと線分の方向ベクトルの内積
+		float t = (lineToSphere.x * dir.x + lineToSphere.y * dir.y + lineToSphere.z * dir.z) / dirLengthSq;
+
+		// 最寄りの点が線分上にあるか確認
+		if (t >= 0.0f && t <= 1.0f) {
+			// 線分上の最寄りの点
+			Vector3 closestPoint = {
+				lineStartPos.x + t * dir.x,
+				lineStartPos.y + t * dir.y,
+				lineStartPos.z + t * dir.z
+			};
+
+			// その点と球の中心との距離の二乗
+			float distanceSq = (closestPoint.x - enemyPos.x) * (closestPoint.x - enemyPos.x) +
+				(closestPoint.y - enemyPos.y) * (closestPoint.y - enemyPos.y) +
+				(closestPoint.z - enemyPos.z) * (closestPoint.z - enemyPos.z);
+
+			// 球の半径の二乗
+			float radiusSq = enemyScale.x * enemyScale.x;
+
+			// 距離の二乗が半径の二乗以下ならば交差している
+			return distanceSq <= radiusSq;
+		}
+	}
+
+	// 線分がゼロベクトルならば交差しない
+	return false;
 }
 
 void GameScene::Particle(XMFLOAT3 pos_)
@@ -1212,7 +1268,7 @@ void GameScene::Particle(XMFLOAT3 pos_)
 	//パーティクル
 	//std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
 	//newparticle->Initialize("line.png");
-	
+
 	//パーティクル
 	particles->SetEmitterPos(pos_);
 	for (int i = 0; i < 50; i++) {
@@ -1247,7 +1303,7 @@ void GameScene::Particle(XMFLOAT3 pos_)
 		life = rand() % rnd_life + 1;
 		life += 20;
 		//追加
-		particles->Add(life, pos, vel, acc, 0.2f, 0.0f, color,true);
+		particles->Add(life, pos, vel, acc, 0.2f, 0.0f, color, true);
 	}
 	particles->Update();
 }
@@ -1335,7 +1391,7 @@ void GameScene::TitleParticle(XMFLOAT3 pos_)
 		life += 20;
 
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color,false);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color, false);
 	}
 	particles->Update();
 }
@@ -1381,7 +1437,7 @@ void GameScene::TransitionParticle(XMFLOAT3 pos_)
 		life += 20;
 
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color,false);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color, false);
 	}
 	particles->Update();
 }
@@ -1427,7 +1483,7 @@ void GameScene::TransitionBackParticle(XMFLOAT3 pos_, int num)
 		life += 20;
 
 		//追加
-		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color,false);
+		particles->Add(life, pos, vel, acc, 0.5f, 0.1f, color, false);
 	}
 	particles->Update();
 }
@@ -1439,7 +1495,7 @@ void GameScene::Transition(Scene nextScene_)
 		//パーティクル座標
 		partPos = eye;
 		partPos.y = eye.y + 5;
-		partPos.z = eye.z+10;
+		partPos.z = eye.z + 10;
 
 		//パーティクル
 		TransitionParticle(partPos);
@@ -1472,7 +1528,7 @@ void GameScene::Transition(Scene nextScene_)
 			//パーティクルの位置
 			partPos = eye;
 			partPos.y = eye.y - 5;
-			partPos.z = eye.z+10;
+			partPos.z = eye.z + 10;
 			//後半は出ないようにしておく
 			if (totalTransitionTime > MaxTransitionTime - 40.0) {
 
@@ -1500,8 +1556,8 @@ void GameScene::Transition(Scene nextScene_)
 		delayTime++;
 	}
 
-		particles->Update();
-	
+	particles->Update();
+
 }
 
 double GameScene::easeOutQuad(double time_, double start_, double difference, double totaltime_)

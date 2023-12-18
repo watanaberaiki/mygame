@@ -59,10 +59,15 @@ class LineObject
 		//セッター
 		void SetStartPosition(XMFLOAT3 pos) { startPosition = pos; }
 		void SetEndPosition(XMFLOAT3 pos) { endPosition = pos; }
+		void SetStartPositionX(float posX) { startPosition.x = posX; }
+		void SetEndPositionX(float posX) { endPosition.x = posX; }
+		void SetStartPositionY(float posY) { startPosition.y = posY; }
+		void SetEndPositionY(float posY) { endPosition.y = posY; }
 		void SetScale(XMFLOAT3 sca) { scale = sca; }
 		void SetRotation(XMFLOAT3 rot) { rotation = rot; }
 		//ゲッター
-		XMFLOAT3 GetPosition() { return startPosition; }
+		XMFLOAT3 GetStartPosition() { return startPosition; }
+		XMFLOAT3 GetEndPosition() { return endPosition; }
 		XMFLOAT3 GetRotation() { return rotation; }
 		XMFLOAT3 GetScale() { return scale; }
 		LineModel* GetModel() { return model; }

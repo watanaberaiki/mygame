@@ -54,6 +54,8 @@ public://メンバ関数
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets; }
 	bool GetisDead() { return isdead; }
 	XMFLOAT3 GetPos() { return position; }
+	XMFLOAT3 GetRotation() { return rotation; }
+	XMFLOAT3 GetScale() { return scale; }
 
 
 private://静的メンバ変数
@@ -125,5 +127,9 @@ private://メンバ変数
 	XMFLOAT3 lineScale = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 startLineScale = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 endLineScale= { 0.01f,1.0f,1.0f };
+	float linePosY = 0;
+	float startLinePosY = 0.0f;
+	float endLinePosY = 0.2f;
+
 };
 

@@ -46,11 +46,14 @@ public://メンバ関数
 	void SetRotation(const XMFLOAT3 rotation_) { this->rotation = rotation_; }
 	void SetIsTitle(bool isTitle_) { this->isTitle = isTitle_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Player::dxcommon = dxcommon_; }
+	void SetIsEnemyReticleCol(bool isEnemyReticleCol_) { isEnemyReticleCol = isEnemyReticleCol_; }
 	//ゲッター
 	CubeObject3D* GetCubeObject() { return collisionBox; }
 	XMFLOAT3 GetPosition() { return position; }
+	XMFLOAT3 GetEndPosition() { return backReticlepos; }
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullet() { return bullets; }
 	bool GetIsDead() { return isDead; }
+	
 private://静的メンバ変数
 	//キーボード
 	static Input* input;
@@ -112,7 +115,9 @@ private://メンバ変数
 	//レティクル
 	LineModel* reticleModel = nullptr;
 	static const int maxLine = 8;
+	const float linePos = 0.2f;
 	LineObject* reticleObject[maxLine] = {};
+	bool isEnemyReticleCol = false;
 
 	//レティクルの位置を横の壁に表示のライン
 	LineModel* reticleLineModel = nullptr;

@@ -29,7 +29,7 @@ void Enemy::Initialize()
 
 	//レティクルの位置を横の壁でわかりやすく
 	posLineModel = new LineModel();
-	posLineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	posLineModel->Initialize(dxcommon->GetDevice(), 0, 0);
 	posLineModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
 	for (int i = 0; i < 2; i++) {
 		posLineObject[i] = new LineObject();
@@ -53,9 +53,7 @@ void Enemy::Update()
 			directionScale = (float)easeOutQuad(directionMaxTime, startScale, endScale - startScale, directionTime);
 
 			//ライン
-			lineScale.x = (float)easeOutQuad(directionMaxTime, startLineScale.x, endLineScale.x - startLineScale.x, directionTime);
-			lineScale.y = (float)easeOutQuad(directionMaxTime, startLineScale.y, endLineScale.y - startLineScale.y, directionTime);
-			lineScale.z = (float)easeOutQuad(directionMaxTime, startLineScale.z, endLineScale.z - startLineScale.z, directionTime);
+			linePosY = (float)easeOutQuad(directionMaxTime, startLinePosY, endLinePosY - startLinePosY, directionTime);
 		}
 	}
 	scale = XMFLOAT3(directionScale, directionScale, directionScale);
@@ -110,7 +108,9 @@ void Enemy::Update()
 			pos.x -= widthSpace;
 		}
 		posLineObject[i]->SetStartPosition(pos);
-		posLineObject[i]->SetScale(lineScale);
+		posLineObject[i]->SetStartPositionY(pos.y-linePosY);
+		posLineObject[i]->SetEndPosition(pos);
+		posLineObject[i]->SetEndPositionY(pos.y + linePosY);
 		posLineObject[i]->Update();
 	}
 

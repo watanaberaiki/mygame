@@ -54,6 +54,8 @@ public:
 	void Draw();
 	//判定一覧
 	void AllCollision();
+	//敵とレティクルの当たり判定
+	bool EnemyLineCollision(XMFLOAT3 lineStartPos, XMFLOAT3 lineEndPos,XMFLOAT3 enemyPos,XMFLOAT3 enemyScale);
 	//パーティクル処理
 	void Particle(XMFLOAT3 pos);
 	//敵のパーティクル
@@ -150,8 +152,10 @@ private:
 	//ライン
 	static const int maxLine = 5;
 	LineModel* lineModel = nullptr;
+	const float linePos = 4.0f;
 	std::list <std::unique_ptr<LineObject>>lineObjects;
-	
+
+
 	ResourceManager* resorcemanager = nullptr;
 
 	//判定をまとめて管理
@@ -205,6 +209,9 @@ private:
 	XMFLOAT3 floorStartScale = {0.0f,0.0f,0.0f};
 	XMFLOAT3 floorEndScale = {0.0f,0.0f,0.0f};
 	XMFLOAT3 floorDirectionScale = {};
+	float floorStartPosX = 0.0f;
+	float floorEndPosX = 4.0f;
+	float floorDirectionPosX = 0;
 	//横の壁の白線のスケール
 	XMFLOAT3 lineStartScale = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 heightLineEndScale = {};
