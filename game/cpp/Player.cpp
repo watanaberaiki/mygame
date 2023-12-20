@@ -269,10 +269,14 @@ void Player::Update()
 
 	//判定
 	if (isEnemyReticleCol) {
-		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 0, 255, 0.5f));
+		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 255, 255, 0.5f));
+		reticleModel->SetImageData(XMFLOAT4(0, 255, 255, 1));
+		reticleLineModel->SetImageData(XMFLOAT4(0, 255, 255, 1));
 	}
 	else {
 		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 255, 0, 0.5f));
+		reticleModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
+		reticleLineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
 	}
 
 	//まっすぐのレティクル

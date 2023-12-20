@@ -19,6 +19,12 @@ enum EnemyMove {
 	Move_xyz
 };
 
+enum Shot {
+	Target,		//ターゲット
+	Straight,	//まっすぐ
+	Random		//ランダム
+};
+
 class Enemy
 {
 public://メンバ関数
@@ -46,6 +52,7 @@ public://メンバ関数
 	void SetScale(const XMFLOAT3 scale_) { this->scale = scale_; }
 	void SetRotation(const XMFLOAT3 rotation_) { this->rotation = rotation_; }
 	void SetType(int type_) { this->type = type_; }
+	void SetShotType(int shotType_) { shotType = static_cast<Shot>(shotType_); }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Enemy::dxcommon = dxcommon_; }
 	static void SetPlayer(Player* player_) { Enemy::player = player_; }
 
@@ -130,6 +137,9 @@ private://メンバ変数
 	float linePosY = 0;
 	float startLinePosY = 0.0f;
 	float endLinePosY = 0.2f;
+
+	//ショット
+	Shot shotType = Shot::Target;
 
 };
 

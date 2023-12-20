@@ -462,6 +462,7 @@ void GameScene::Update()
 					newObject->SetRotation(enemycsv->GetRotation(i));
 					newObject->SetScale(enemycsv->GetScale(i));
 					newObject->SetType(enemycsv->Getmove(i));
+					newObject->SetShotType(enemycsv->GetShotType(i));
 					newObject->Update();
 					enemys.push_back(std::move(newObject));
 				}

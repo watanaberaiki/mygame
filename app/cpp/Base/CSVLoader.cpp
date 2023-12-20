@@ -59,6 +59,12 @@ void CSVLoader::LoadCSV(const std::string& fileName)
 			line_stream >> move1;
 			move.emplace_back(move1);
 		}
+		if (key == "shotType")
+		{
+			int shotType1;
+			line_stream >> shotType1;
+			shotType.emplace_back(shotType1);
+		}
 	}
 	//ファイルを閉じる
 	file.close();

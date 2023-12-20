@@ -1,6 +1,9 @@
 #include "Enemy.h"
+#include <random>
+
 DirectXCommon* Enemy::dxcommon = nullptr;
 Player* Enemy::player = nullptr;
+
 
 void Enemy::Initialize()
 {
@@ -267,14 +270,43 @@ void Enemy::Move()
 
 void Enemy::Fire()
 {
-	velocityVec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
-	velocityVec.normalize();
+	//自機狙い
+	if (shotType == Shot::Target) {
+		velocityVec = { player->GetPosition().x - position.x,player->GetPosition().y - position.y, player->GetPosition().z - position.z };
+		velocityVec.normalize();
+		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
+		std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
+		newObject->Initialize(dxcommon, resource, velocity);
+		newObject->SetPosition(position);
+		bullets.push_back(std::move(newObject));
+	}
+	//まっすぐ
+	else if (shotType==Shot::Straight) {
+		velocityVec = { position.x - 1,position.y - 1, player->GetPosition().z - position.z };
+		velocityVec.normalize();
+		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
+		std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
+		newObject->Initialize(dxcommon, resource, velocity);
+		newObject->SetPosition(position);
+		bullets.push_back(std::move(newObject));
+	}
+	//ランダム
+	else if (shotType==Shot::Random) {
+		std::random_device ram_dev;
+		std::mt19937 ram(ram_dev());
+		XMFLOAT3 pos;
+		pos.x= ram() % 1 - 0.5f;
+		pos.y= ram() % 1 - 0.5f;
+		velocityVec = { pos.x - position.x,pos.y - position.y,player->GetPosition().z - position.z };
+		velocityVec.normalize();
+		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
+		std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
+		newObject->Initialize(dxcommon, resource, velocity);
+		newObject->SetPosition(position);
+		bullets.push_back(std::move(newObject));
+	}
 
-	velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
-	std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
-	newObject->Initialize(dxcommon, resource, velocity);
-	newObject->SetPosition(position);
-	bullets.push_back(std::move(newObject));
+
 }
 
 void Enemy::OnCollision()
