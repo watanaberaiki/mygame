@@ -282,7 +282,7 @@ void Enemy::Fire()
 	}
 	//まっすぐ
 	else if (shotType==Shot::Straight) {
-		velocityVec = { position.x - 1,position.y - 1, player->GetPosition().z - position.z };
+		velocityVec = { position.x,position.y, player->GetPosition().z - position.z };
 		velocityVec.normalize();
 		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
 		std::unique_ptr<EnemyBullet>newObject = std::make_unique<EnemyBullet>();
