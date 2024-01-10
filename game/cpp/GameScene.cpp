@@ -103,7 +103,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	boss = new Boss();
 	boss->Initialize();
 	boss->SetRotation(XMFLOAT3(0, 0, 0));
-	boss->SetScale(XMFLOAT3(0.2f, 0.4f, 0.2f));
 	//スプライト共通部の初期化
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
@@ -136,11 +135,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	marioSprite->Update();
 
 	//画面遷移用スプライト
-	transitionWhiteSprite->SetAnchorPoint(XMFLOAT2(0.5, 0.5));
+	const XMFLOAT2 center = { 0.5f,0.5f };
+	transitionWhiteSprite->SetAnchorPoint(center);
 	transitionWhiteSprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
 
 	//クリア用スプライト
-	clearWhiteSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	clearWhiteSprite->SetAnchorPoint(center);
 	clearWhiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, WinApp::window_height / 2));
 
 	//3Dモデル
@@ -151,7 +151,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 
 
 
-	menuSprite->SetAnchorPoint(XMFLOAT2(0.5f, 0.5f));
+	menuSprite->SetAnchorPoint(center);
 	menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 
 	////地面の配置(json読み込み)
@@ -327,16 +327,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	lineModel = new LineModel();
 	lineModel->Initialize(dxCommon->GetDevice(), 0, 0);
 	lineModel->SetImageData(XMFLOAT4(255, 255, 255, 1));
-	for (int i = 0; i < maxLine; i++) {
-		std::unique_ptr<LineObject>newobject = std::make_unique<LineObject>();
-		newobject->Initialize();
-		newobject->SetModel(lineModel);
-		newobject->SetStartPosition(XMFLOAT3(0, -1.8f, (float)20.0f * i + 20));
-		newobject->SetEndPosition(XMFLOAT3(0, -1.8f, (float)20.0f * i + 20));
-		newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
-		floorEndScale = newobject->GetScale();
-		lineObjects.push_back(std::move(newobject));
-	}
 
 	//パーティクル
 	particles = new ParticleManager();
@@ -472,8 +462,8 @@ void GameScene::Update()
 					std::unique_ptr<LineObject>newobject = std::make_unique<LineObject>();
 					newobject->Initialize();
 					newobject->SetModel(lineModel);
-					newobject->SetStartPosition(XMFLOAT3(linePos, -1.8f, (float)20.0f * i + 20));
-					newobject->SetEndPosition(XMFLOAT3(-linePos, -1.8f, (float)20.0f * i + 20));
+					newobject->SetStartPosition(XMFLOAT3(linePosX, -linePosY, (float)lineSpaceZ* i + lineSpaceZ));
+					newobject->SetEndPosition(XMFLOAT3(-linePosX, -linePosY, (float)lineSpaceZ* i + lineSpaceZ));
 					newobject->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
 					floorEndScale = newobject->GetScale();
 					lineObjects.push_back(std::move(newobject));
@@ -601,20 +591,9 @@ void GameScene::Update()
 			if (isEnemyAlive) {
 				eye.z += 0.05f;
 				target.z = eye.z + 1;
-				//デバッグ
-				debugEye = target;
-				debugEye.x += 10.0f;
-				debugEye.z += 3;
-				debugTarget = target;
-				debugTarget.z += 3;
 
 				camera->SetEye(eye);
 				camera->SetTarget(target);
-				//デバッグ
-				if (input_->PushKey(DIK_4)) {
-					camera->SetEye(debugEye);
-					camera->SetTarget(debugTarget);
-				}
 				camera->Update();
 
 				//地面
@@ -643,16 +622,15 @@ void GameScene::Update()
 								pos = searchlineobject->GetStartPosition();
 							}
 						}
-						//pos = lineObjects.back().get()->GetPosition();
-						pos.z += 20.0f;
+						pos.z += lineSpaceZ;
 						lineobject->SetStartPosition(pos);
-						pos.x = -linePos;
+						pos.x = -linePosX;
 						lineobject->SetEndPosition(pos);
 					}
 				}
 
 				//プレイヤー
-				player->SetPositionZ(eye.z + 4.0f);
+				player->SetPositionZ(eye.z + playerSpaceZ);
 				//プレイヤーが動くように判定を送る
 				player->SetIsTitle(isTitle);
 				player->Update();
@@ -689,18 +667,8 @@ void GameScene::Update()
 			}
 			else {
 				scene = BossFight;
-
-				//eye.z += 10.0f;
-				//target.z = eye.z + 1;
-				//camera->SetEye(eye);
-				//camera->SetTarget(target);
-				//camera->Update();
-				////プレイヤー
-				//player->SetPositionZ(eye.z + 4.0f);
-				//player->Update();
-
 				//ボス
-				boss->SetPositionZ(player->GetPosition().z + 12.0f);
+				boss->SetPositionZ(player->GetPosition().z + bossSpaceZ);
 				boss->Reset();
 			}
 
@@ -1264,12 +1232,6 @@ bool GameScene::EnemyLineCollision(XMFLOAT3 lineStartPos, XMFLOAT3 lineEndPos, X
 
 void GameScene::Particle(XMFLOAT3 pos_)
 {
-	//XMFLOAT3 posA = pos_;
-	//posA.z += 5;
-	//パーティクル
-	//std::unique_ptr<ParticleManager>newparticle = std::make_unique<ParticleManager>();
-	//newparticle->Initialize("line.png");
-
 	//パーティクル
 	particles->SetEmitterPos(pos_);
 	for (int i = 0; i < 50; i++) {

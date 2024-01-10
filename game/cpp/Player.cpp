@@ -63,10 +63,6 @@ void Player::Initialize()
 	reticleLineObjectStraight->SetModel(reticleLineModelStraight);
 	reticleLineObjectStraight->SetStartPosition({ 0.0f,0.0f,0.0f });
 
-	////XMConvertToDegrees
-	//lineObject[0]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
-	//lineObject[2]->SetRotation(XMFLOAT3(0.0f, 0.0f, XMConvertToRadians(90.0f)));
-
 	//レティクルの位置
 	frontdepth = 5;
 	backdepth = 30;
@@ -240,10 +236,11 @@ void Player::Update()
 	}
 
 	//レティクルの横の壁に表示
+	const float widthLineY = 0.5f;
 	for (int i = 0; i < maxWidthLine;i++) {
 		XMFLOAT3 pos = {};
 		pos = reticleObject[i]->GetStartPosition();
-		pos.y = -0.5f;
+		pos.y = -widthLineY;
 		pos.x = 0;
 		XMFLOAT3 widthLinePos = {};
 		if (i%2==0) {
@@ -374,12 +371,12 @@ void Player::MoveReticle()
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)||input->RStickUp()||input->RStickDown()) {
 		if (input->PushKey(DIK_UP)|| input->RStickUp()) {
 			if (backReticlepos.y< reticleUpLimit) {
-				backReticlepos.y += 0.3f;
+				backReticlepos.y += 0.2f;
 			}
 		}
 		else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
 			if (backReticlepos.y >-reticleDownLimit ) {
-				backReticlepos.y -= 0.3f;
+				backReticlepos.y -= 0.2f;
 			}
 		}
 	}
@@ -387,12 +384,12 @@ void Player::MoveReticle()
 	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
 		if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
 			if (backReticlepos.x > -reticleLeftLimit) {
-				backReticlepos.x -= 0.3f;
+				backReticlepos.x -= 0.2f;
 			}
 		}
 		else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
 			if (backReticlepos.x < reticleRightLimit) {
-				backReticlepos.x += 0.3f;
+				backReticlepos.x += 0.2f;
 			}
 		}
 	}

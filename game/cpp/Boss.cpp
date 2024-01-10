@@ -37,6 +37,7 @@ void Boss::Initialize()
 		posLineObject[i]->Initialize();
 		posLineObject[i]->SetModel(posLineModel);
 	}
+	scale = { 0.2f, 0.4f, 0.2f };
 
 }
 

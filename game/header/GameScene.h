@@ -140,9 +140,12 @@ private:
 	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
 	Player* player = nullptr;
+	const float playerSpaceZ = 4.0f;
 
 	//ボス
 	Boss* boss = nullptr;
+	const float bossSpaceZ = 12.0f;
+
 	////マップ用
 	int enemyCount = 0;
 
@@ -152,7 +155,9 @@ private:
 	//ライン
 	static const int maxLine = 5;
 	LineModel* lineModel = nullptr;
-	const float linePos = 4.0f;
+	const float linePosX = 4.0f;
+	const float linePosY = 1.8f;
+	const float lineSpaceZ = 20.0f;
 	std::list <std::unique_ptr<LineObject>>lineObjects;
 
 
