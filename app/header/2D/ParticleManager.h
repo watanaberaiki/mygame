@@ -12,7 +12,7 @@
 #include "Camera.h"
 
 using namespace Microsoft::WRL;
-
+using namespace RaikiEngine;
 class ParticleManager
 {
 private: // エイリアス

@@ -10,6 +10,7 @@
 #include<string.h>
 #include "Model.h"
 #include"Camera.h"
+using namespace RaikiEngine;
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>

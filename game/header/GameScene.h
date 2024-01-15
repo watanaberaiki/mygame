@@ -32,7 +32,7 @@
 #include<map>
 #include<utility>
 #pragma warning(pop)
-struct LevelData;
+using namespace RaikiEngine;
 enum Scene {
 	Title,
 	Game,

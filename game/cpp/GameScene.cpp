@@ -679,8 +679,6 @@ void GameScene::Update()
 		//メニュー画面
 		if (isMenu) {
 			menuSprite->Update();
-
-
 			//メニューから戻るとき
 			if (backMenu) {
 				menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, end, start - end, backtime), WinApp::window_height / 2));
