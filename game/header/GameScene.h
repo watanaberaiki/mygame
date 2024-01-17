@@ -73,6 +73,8 @@ public:
 	void ClearTransition();
 	//クリアバック
 	void ClearBackTransition();
+	//操作ガイド
+	void OperationGuide();
 private:
 	//ポインタ
 	Input* input_ = nullptr;
@@ -95,6 +97,11 @@ private:
 	Sprite* gameOverSprite = new Sprite();
 	Sprite* clearWhiteSprite = new Sprite();
 	Sprite* clearSprite = new Sprite();
+	Sprite* stickRSprite = new Sprite();
+	Sprite* stickLSprite = new Sprite();
+	Sprite* buttonRTSprite = new Sprite();
+
+	
 
 	/*OBJからモデルデータを読み込む*/
 	//3Dモデル
@@ -272,5 +279,17 @@ private:
 	//地面の繰り返し描画処理用
 	int floorCount = 0;
 
+
+	//操作方法のガイド
+	bool isStickR = false;
+	bool isStickL = false;
+	bool isButtonRT = false;
+	int stickRCount = 0;
+	int stickLCount = 0;
+	int buttonRTCount = 0;
+	float stickRAlpha = 1.0f;
+	float stickLAlpha = 1.0f;
+	float buttonRTAlpha = 1.0f;
+	const int maxGuideCount = 30;
 };
 

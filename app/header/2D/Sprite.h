@@ -58,6 +58,7 @@ public:
 
 	//セッター
 	void SetColor(XMFLOAT4 color_) { this->color = color_; }
+	void SetAlpha(float alpha) { color.w = alpha; }
 	void SetPosition(const XMFLOAT2& position_) { this->position = position_; }
 	void SetRotationZ(const float& rotationZ_) { this->rotationZ = rotationZ_; }
 	void SetSize(const XMFLOAT2& size_) { this->size = size_; }
@@ -79,7 +80,7 @@ private:
 
 	uint32_t textureIndex = 0;
 
-	XMFLOAT4 color = { 1,0,0,0.5f };
+	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 
 	float rotationZ=0;
 	XMFLOAT2 position = {};

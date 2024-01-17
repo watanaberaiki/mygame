@@ -118,6 +118,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	spriteCommon->LoadTexture(7, "white1x1.png");
 	spriteCommon->LoadTexture(8, "gameover.png");
 	spriteCommon->LoadTexture(9, "clear.png");
+	spriteCommon->LoadTexture(10, "stickR.png");
+	spriteCommon->LoadTexture(11, "stickL.png");
+	spriteCommon->LoadTexture(12, "buttonRT.png");
 	//スプライトにテクスチャ割り当て
 	hitSprite->Initialize(spriteCommon, 0);
 	marioSprite->Initialize(spriteCommon, 1);
@@ -129,13 +132,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	gameOverSprite->Initialize(spriteCommon, 8);
 	clearWhiteSprite->Initialize(spriteCommon, 7);
 	clearSprite->Initialize(spriteCommon, 9);
+	stickRSprite->Initialize(spriteCommon, 10);
+	stickLSprite->Initialize(spriteCommon, 11);
+	buttonRTSprite->Initialize(spriteCommon, 12);
+
 
 	//スプライト初期位置
+	const XMFLOAT2 center = { 0.5f,0.5f };
 	marioSprite->SetPosition({ 800,0 });
 	marioSprite->Update();
 
+	//右スティック
+	stickRSprite->SetAnchorPoint(center);
+	stickRSprite->SetPosition({WinApp::window_width- stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y/2});
+	//左スティック
+	stickLSprite->SetAnchorPoint(center);
+	stickLSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y *1.5f });
+	//右トリガー
+	buttonRTSprite->SetAnchorPoint(center);
+	buttonRTSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y * 2.5f });
+	
 	//画面遷移用スプライト
-	const XMFLOAT2 center = { 0.5f,0.5f };
 	transitionWhiteSprite->SetAnchorPoint(center);
 	transitionWhiteSprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
 
@@ -587,6 +604,15 @@ void GameScene::Update()
 				isMenu = true;
 				time = 0;
 			}
+			//操作ガイド
+			OperationGuide();
+			//右スティック
+			stickRSprite->Update();
+			//左スティック
+			stickLSprite->Update();
+			//右トリガー
+			buttonRTSprite->Update();
+
 			//雑魚敵が生きてる
 			if (isEnemyAlive) {
 				eye.z += 0.05f;
@@ -753,7 +779,6 @@ void GameScene::Update()
 			if (input_->TriggerKey(DIK_RETURN)) {
 				scene = Title;
 			}
-
 			//地面
 			for (auto& object : objects) {
 				object->Update();
@@ -778,6 +803,7 @@ void GameScene::Update()
 			//プレイヤー更新
 			player->SetIsTitle(isTitle);
 			player->Update();
+			
 			//死んだ判定
 			if (player->GetIsDead()) {
 				isGameOver = true;
@@ -980,6 +1006,17 @@ void GameScene::Draw()
 
 		if (isHit) {
 			hitSprite->Draw();
+		}
+
+		//操作ガイド
+		if (stickRAlpha > 0) {
+			stickRSprite->Draw();
+		}
+		if (stickLAlpha > 0) {
+			stickLSprite->Draw();
+		}
+		if (buttonRTAlpha > 0) {
+			buttonRTSprite->Draw();
 		}
 
 		spriteCommon->PostDraw();
@@ -1584,4 +1621,56 @@ void GameScene::ClearBackTransition()
 		}
 	}
 	clearWhiteSprite->Update();
+}
+
+//操作ガイド
+void GameScene::OperationGuide()
+{
+	//左スティック
+	if (input_->LStickUp() || input_->LStickDown() || (input_->LStickLeft() || input_->LStickRight())) {
+		stickLCount++;
+		if (stickLCount >= maxGuideCount) {
+			if (stickLAlpha > 0) {
+				stickLAlpha -= 0.05f;
+			}
+		}
+	}
+	//長く触れていない場合
+	else {
+
+	}
+	//アルファ値
+	stickLSprite->SetAlpha(stickLAlpha);
+
+	//右スティック
+	if (input_->RStickUp() || input_->RStickDown() || (input_->RStickLeft() || input_->RStickRight())) {
+		stickRCount++;
+		if (stickRCount >= maxGuideCount) {
+			if (stickRAlpha > 0) {
+				stickRAlpha -= 0.05f;
+			}
+		}
+	}
+	//長く触れていない場合
+	else {
+
+	}
+	//アルファ値
+	stickRSprite->SetAlpha(stickRAlpha);
+
+	//右トリガー
+	if (input_->PushRButton()) {
+		buttonRTCount++;
+		if (buttonRTCount >= maxGuideCount) {
+			if (buttonRTAlpha > 0) {
+				buttonRTAlpha -= 0.05f;
+			}
+		}
+	}
+	//長く触れていない場合
+	else {
+
+	}
+	//アルファ値
+	buttonRTSprite->SetAlpha(buttonRTAlpha);
 }
