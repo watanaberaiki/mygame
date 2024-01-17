@@ -57,7 +57,7 @@ private://メンバ変数
 
 
 	//スピード
-	float speed = 1.0f;
+	float speed = 1.5f;
 	XMFLOAT3 velocity = {};
 	//回転用
 	float bulletRotation=0.0f;

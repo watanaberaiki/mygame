@@ -459,7 +459,12 @@ void GameScene::Update()
 				isStart = true;
 				isEnemyAlive = true;
 				lineLose = false;
-
+				//右スティック
+				stickRSprite->Update();
+				//左スティック
+				stickLSprite->Update();
+				//右トリガー
+				buttonRTSprite->Update();
 				enemys.clear();
 				//敵読み込み
 				for (int i = 0; i < enemysize; i++) {
@@ -1130,7 +1135,7 @@ void GameScene::Draw()
 
 
 }
-
+//判定一覧
 void GameScene::AllCollision()
 {
 	//自弾リストの取得
@@ -1222,7 +1227,7 @@ void GameScene::AllCollision()
 	}
 
 }
-
+//敵とレティクルの当たり判定
 bool GameScene::EnemyLineCollision(XMFLOAT3 lineStartPos, XMFLOAT3 lineEndPos, XMFLOAT3 enemyPos, XMFLOAT3 enemyScale)
 {
 	// 線分の方向ベクトル
@@ -1264,7 +1269,7 @@ bool GameScene::EnemyLineCollision(XMFLOAT3 lineStartPos, XMFLOAT3 lineEndPos, X
 	// 線分がゼロベクトルならば交差しない
 	return false;
 }
-
+//パーティクル処理
 void GameScene::Particle(XMFLOAT3 pos_)
 {
 	//パーティクル
@@ -1305,7 +1310,7 @@ void GameScene::Particle(XMFLOAT3 pos_)
 	}
 	particles->Update();
 }
-
+//敵のパーティクル処理
 void GameScene::EnemyParticle(XMFLOAT3 pos_)
 {
 	//パーティクル
@@ -1346,7 +1351,7 @@ void GameScene::EnemyParticle(XMFLOAT3 pos_)
 	}
 	redParticles->Update();
 }
-
+//タイトルシーンのパーティクル処理
 void GameScene::TitleParticle(XMFLOAT3 pos_)
 {
 	//パーティクル
@@ -1393,7 +1398,7 @@ void GameScene::TitleParticle(XMFLOAT3 pos_)
 	}
 	particles->Update();
 }
-
+//画面遷移時に使うパーティクル
 void GameScene::TransitionParticle(XMFLOAT3 pos_)
 {
 	//パーティクル
@@ -1439,7 +1444,7 @@ void GameScene::TransitionParticle(XMFLOAT3 pos_)
 	}
 	particles->Update();
 }
-
+//画面遷移時に使うパーティクル
 void GameScene::TransitionBackParticle(XMFLOAT3 pos_, int num)
 {
 	//パーティクル
@@ -1485,7 +1490,7 @@ void GameScene::TransitionBackParticle(XMFLOAT3 pos_, int num)
 	}
 	particles->Update();
 }
-
+//画面遷移
 void GameScene::Transition(Scene nextScene_)
 {
 	//遷移中
@@ -1557,7 +1562,7 @@ void GameScene::Transition(Scene nextScene_)
 	particles->Update();
 
 }
-
+//イージング
 double GameScene::easeOutQuad(double time_, double start_, double difference, double totaltime_)
 {
 	double x = totaltime_ / time_;
@@ -1565,7 +1570,7 @@ double GameScene::easeOutQuad(double time_, double start_, double difference, do
 	double ret = difference * v + start_;
 	return ret;
 }
-
+//クリア演出
 void GameScene::ClearTransition()
 {
 	float startSize = 0.0f;
@@ -1599,7 +1604,7 @@ void GameScene::ClearTransition()
 	clearWhiteSprite->Update();
 
 }
-
+//クリアバック
 void GameScene::ClearBackTransition()
 {
 	float sizeX = 0.0f;
@@ -1622,22 +1627,22 @@ void GameScene::ClearBackTransition()
 	}
 	clearWhiteSprite->Update();
 }
-
 //操作ガイド
 void GameScene::OperationGuide()
 {
 	//左スティック
 	if (input_->LStickUp() || input_->LStickDown() || (input_->LStickLeft() || input_->LStickRight())) {
 		stickLCount++;
-		if (stickLCount >= maxGuideCount) {
-			if (stickLAlpha > 0) {
-				stickLAlpha -= 0.05f;
-			}
-		}
-	}
-	//長く触れていない場合
+		
+	}//長く触れていない場合
 	else {
 
+	}
+	//一定時間触れるとアルファ値を下げていく
+	if (stickLCount >= maxGuideCount) {
+		if (stickLAlpha > 0) {
+			stickLAlpha -= 0.05f;
+		}
 	}
 	//アルファ値
 	stickLSprite->SetAlpha(stickLAlpha);
@@ -1645,15 +1650,16 @@ void GameScene::OperationGuide()
 	//右スティック
 	if (input_->RStickUp() || input_->RStickDown() || (input_->RStickLeft() || input_->RStickRight())) {
 		stickRCount++;
-		if (stickRCount >= maxGuideCount) {
-			if (stickRAlpha > 0) {
-				stickRAlpha -= 0.05f;
-			}
-		}
-	}
-	//長く触れていない場合
+		
+	}//長く触れていない場合
 	else {
 
+	}
+	//一定時間触れるとアルファ値を下げていく
+	if (stickRCount >= maxGuideCount) {
+		if (stickRAlpha > 0) {
+			stickRAlpha -= 0.05f;
+		}
 	}
 	//アルファ値
 	stickRSprite->SetAlpha(stickRAlpha);
@@ -1661,15 +1667,15 @@ void GameScene::OperationGuide()
 	//右トリガー
 	if (input_->PushRButton()) {
 		buttonRTCount++;
-		if (buttonRTCount >= maxGuideCount) {
-			if (buttonRTAlpha > 0) {
-				buttonRTAlpha -= 0.05f;
-			}
-		}
-	}
-	//長く触れていない場合
+	}//長く触れていない場合
 	else {
 
+	}
+	//一定時間触れるとアルファ値を下げていく
+	if (buttonRTCount >= maxGuideCount) {
+		if (buttonRTAlpha > 0) {
+			buttonRTAlpha -= 0.05f;
+		}
 	}
 	//アルファ値
 	buttonRTSprite->SetAlpha(buttonRTAlpha);
