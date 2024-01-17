@@ -16,7 +16,7 @@ namespace RaikiEngine {
 	public:
 
 		//初期化
-		void Initialize(WinApp* winApp);
+		void Initialize(WinApp* winApp_);
 
 		//描画前処理
 		void PreDraw();
@@ -69,7 +69,7 @@ namespace RaikiEngine {
 		//バックバッファ
 		std::vector< Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
 		//WindowsAPI
-		WinApp* winApp = nullptr;
+		std::unique_ptr<WinApp>	winApp=nullptr;
 
 		//記録時間(FPS用)
 		std::chrono::steady_clock::time_point reference_;

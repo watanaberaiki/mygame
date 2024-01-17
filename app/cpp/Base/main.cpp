@@ -12,13 +12,12 @@
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//　基盤システムの初期化
 	//ポインタ
-	Input* input = Input::GetInstance();
-	WinApp* winApp = nullptr;
-	DirectXCommon* dxCommon = nullptr;
+	std::unique_ptr<Input> input(Input::GetInstance());
+	std::unique_ptr<WinApp> winApp(new WinApp());
+	std::unique_ptr<DirectXCommon> dxCommon (new DirectXCommon());
 
 
 	//WindowsAPIの初期化
-	winApp = new WinApp();
 	winApp->Initialize();
 
 #ifdef _DEBUG
@@ -31,8 +30,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	}
 #endif
 	//DirectXの初期化
-	dxCommon = new DirectXCommon();
-	dxCommon->Initialize(winApp);
+	dxCommon->Initialize(winApp.get());
 #ifdef  _DEBUG
 	ID3D12InfoQueue* infoQueue = nullptr;
 	if (SUCCEEDED(dxCommon->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {

@@ -7,13 +7,14 @@
 
 using namespace Microsoft::WRL;
 
-void DirectXCommon::Initialize(WinApp* winApp_)
+void DirectXCommon::Initialize(WinApp *winApp_)
 {
 	//NULL検出
 	assert(winApp_);
 
 	//借りてきたWinAppのインスタンスを記録
-	this->winApp = winApp_;
+	std::unique_ptr<WinApp>	temporarilyWinApp(winApp_);
+	winApp = std::move(temporarilyWinApp);
 
 	//FPS固定初期化
 	InitializeFixFPS();

@@ -77,9 +77,9 @@ public:
 	void OperationGuide();
 private:
 	//ポインタ
-	Input* input_ = nullptr;
-	DirectXCommon* dxCommon_ = nullptr;
-	ImguiManager* imgui_ = nullptr;
+	std::unique_ptr<Input> input_ = nullptr;
+	std::unique_ptr<DirectXCommon> dxCommon_ = nullptr;
+	std::unique_ptr<ImguiManager> imgui_ = nullptr;
 
 	//パーティクル
 	ParticleManager* particles=nullptr;
