@@ -112,9 +112,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//imguiの終了処理
 	imgui->Finalize();
 	//WindowsAPIの解放
-	delete winApp;
+	winApp.reset();
 	//DirectX解放
-	delete dxCommon;
+	dxCommon.reset();
 	//GameScene解放
 	delete gamescene;
 	//カメラ解放
