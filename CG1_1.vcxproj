@@ -109,6 +109,7 @@
     <ClCompile Include="app\cpp\3D\CubeObject3D.cpp" />
     <ClCompile Include="app\cpp\Base\DirectXCommon.cpp" />
     <ClCompile Include="app\cpp\Base\DxInput.cpp" />
+    <ClCompile Include="app\cpp\Base\TextureConverter.cpp" />
     <ClCompile Include="game\cpp\Enemy.cpp" />
     <ClCompile Include="game\cpp\EnemyBullet.cpp" />
     <ClCompile Include="app\cpp\3D\FbxLoader.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="app\header\3D\Object3d.h" />
     <ClInclude Include="app\header\3D\WireObject.h" />
     <ClInclude Include="app\header\Base\DxInput.h" />
+    <ClInclude Include="app\header\Base\TextureConverter.h" />
     <ClInclude Include="game\header\Boss.h" />
     <ClInclude Include="app\header\Base\Camera.h" />
     <ClInclude Include="app\header\Base\CSVLoader.h" />

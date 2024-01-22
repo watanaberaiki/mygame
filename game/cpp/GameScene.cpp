@@ -89,8 +89,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	player = new Player;
 	player->Initialize();
 
-
-
 	//敵
 	enemycsv = new CSVLoader();
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
@@ -119,7 +117,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	spriteCommon->LoadTexture(8, "gameover.png");
 	spriteCommon->LoadTexture(9, "clear.png");
 	spriteCommon->LoadTexture(10, "stickR.png");
-	spriteCommon->LoadTexture(11, "stickL.png");
+	spriteCommon->LoadTexture(11, "stickL.dds");
 	spriteCommon->LoadTexture(12, "buttonRT.png");
 	//スプライトにテクスチャ割り当て
 	hitSprite->Initialize(spriteCommon, 0);

@@ -257,6 +257,20 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName) {
 	//ディレクトリパスとファイル名を連結してフルパスを得る
 	std::string fullPath = kDefaultTextureDirectoryPath + fileName;
 
+	size_t pos1;
+	std::string fileExt_;
+
+	//区切り文字 '.'が出てくる一番最後の部分を検索
+	pos1 = fullPath.rfind('.');
+	//検索がヒットしたら
+	if (pos1 != std::wstring::npos) {
+		//区切り文字の後ろをファイル拡張子として保存
+		fileExt_ = fullPath.substr(pos1 + 1, fullPath.size() - pos1 - 1);
+	}
+	else {
+		fileExt_ = "";
+	}
+
 	//ワイド文字列に変換した際の文字列バッファサイズを計算
 	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
 
@@ -267,22 +281,31 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName) {
 	//画像ファイル読み込み
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
-
-	//WICテクスチャのロード
-	HRESULT result = LoadFromWICFile(
-		wfilePath.data(),
-		WIC_FLAGS_NONE,
-		&metadata, scratchImg);
-	ScratchImage mipChain{};
-
-	//ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
+	HRESULT result;
+	if (fileExt_ == "dds") {
+		//DDSテクスチャのロード
+		result = LoadFromDDSFile(
+			wfilePath.data(),
+			DDS_FLAGS_NONE,
+			&metadata, scratchImg);
 	}
+	else {
+		//WICテクスチャのロード
+		result = LoadFromWICFile(
+			wfilePath.data(),
+			WIC_FLAGS_NONE,
+			&metadata, scratchImg);
+	}
+
+	////ミップマップ生成
+	//ScratchImage mipChain{};
+	//result = GenerateMipMaps(
+	//	scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+	//	TEX_FILTER_DEFAULT, 0, mipChain);
+	//if (SUCCEEDED(result)) {
+	//	scratchImg = std::move(mipChain);
+	//	metadata = scratchImg.GetMetadata();
+	//}
 
 	//読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);

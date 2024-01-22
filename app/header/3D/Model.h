@@ -103,6 +103,12 @@ private://メンバ変数
 	ComPtr<ID3D12Resource> constBuffB1;
 	//最小、最大
 	XMFLOAT3 minModel = {}, maxModel = {};
+	//ディレクトリパス
+	std::wstring directoryPath_;
+	//ファイルパス
+	std::wstring fileName_;
+	//ファイル拡張子
+	std::wstring fileExt_;
 private://静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
