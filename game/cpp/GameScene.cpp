@@ -453,10 +453,17 @@ void GameScene::Update()
 		{
 			//ゲームシーンへのシーンチェンジ
 			if (input_->TriggerKey(DIK_SPACE) || input_->TriggerPadButton(XINPUT_GAMEPAD_A)) {
+				//初期化関連
 				isGameOver = false;
 				isStart = true;
 				isEnemyAlive = true;
 				lineLose = false;
+				stickRCount = 0;
+				stickLCount = 0;
+				buttonRTCount = 0;
+				stickRAlpha = 1.0f;
+				stickLAlpha = 1.0f;
+				buttonRTAlpha = 1.0f;
 				//右スティック
 				stickRSprite->Update();
 				//左スティック
@@ -1631,10 +1638,18 @@ void GameScene::OperationGuide()
 	//左スティック
 	if (input_->LStickUp() || input_->LStickDown() || (input_->LStickLeft() || input_->LStickRight())) {
 		stickLCount++;
+		stickLNotCount = 0;
 		
 	}//長く触れていない場合
 	else {
-
+		stickLNotCount++;
+		if (maxGuideNotCount <= stickLNotCount) {
+			stickLCount = 0;
+			//だんだんアルファ値をあげていく
+			if (stickLAlpha < 1.0f) {
+				stickLAlpha += 0.05f;
+			}
+		}
 	}
 	//一定時間触れるとアルファ値を下げていく
 	if (stickLCount >= maxGuideCount) {
@@ -1648,10 +1663,17 @@ void GameScene::OperationGuide()
 	//右スティック
 	if (input_->RStickUp() || input_->RStickDown() || (input_->RStickLeft() || input_->RStickRight())) {
 		stickRCount++;
-		
+		stickRNotCount = 0;
 	}//長く触れていない場合
 	else {
-
+		stickRNotCount++;
+		if (maxGuideNotCount <= stickRNotCount) {
+			stickRCount = 0;
+			//だんだんアルファ値をあげていく
+			if (stickRAlpha < 1.0f) {
+				stickRAlpha += 0.05f;
+			}
+		}
 	}
 	//一定時間触れるとアルファ値を下げていく
 	if (stickRCount >= maxGuideCount) {
@@ -1665,9 +1687,17 @@ void GameScene::OperationGuide()
 	//右トリガー
 	if (input_->PushRButton()) {
 		buttonRTCount++;
+		buttonRTNotCount = 0;
 	}//長く触れていない場合
 	else {
-
+		buttonRTNotCount++;
+		if (maxGuideNotCount <= buttonRTNotCount) {
+			buttonRTCount = 0;
+			//だんだんアルファ値をあげていく
+			if (buttonRTAlpha < 1.0f) {
+				buttonRTAlpha += 0.05f;
+			}
+		}
 	}
 	//一定時間触れるとアルファ値を下げていく
 	if (buttonRTCount >= maxGuideCount) {

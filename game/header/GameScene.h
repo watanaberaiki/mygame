@@ -287,9 +287,13 @@ private:
 	int stickRCount = 0;
 	int stickLCount = 0;
 	int buttonRTCount = 0;
+	int stickRNotCount = 0;
+	int stickLNotCount = 0;
+	int buttonRTNotCount = 0;
 	float stickRAlpha = 1.0f;
 	float stickLAlpha = 1.0f;
 	float buttonRTAlpha = 1.0f;
 	const int maxGuideCount = 30;
+	const int maxGuideNotCount = 240;
 };
 
