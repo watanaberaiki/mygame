@@ -2,65 +2,65 @@
 position 0.5 -0.6 50 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
-move 0
+move 1
 shotType 0
 (2)
-position 0 0 60
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 1
-shotType 1
-(3)
-position 0.2 0.6 70 
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 0
-shotType 2
-(4)
-position 1.0 1.0 80
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 1
-shotType 0
-(5)
-position 0.5 0.5 90 
+position 0 0 50
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 2
-shotType 2
+shotType 1
+(3)
+position 0.2 0.6 50 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 1
+shotType 0
+(4)
+position 1.0 1.0 50
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 2
+shotType 1
+(5)
+position 0.5 0.5 80 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 3
+shotType 1
 (6)
-position 1.5 0.5 100 
+position 1.5 0.5 80 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 3
-shotType 0
+shotType 1
 (7)
-position 1.0 0.5 105 
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 3
-shotType 1
-(8)
-position 0.5 0.5 110 
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 3
-shotType 2
-(9)
-position 0.0 0.5 115 
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 3
-shotType 0
-(10)
-position 1.5 -0.5 120 
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 3
-shotType 1
-(11)
-position -0.8 -0.9 125 
+position 1.0 0.5 80 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 0
-shotType 0
+shotType 2
+(8)
+position 0.5 0.5 80
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 0
+shotType 2
+(9)
+position 0.0 0.5 110
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 3
+shotType 2
+(10)
+position 1.5 -0.5 110 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 3
+shotType 2
+(11)
+position -0.8 -0.9 110 
+rotation 0 0 0 
+scale 0.1 0.1 0.1
+move 3
+shotType 2

@@ -12,13 +12,14 @@
 #include"ResourceManager.h"
 #include"Player.h"
 
+//敵の動き
 enum EnemyMove {
-	Move_z,
-	Move_xz,
-	Move_yz,
-	Move_xyz
+	Move_z,		//動かない
+	Move_xz,	//横のみ
+	Move_yz,	//縦のみ
+	Move_xyz	//横と縦
 };
-
+//敵の弾の撃ち方
 enum Shot {
 	Target,		//ターゲット
 	Straight,	//まっすぐ
@@ -95,8 +96,15 @@ private://メンバ変数
 	float speedY = 0.02f;
 	float speedX = 0.02f;
 
+	//弾を撃つ間隔
 	int time = 0;
-	const int MaxTime = 60;
+	int MaxTime = 0;
+	//それぞれの種類ごとに間隔を変更
+	int targetShot = 30;
+	int straightShot = 25;
+	int ramdomShot = 15;
+
+
 
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>>bullets;

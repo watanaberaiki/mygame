@@ -39,11 +39,20 @@ void Enemy::Initialize()
 		posLineObject[i]->Initialize();
 		posLineObject[i]->SetModel(posLineModel);
 	}
-
 }
 
 void Enemy::Update()
 {
+	if (shotType== Target) {
+		MaxTime = targetShot;
+	}
+	else if (shotType == Straight) {
+		MaxTime = straightShot;
+	}
+	else if (shotType==Random) {
+		MaxTime = ramdomShot;
+	}
+
 	//登場演出
 	//プレイヤー
 	if (isAppearanceDirection) {
@@ -71,6 +80,7 @@ void Enemy::Update()
 	//動き
 	Move();
 
+	//プレイヤーの後ろに行ったら消える
 	if (player->GetPosition().z - position.z >= 10.0f) {
 		isdead = true;
 	}
@@ -292,11 +302,12 @@ void Enemy::Fire()
 	}
 	//ランダム
 	else if (shotType==Shot::Random) {
+		//ランダム
 		std::random_device ram_dev;
 		std::mt19937 ram(ram_dev());
 		XMFLOAT3 pos;
-		pos.x= ram() % 1 - 0.5f;
-		pos.y= ram() % 1 - 0.5f;
+		pos.x= (ram() % 20  -10.0f)/10;
+		pos.y= (ram() % 20 - 10.0f)/10;
 		velocityVec = { pos.x - position.x,pos.y - position.y,player->GetPosition().z - position.z };
 		velocityVec.normalize();
 		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
