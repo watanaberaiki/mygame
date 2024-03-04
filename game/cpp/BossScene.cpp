@@ -9,12 +9,57 @@ void BossScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	//スプライト共通部の初期化
 	spriteCommon->Initialize(dxCommon);
 
-	//読み込み
+	
+	//カメラ
+	eye = XMFLOAT3(0, 0, 5);	//視点座標
+	target = XMFLOAT3(0, 0, 10);	//注視点座標
+	up = XMFLOAT3(0, 1, 0);		//上方向ベクトル
+	camera->Initialize();
+	camera->SetEye(eye);
+	camera->SetTarget(target);
+	camera->SetUp(up);
+	camera->Update();
+	//リソースマネージャ
+	resorcemanager = ResourceManager::Getinstance();
+	resorcemanager->LoadObj("blackcube");
+	resorcemanager->LoadObj("redcube");
+	resorcemanager->LoadObj("floor");
+	
+	//ワイヤーオブジェクト
+	WireObject::SetCamera(camera);
+	//オブジェクト3dカメラ
+	Object3d::SetCamera(camera);
+	//パーティクルマネージャカメラセット
+	ParticleManager::SetCamera(camera);
+
+
+	//当たり判定キューブオブジェクト
+	CubeObject3D::SetCamera(camera);
+	CubeObject3D::SetDevice(dxCommon_->GetDevice());
+	CubeObject3D::CreateGraphicsPipeline();
+
+	//デバイスをセット
+	FbxObject3D::SetDevice(dxCommon_->GetDevice());
+	//カメラをセット
+	FbxObject3D::SetCamera(camera);
+	//グラフィックスパイプライン生成
+	FbxObject3D::CreateGraphicsPipeline();
+
+	//ライン初期化
+	LineObject::SetCamera(camera);
+	LineObject::SetDevice(dxCommon->GetDevice());
+	LineObject::CreateGraphicsPipeline();
 
 	//プレイヤー
 	player->Initialize();
 
 	//敵
+	Enemy::SetPlayer(player);
+	Enemy::SetDxCommon(dxCommon);
+
+	//ボス
+	Boss::SetPlayer(player);
+	Boss::SetDxCommon(dxCommon);
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
 
 	boss->Initialize();
@@ -78,6 +123,10 @@ void BossScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	menuSprite->SetAnchorPoint(center);
 	menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 
+	//モデルデータをマップに入れる
+	models.insert(std::make_pair("floor", resorcemanager->LoadObj("blackcube")));
+	models.insert(std::make_pair("heightLine", resorcemanager->LoadObj("block")));
+	models.insert(std::make_pair("widthLine", resorcemanager->LoadObj("block")));
 	////地面の配置(json読み込み)
 	//地面を繰り返し描画するために二つ読み込む(json読み込み)
 
@@ -255,6 +304,9 @@ void BossScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	particles->Initialize("line.png");
 
 	redParticles->Initialize("redline.png");
+
+	//ボス
+	boss->Reset();
 }
 
 void BossScene::Finalize()
@@ -363,6 +415,7 @@ void BossScene::Update()
 		//カメラ更新
 		camera->Update();
 		//プレイヤー更新
+		player->SetPositionZ(eye.z + playerSpaceZ);
 		player->SetIsTitle(isTitle);
 		player->Update();
 
@@ -371,6 +424,7 @@ void BossScene::Update()
 			isGameOver = true;
 		}
 		//ボス更新
+		boss->SetPositionZ(player->GetPosition().z + bossSpaceZ);
 		boss->Update();
 		//判定
 		AllCollision();

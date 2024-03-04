@@ -506,9 +506,7 @@ void GamePlayScene::Update()
 		}
 		//ボスシーンに移行
 		else {
-			//ボス
-			boss->SetPositionZ(player->GetPosition().z + bossSpaceZ);
-			boss->Reset();
+			
 			//ボスシーン生成
 			BaseScene* changeScene = new BossScene();
 			sceneManager_->SetNextScene(changeScene);
