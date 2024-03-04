@@ -110,6 +110,12 @@
     <ClCompile Include="app\cpp\Base\DirectXCommon.cpp" />
     <ClCompile Include="app\cpp\Base\DxInput.cpp" />
     <ClCompile Include="app\cpp\Base\TextureConverter.cpp" />
+    <ClCompile Include="game\cpp\BaseScene.cpp" />
+    <ClCompile Include="game\cpp\BossScene.cpp" />
+    <ClCompile Include="game\cpp\ClearScene.cpp" />
+    <ClCompile Include="game\cpp\Game.cpp" />
+    <ClCompile Include="game\cpp\GameOverScene.cpp" />
+    <ClCompile Include="game\cpp\GamePlayScene.cpp" />
     <ClCompile Include="game\cpp\Enemy.cpp" />
     <ClCompile Include="game\cpp\EnemyBullet.cpp" />
     <ClCompile Include="app\cpp\3D\FbxLoader.cpp" />
@@ -134,6 +140,8 @@
     <ClCompile Include="app\cpp\3D\WireObject.cpp" />
     <ClCompile Include="game\cpp\Boss.cpp" />
     <ClCompile Include="app\cpp\2D\ImguiManager.cpp" />
+    <ClCompile Include="game\cpp\SceneManager.cpp" />
+    <ClCompile Include="game\cpp\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicGS.hlsl">
@@ -247,6 +255,12 @@
     <ClInclude Include="app\header\3D\WireObject.h" />
     <ClInclude Include="app\header\Base\DxInput.h" />
     <ClInclude Include="app\header\Base\TextureConverter.h" />
+    <ClInclude Include="game\header\BaseScene.h" />
+    <ClInclude Include="game\header\BossScene.h" />
+    <ClInclude Include="game\header\ClearScene.h" />
+    <ClInclude Include="game\header\Game.h" />
+    <ClInclude Include="game\header\GameOverScene.h" />
+    <ClInclude Include="game\header\GamePlayScene.h" />
     <ClInclude Include="game\header\Boss.h" />
     <ClInclude Include="app\header\Base\Camera.h" />
     <ClInclude Include="app\header\Base\CSVLoader.h" />
@@ -262,6 +276,8 @@
     <ClInclude Include="app\header\Base\WinApp.h" />
     <ClInclude Include="game\header\GameScene.h" />
     <ClInclude Include="app\header\2D\ImguiManager.h" />
+    <ClInclude Include="game\header\SceneManager.h" />
+    <ClInclude Include="game\header\TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="imgui\imgui.vcxproj">
