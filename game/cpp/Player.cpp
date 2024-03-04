@@ -134,7 +134,7 @@ void Player::Update()
 	bulletFrontVec = { position.x - position.x,position.y - position.y,backReticlepos.z - position.z };
 
 	//レティクル
-	reticleVec = { backReticlepos.x - (position.x), backReticlepos.y - (position.y), backReticlepos.z - position.z };
+	reticleVec = { frontReticlepos.x - (position.x), frontReticlepos.y - (position.y), frontReticlepos.z - position.z };
 
 	//弾の回転用
 	lengthFrontVec = bulletFrontVec.length();
@@ -143,9 +143,10 @@ void Player::Update()
 
 	//正規化
 	reticleVec.normalize();
-	//手前レティクル
-	frontVec = reticleVec * frontdepth;
-	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);
+	////手前レティクル
+	//frontVec = reticleVec * frontdepth;
+	//frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);
+	frontReticlepos.z = frontdepth + position.z;
 	//手前の後ろ
 	frontBackVec = reticleVec * ((backdepth-frontdepth)/2);
 	frontBackReticlepos = XMFLOAT3(frontBackVec.x + position.x, frontBackVec.y + position.y, frontBackVec.z + position.z);
@@ -154,9 +155,10 @@ void Player::Update()
 	backFrontReticlepos= XMFLOAT3(backFrontVec.x + position.x, backFrontVec.y + position.y, backFrontVec.z + position.z);
 
 	//奥側のレティクル
-	//backVec= reticleVec * backdepth;
-	//backReticlepos= XMFLOAT3(backVec.x, backVec.y, backVec.z);
-	backReticlepos.z = backdepth+position.z;
+	backVec= reticleVec * backdepth;
+	backReticlepos= XMFLOAT3(backVec.x + position.x, backVec.y + position.y, backVec.z + position.z);
+
+	//backReticlepos.z = backdepth+position.z;
 
 	for (int i = 0; i < maxLine; i++) {
 		XMFLOAT3 reticlePos = {};
@@ -370,26 +372,26 @@ void Player::MoveReticle()
 	//レティクルの移動
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)||input->RStickUp()||input->RStickDown()) {
 		if (input->PushKey(DIK_UP)|| input->RStickUp()) {
-			if (backReticlepos.y< reticleUpLimit) {
-				backReticlepos.y += 0.2f;
+			if (frontReticlepos.y< reticleUpLimit) {
+				frontReticlepos.y += 0.05f;
 			}
 		}
 		else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
-			if (backReticlepos.y >-reticleDownLimit ) {
-				backReticlepos.y -= 0.2f;
+			if (frontReticlepos.y >-reticleDownLimit ) {
+				frontReticlepos.y -= 0.05f;
 			}
 		}
 	}
 
 	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
 		if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
-			if (backReticlepos.x > -reticleLeftLimit) {
-				backReticlepos.x -= 0.2f;
+			if (frontReticlepos.x > -reticleLeftLimit) {
+				frontReticlepos.x -= 0.05f;
 			}
 		}
 		else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
-			if (backReticlepos.x < reticleRightLimit) {
-				backReticlepos.x += 0.2f;
+			if (frontReticlepos.x < reticleRightLimit) {
+				frontReticlepos.x += 0.05f;
 			}
 		}
 	}
