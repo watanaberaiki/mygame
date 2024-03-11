@@ -35,6 +35,9 @@ void Player::Initialize()
 	reticleModel = new LineModel();
 	reticleModel->Initialize(dxcommon->GetDevice(), 0, 0);
 	reticleModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
+	reticleSelectModel = new LineModel();
+	reticleSelectModel->Initialize(dxcommon->GetDevice(), 0, 0);
+	reticleSelectModel->SetImageData(XMFLOAT4(255, 0, 255, 1));
 	for (int i = 0; i < maxLine; i++) {
 		reticleObject[i] = new LineObject();
 		reticleObject[i]->Initialize();
@@ -102,7 +105,8 @@ void Player::Update()
 	Fire();
 	//レティクルの動き
 	MoveReticle();
-
+	//レティクルチェンジ
+	ReticleChange();
 
 	//弾
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
@@ -133,8 +137,7 @@ void Player::Update()
 	//弾の回転用
 	bulletFrontVec = { position.x - position.x,position.y - position.y,backReticlepos.z - position.z };
 
-	//レティクル
-	reticleVec = { backReticlepos.x - (position.x), backReticlepos.y - (position.y), backReticlepos.z - position.z };
+
 
 	//弾の回転用
 	lengthFrontVec = bulletFrontVec.length();
@@ -143,20 +146,7 @@ void Player::Update()
 
 	//正規化
 	reticleVec.normalize();
-	//手前レティクル
-	frontVec = reticleVec * frontdepth;
-	frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontVec.z + position.z);
-	//手前の後ろ
-	frontBackVec = reticleVec * ((backdepth-frontdepth)/2);
-	frontBackReticlepos = XMFLOAT3(frontBackVec.x + position.x, frontBackVec.y + position.y, frontBackVec.z + position.z);
-	//奥側の前
-	backFrontVec = reticleVec * ((backdepth - frontdepth)/2+frontdepth);
-	backFrontReticlepos= XMFLOAT3(backFrontVec.x + position.x, backFrontVec.y + position.y, backFrontVec.z + position.z);
-
-	//奥側のレティクル
-	//backVec= reticleVec * backdepth;
-	//backReticlepos= XMFLOAT3(backVec.x, backVec.y, backVec.z);
-	backReticlepos.z = backdepth+position.z;
+	
 
 	for (int i = 0; i < maxLine; i++) {
 		XMFLOAT3 reticlePos = {};
@@ -269,11 +259,13 @@ void Player::Update()
 		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 255, 255, 0.5f));
 		reticleModel->SetImageData(XMFLOAT4(0, 255, 255, 1));
 		reticleLineModel->SetImageData(XMFLOAT4(0, 255, 255, 1));
+		reticleSelectModel->SetImageData(XMFLOAT4(0, 255, 255, 1));
 	}
 	else {
 		reticleLineModelStraight->SetImageData(XMFLOAT4(0, 255, 0, 0.5f));
 		reticleModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
 		reticleLineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
+		reticleSelectModel->SetImageData(XMFLOAT4(255, 0, 255, 1));
 	}
 
 	//まっすぐのレティクル
@@ -367,29 +359,115 @@ void Player::Move()
 
 void Player::MoveReticle()
 {
-	//レティクルの移動
-	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN)||input->RStickUp()||input->RStickDown()) {
-		if (input->PushKey(DIK_UP)|| input->RStickUp()) {
-			if (backReticlepos.y< reticleUpLimit) {
-				backReticlepos.y += 0.2f;
+	//前の場合
+	if (reticle == front) {
+		//レティクルの移動
+		if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->RStickUp() || input->RStickDown()) {
+			if (input->PushKey(DIK_UP) || input->RStickUp()) {
+				if (frontReticlepos.y < reticleUpLimit) {
+					frontReticlepos.y += 0.05f;
+				}
+			}
+			else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
+				if (frontReticlepos.y > -reticleDownLimit) {
+					frontReticlepos.y -= 0.05f;
+				}
 			}
 		}
-		else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
-			if (backReticlepos.y >-reticleDownLimit ) {
-				backReticlepos.y -= 0.2f;
+		if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
+			if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
+				if (frontReticlepos.x > -reticleLeftLimit) {
+					frontReticlepos.x -= 0.05f;
+				}
+			}
+			else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
+				if (frontReticlepos.x < reticleRightLimit) {
+					frontReticlepos.x += 0.05f;
+				}
 			}
 		}
 	}
-
-	if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
-		if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
-			if (backReticlepos.x > -reticleLeftLimit) {
-				backReticlepos.x -= 0.2f;
+	//二番目
+	else if (reticle == frontBack) {
+		//レティクルの移動
+		if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->RStickUp() || input->RStickDown()) {
+			if (input->PushKey(DIK_UP) || input->RStickUp()) {
+				if (frontBackReticlepos.y < reticleUpLimit) {
+					frontBackReticlepos.y += 0.1f;
+				}
+			}
+			else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
+				if (frontBackReticlepos.y > -reticleDownLimit) {
+					frontBackReticlepos.y -= 0.1f;
+				}
 			}
 		}
-		else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
-			if (backReticlepos.x < reticleRightLimit) {
-				backReticlepos.x += 0.2f;
+		if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
+			if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
+				if (frontBackReticlepos.x > -reticleLeftLimit) {
+					frontBackReticlepos.x -= 0.1f;
+				}
+			}
+			else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
+				if (frontBackReticlepos.x < reticleRightLimit) {
+					frontBackReticlepos.x += 0.1f;
+				}
+			}
+		}
+	}
+	//三番目
+	else if (reticle == backFront) {
+		//レティクルの移動
+		if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->RStickUp() || input->RStickDown()) {
+			if (input->PushKey(DIK_UP) || input->RStickUp()) {
+				if (backFrontReticlepos.y < reticleUpLimit) {
+					backFrontReticlepos.y += 0.15f;
+				}
+			}
+			else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
+				if (backFrontReticlepos.y > -reticleDownLimit) {
+					backFrontReticlepos.y -= 0.15f;
+				}
+			}
+		}
+		if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
+			if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
+				if (backFrontReticlepos.x > -reticleLeftLimit) {
+					backFrontReticlepos.x -= 0.15f;
+				}
+			}
+			else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
+				if (backFrontReticlepos.x < reticleRightLimit) {
+					backFrontReticlepos.x += 0.15f;
+				}
+			}
+		}
+	}
+	//後ろ
+	else if (reticle == back) {
+		//レティクルの移動
+		if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->RStickUp() || input->RStickDown()) {
+			if (input->PushKey(DIK_UP) || input->RStickUp()) {
+				if (backReticlepos.y < reticleUpLimit) {
+					backReticlepos.y += 0.20f;
+				}
+			}
+			else if (input->PushKey(DIK_DOWN) || input->RStickDown()) {
+				if (backReticlepos.y > -reticleDownLimit) {
+					backReticlepos.y -= 0.20f;
+				}
+			}
+		}
+		if (input->PushKey(DIK_LEFT) || input->PushKey(DIK_RIGHT) || input->RStickLeft() || input->RStickRight()) {
+			if (input->PushKey(DIK_LEFT) || input->RStickLeft()) {
+				if (backReticlepos.x > -reticleLeftLimit) {
+					backReticlepos.x -= 0.20f;
+				}
+			}
+			else if (input->PushKey(DIK_RIGHT) || input->RStickRight()) {
+				if (backReticlepos.x < reticleRightLimit) {
+					backReticlepos.x += 0.20f;
+				}
 			}
 		}
 	}
@@ -438,4 +516,115 @@ void Player::Reset()
 	life = maxLife;
 	position = { 0,0,0 };
 	playerObj->SetModel(playerModel_hp[maxLife - life]);
+}
+
+void Player::ReticleChange()
+{
+	//左奥のトリガーが押されたら
+	if (input->TriggerLButton()||input->TriggerKey(DIK_Q)) {
+		if (reticle == back) {
+			reticle = front;
+		}
+		else {
+			reticle+=1;
+		}
+	}
+	//前の場合
+	if (reticle == front) {
+		//レティクル
+		reticleVec = { frontReticlepos.x - (position.x), frontReticlepos.y - (position.y), frontReticlepos.z - position.z };
+		//正規化
+		reticleVec.normalize();
+		//手前レティクル
+		frontReticlepos.z = frontdepth + position.z;
+		//手前の後ろ
+		frontBackVec = reticleVec * ((backdepth - frontdepth) / 2);
+		frontBackReticlepos = XMFLOAT3(frontBackVec.x + position.x, frontBackVec.y + position.y, (backdepth - frontdepth) / 2 + position.z);
+		//奥側の前
+		backFrontVec = reticleVec * ((backdepth - frontdepth) / 2 + frontdepth);
+		backFrontReticlepos = XMFLOAT3(backFrontVec.x + position.x, backFrontVec.y + position.y, (backdepth - frontdepth) / 2 + frontdepth + position.z);
+		//奥側のレティクル
+		backVec = reticleVec * backdepth;
+		backReticlepos = XMFLOAT3(backVec.x + position.x, backVec.y + position.y, backdepth + position.z);
+
+		//色を変える
+		reticleObject[0]->SetModel(reticleSelectModel);
+		reticleObject[1]->SetModel(reticleSelectModel);
+		reticleObject[6]->SetModel(reticleModel);
+		reticleObject[7]->SetModel(reticleModel);
+	}
+	//二番目のレティクル
+	else if (reticle == frontBack) {
+		//レティクル
+		reticleVec = { frontBackReticlepos.x - (position.x), frontBackReticlepos.y - (position.y), frontBackReticlepos.z - position.z };
+		//正規化
+		reticleVec.normalize();
+		//手前レティクル
+		frontVec = reticleVec * frontdepth;
+		frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontdepth + position.z);
+		//手前の後ろ
+		frontBackReticlepos.z =(backdepth - frontdepth) / 2 + position.z;
+		//奥側の前
+		backFrontVec = reticleVec * ((backdepth - frontdepth) / 2 + frontdepth);
+		backFrontReticlepos = XMFLOAT3(backFrontVec.x + position.x, backFrontVec.y + position.y, (backdepth - frontdepth) / 2 + frontdepth + position.z);
+		//奥側のレティクル
+		backVec = reticleVec * backdepth;
+		backReticlepos = XMFLOAT3(backVec.x + position.x, backVec.y + position.y, backdepth + position.z);
+		
+		//色を変える
+		reticleObject[2]->SetModel(reticleSelectModel);
+		reticleObject[3]->SetModel(reticleSelectModel);
+		reticleObject[0]->SetModel(reticleModel);
+		reticleObject[1]->SetModel(reticleModel);
+	}
+	//三番目のレティクル
+	else if (reticle == backFront) {
+
+		//レティクル
+		reticleVec = { backFrontReticlepos.x - (position.x), backFrontReticlepos.y - (position.y), backFrontReticlepos.z - position.z };
+		//正規化
+		reticleVec.normalize();
+		//手前レティクル
+		frontVec = reticleVec * frontdepth;
+		frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontdepth + position.z);
+		//手前の後ろ
+		frontBackVec = reticleVec * ((backdepth - frontdepth) / 2);
+		frontBackReticlepos = XMFLOAT3(frontBackVec.x + position.x, frontBackVec.y + position.y, (backdepth - frontdepth) / 2 + position.z);
+		//奥側の前
+		backFrontReticlepos.z =(backdepth - frontdepth) / 2 + frontdepth + position.z;
+		//奥側のレティクル
+		backVec = reticleVec * backdepth;
+		backReticlepos = XMFLOAT3(backVec.x + position.x, backVec.y + position.y, backdepth + position.z);
+
+		//色を変える
+		reticleObject[4]->SetModel(reticleSelectModel);
+		reticleObject[5]->SetModel(reticleSelectModel);
+		reticleObject[2]->SetModel(reticleModel);
+		reticleObject[3]->SetModel(reticleModel);
+	}
+	//後ろのレティクル
+	else if (reticle == back) {
+		//レティクル
+		reticleVec = { backReticlepos.x - (position.x), backReticlepos.y - (position.y), backReticlepos.z - position.z };
+		//正規化
+		reticleVec.normalize();
+		//手前レティクル
+		frontVec = reticleVec * frontdepth;
+		frontReticlepos = XMFLOAT3(frontVec.x + position.x, frontVec.y + position.y, frontdepth + position.z);
+		//手前の後ろ
+		frontBackVec = reticleVec * ((backdepth - frontdepth) / 2);
+		frontBackReticlepos = XMFLOAT3(frontBackVec.x + position.x, frontBackVec.y + position.y, (backdepth - frontdepth) / 2 + position.z);
+		//奥側の前
+		backFrontVec = reticleVec * ((backdepth - frontdepth) / 2 + frontdepth);
+		backFrontReticlepos = XMFLOAT3(backFrontVec.x + position.x, backFrontVec.y + position.y, (backdepth - frontdepth) / 2 + frontdepth + position.z);
+		//奥側のレティクル
+		backReticlepos.z =backdepth + position.z;
+
+		//色を変える
+		reticleObject[6]->SetModel(reticleSelectModel);
+		reticleObject[7]->SetModel(reticleSelectModel);
+		reticleObject[4]->SetModel(reticleModel);
+		reticleObject[5]->SetModel(reticleModel);
+	}
+	
 }

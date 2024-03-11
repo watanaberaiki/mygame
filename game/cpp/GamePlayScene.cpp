@@ -58,9 +58,6 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	Enemy::SetPlayer(player);
 	Enemy::SetDxCommon(dxCommon);
 	enemycsv->LoadCSV("Resources/csv/enemy.csv");
-
-	boss->Initialize();
-	boss->SetRotation(XMFLOAT3(0, 0, 0));
 	//スプライト共通部の初期化
 	spriteCommon->Initialize(dxCommon);
 
@@ -661,34 +658,6 @@ void GamePlayScene::AllCollision()
 		}
 	}
 
-	//自キャラとボス弾
-	for (const std::unique_ptr<EnemyBullet>& bossybullet : boss->GetBullet()) {
-		if (player->GetCubeObject()->CheakCollision(bossybullet->GetCubeObject())) {
-			bossybullet->OnCollision();
-			player->OnCollision();
-			Particle(player->GetPosition());
-
-		}
-	}
-
-	//自弾とボス弾
-	for (const std::unique_ptr<EnemyBullet>& bossybullet : boss->GetBullet()) {
-		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-			if (playerbullet->GetCubeObject()->CheakCollision(bossybullet->GetCubeObject())) {
-				playerbullet->OnCollision();
-				bossybullet->OnCollision();
-			}
-		}
-	}
-
-	//自弾とボスの判定
-	for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-		if (playerbullet->GetCubeObject()->CheakCollision(boss->GetCubeObject())) {
-			playerbullet->OnCollision();
-			boss->OnCollision();
-			EnemyParticle(boss->GetPos());
-		}
-	}
 
 	//レティクルと敵の当たり判定
 	for (std::unique_ptr<Enemy>& enemy : enemys) {

@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include"GamePlayScene.h"
 #include"SceneManager.h"
+#include"ClearScene.h"
 void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 {
 	dxCommon_ = dxCommon;
@@ -48,23 +49,11 @@ void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	//読み込み
 	resorcemanager = ResourceManager::Getinstance();
 	resorcemanager->LoadObj("blackcube");
-	resorcemanager->LoadObj("redcube");
 	resorcemanager->LoadObj("floor");
 
 	//プレイヤー
 	Player::SetDxCommon(dxCommon);
 	player->Initialize();
-
-	//敵
-	enemycsv->LoadCSV("Resources/csv/enemy.csv");
-	Enemy::SetPlayer(player);
-	Enemy::SetDxCommon(dxCommon);
-
-	//ボス
-	Boss::SetPlayer(player);
-	Boss::SetDxCommon(dxCommon);
-	boss->Initialize();
-	boss->SetRotation(XMFLOAT3(0, 0, 0));
 	//スプライト共通部の初期化
 	spriteCommon->Initialize(dxCommon);
 
@@ -78,10 +67,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	spriteCommon->LoadTexture(6, "black1x1.png");
 	spriteCommon->LoadTexture(7, "white1x1.png");
 	spriteCommon->LoadTexture(8, "gameover.png");
-	spriteCommon->LoadTexture(9, "clear.png");
-	spriteCommon->LoadTexture(10, "stickR.png");
-	spriteCommon->LoadTexture(11, "stickL.dds");
-	spriteCommon->LoadTexture(12, "buttonRT.png");
 	//スプライトにテクスチャ割り当て
 	hitSprite->Initialize(spriteCommon, 0);
 	marioSprite->Initialize(spriteCommon, 1);
@@ -90,12 +75,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	startSprite->Initialize(spriteCommon, 5);
 	blackSprite->Initialize(spriteCommon, 6);
 	transitionWhiteSprite->Initialize(spriteCommon, 7);
-	gameOverSprite->Initialize(spriteCommon, 8);
-	clearWhiteSprite->Initialize(spriteCommon, 7);
-	clearSprite->Initialize(spriteCommon, 9);
-	stickRSprite->Initialize(spriteCommon, 10);
-	stickLSprite->Initialize(spriteCommon, 11);
-	buttonRTSprite->Initialize(spriteCommon, 12);
 
 
 	//スプライト初期位置
@@ -103,34 +82,16 @@ void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	marioSprite->SetPosition({ 800,0 });
 	marioSprite->Update();
 
-	//右スティック
-	stickRSprite->SetAnchorPoint(center);
-	stickRSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y / 2 });
-	//左スティック
-	stickLSprite->SetAnchorPoint(center);
-	stickLSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y * 1.5f });
-	//右トリガー
-	buttonRTSprite->SetAnchorPoint(center);
-	buttonRTSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y * 2.5f });
-
 	//画面遷移用スプライト
 	transitionWhiteSprite->SetAnchorPoint(center);
 	transitionWhiteSprite->SetSize(XMFLOAT2(WinApp::window_width, WinApp::window_height));
-
-	//クリア用スプライト
-	clearWhiteSprite->SetAnchorPoint(center);
-	clearWhiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, WinApp::window_height / 2));
+	transitionWhiteSprite->SetPosition(XMFLOAT2(WinApp::window_width / 2, WinApp::window_height / 2));
 
 	//3Dモデル
 	//モデルデータをマップに入れる
 	models.insert(std::make_pair("floor", resorcemanager->LoadObj("blackcube")));
 	models.insert(std::make_pair("heightLine", resorcemanager->LoadObj("block")));
 	models.insert(std::make_pair("widthLine", resorcemanager->LoadObj("block")));
-
-
-
-	menuSprite->SetAnchorPoint(center);
-	menuSprite->SetPosition(XMFLOAT2((float)easeOutQuad(maxTime, start, end - start, time), WinApp::window_height / 2));
 
 	////地面の配置(json読み込み)
 	//地面を繰り返し描画するために二つ読み込む(json読み込み)
@@ -308,8 +269,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	//パーティクル
 	particles->Initialize("line.png");
 
-	redParticles->Initialize("redline.png");
-
 
 	isTitle = true;
 	eye = eyeReset;
@@ -416,25 +375,7 @@ void TitleScene::Update() {
 			stickRAlpha = 1.0f;
 			stickLAlpha = 1.0f;
 			buttonRTAlpha = 1.0f;
-			//右スティック
-			stickRSprite->Update();
-			//左スティック
-			stickLSprite->Update();
-			//右トリガー
-			buttonRTSprite->Update();
 			enemys.clear();
-			//敵読み込み
-			for (int i = 0; i < enemysize; i++) {
-				std::unique_ptr<Enemy>newObject = std::make_unique<Enemy>();
-				newObject->Initialize();
-				newObject->SetPosition(enemycsv->GetPosition(i));
-				newObject->SetRotation(enemycsv->GetRotation(i));
-				newObject->SetScale(enemycsv->GetScale(i));
-				newObject->SetType(enemycsv->Getmove(i));
-				newObject->SetShotType(enemycsv->GetShotType(i));
-				newObject->Update();
-				enemys.push_back(std::move(newObject));
-			}
 			//白線を元の位置に戻す
 			lineObjects.clear();
 			for (int i = 0; i < maxLine; i++) {
@@ -541,8 +482,9 @@ void TitleScene::Draw()
 	startSprite->Draw();
 
 	//遷移演出
-	transitionWhiteSprite->Draw();
-
+	if (isBackTransition) {
+		transitionWhiteSprite->Draw();
+	}
 	spriteCommon->PostDraw();
 
 }

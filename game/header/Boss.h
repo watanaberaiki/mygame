@@ -82,6 +82,7 @@ public://ゲッター
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets; }
 	bool GetisDead() { return isdead; }
 	XMFLOAT3 GetPos() { return position; }
+	XMFLOAT3 GetScale() { return scale; }
 
 
 private://静的メンバ変数
@@ -158,5 +159,6 @@ private://メンバ変数
 	LineModel* posLineModel = nullptr;
 	LineObject* posLineObject[2] = {};
 	const float widthSpace = 4.0f;
+	const float linePosY = 0.2f;
 };
 

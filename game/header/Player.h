@@ -18,6 +18,12 @@
 #include"WireObject.h"
 class Player
 {
+	enum Reticle {
+		front,		//一番前
+		frontBack,	//二番目
+		backFront,	//三番目
+		back,		//後ろ
+	};
 public://メンバ関数
 	//初期化
 	void Initialize();
@@ -39,6 +45,8 @@ public://メンバ関数
 	void OnCollision();
 	//リセット
 	void Reset();
+	//レティクルチェンジ
+	void ReticleChange();
 	//セッター
 	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
 	void SetPositionZ(const float positionz_) { this->position.z = positionz_; }
@@ -70,6 +78,8 @@ private://メンバ変数
 	XMFLOAT3 backFrontReticlepos = { 0,0,0 };
 	XMFLOAT3 backReticlepos = { 0,0,0 };
 
+	//レティクルチェンジ
+	int reticle = front;
 
 	float frontdepth = 0.0f;
 	float backdepth = 0.0f;
@@ -114,6 +124,8 @@ private://メンバ変数
 
 	//レティクル
 	LineModel* reticleModel = nullptr;
+	LineModel* reticleSelectModel = nullptr;
+
 	static const int maxLine = 8;
 	const float linePos = 0.2f;
 	LineObject* reticleObject[maxLine] = {};

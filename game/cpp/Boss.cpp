@@ -111,6 +111,9 @@ void Boss::Update()
 				pos.x -= widthSpace;
 			}
 			posLineObject[i]->SetStartPosition(pos);
+			//posLineObject[i]->SetStartPositionY(pos.y - linePosY);
+			posLineObject[i]->SetEndPosition(pos);
+			//posLineObject[i]->SetEndPositionY(pos.y + linePosY);
 			posLineObject[i]->Update();
 		}
 	}

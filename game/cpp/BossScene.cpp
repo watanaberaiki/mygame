@@ -9,7 +9,7 @@ void BossScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	//スプライト共通部の初期化
 	spriteCommon->Initialize(dxCommon);
 
-	
+
 	//カメラ
 	eye = XMFLOAT3(0, 0, 5);	//視点座標
 	target = XMFLOAT3(0, 0, 10);	//注視点座標
@@ -24,7 +24,7 @@ void BossScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	resorcemanager->LoadObj("blackcube");
 	resorcemanager->LoadObj("redcube");
 	resorcemanager->LoadObj("floor");
-	
+
 	//ワイヤーオブジェクト
 	WireObject::SetCamera(camera);
 	//オブジェクト3dカメラ
@@ -721,6 +721,13 @@ void BossScene::AllCollision()
 			player->SetIsEnemyReticleCol(false);
 		}
 	}
+	//レティクルとボスの当たり判定
+	if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), boss->GetPos(), boss->GetScale())) {
+		player->SetIsEnemyReticleCol(true);
+	}
+	else {
+		player->SetIsEnemyReticleCol(false);
+	}
 
 }
 
@@ -833,7 +840,7 @@ void BossScene::ClearTransition()
 		//クリアシーン生成
 		BaseScene* changeScene = new ClearScene();
 		sceneManager_->SetNextScene(changeScene);
-		
+
 		isClearBack = true;
 		clearTime = 0;
 	}

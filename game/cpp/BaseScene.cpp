@@ -75,6 +75,7 @@ void BaseScene::Transition(Scene nextScene_)
 				}
 				else if (nextScene_ == Scene::Title) {
 					changeScene = new TitleScene();
+					changeScene->isBackTransition = true;
 				}
 				//シーン切り替え
 				sceneManager_->SetNextScene(changeScene);
