@@ -2,6 +2,7 @@
 #include"GamePlayScene.h"
 #include"SceneManager.h"
 #include"ClearScene.h"
+#include"GameOverScene.h"
 void TitleScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 {
 	dxCommon_ = dxCommon;

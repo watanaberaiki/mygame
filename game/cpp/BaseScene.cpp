@@ -120,7 +120,7 @@ void BaseScene::Transition(Scene nextScene_)
 		delayTime++;
 	}
 
-	particles->Update();
+	//particles->Update();
 
 }
 //画面遷移時に使うパーティクル
