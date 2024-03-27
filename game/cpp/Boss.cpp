@@ -20,7 +20,7 @@ void Boss::Initialize()
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
-	cubeModel->CreateBuffers(dxcommon->GetDevice());
+ 	cubeModel->CreateBuffers(dxcommon->GetDevice());
 	cubeModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
 
 	collisionBox = new CubeObject3D();

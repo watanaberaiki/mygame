@@ -1,6 +1,7 @@
 #include "GamePlayScene.h"
 #include"BossScene.h"
 #include"SceneManager.h"
+#include"ClearScene.h"
 void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 {
 
@@ -326,6 +327,13 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 		floorEndScale = newobject->GetScale();
 		lineObjects.push_back(std::move(newobject));
 	}
+
+	//ボス
+	Boss::SetPlayer(player);
+	Boss::SetDxCommon(dxCommon);
+	boss->Initialize();
+	boss->SetRotation(XMFLOAT3(0, 0, 0));
+	boss->Reset();
 }
 
 void GamePlayScene::Finalize()
@@ -503,13 +511,60 @@ void GamePlayScene::Update()
 		}
 		//ボスシーンに移行
 		else {
-			
-			//ボスシーン生成
-			BaseScene* changeScene = new BossScene();
-			sceneManager_->SetNextScene(changeScene);
+			//ボス戦に移行
+			isBoss = true;
+
+			////ボスシーン生成
+			//BaseScene* changeScene = new BossScene();
+			//sceneManager_->SetNextScene(changeScene);
 		}
 
+		//ボス戦
+		if (isBoss) {
+			//地面
+			for (auto& object : objects) {
+				object->Update();
+			}
+			//横向きの白線
+			for (auto& wireobject : heightWireObjects) {
+				wireobject->Update();
+			}
+			//縦向きの白線
+			for (auto& wireobject : widthWireObjects) {
+				wireobject->Update();
+			}
+			//地面の真ん中の白線
+			for (auto& lineobject : lineObjects) {
+				lineobject->Update();
+			}
+			//パーティクル
+			particles->Update();
+			redParticles->Update();
+			//カメラ更新
+			camera->Update();
+			//プレイヤー更新
+			player->SetPositionZ(eye.z + playerSpaceZ);
+			player->SetIsTitle(isTitle);
+			player->Update();
+
+			//死んだ判定
+			if (player->GetIsDead()) {
+				isGameOver = true;
+			}
+			//ボス更新
+			boss->SetPositionZ(player->GetPosition().z + bossSpaceZ);
+			boss->Update();
+			//判定
+			AllCollision();
+
+			//ボスの死亡
+			if (boss->GetisDead()) {
+				//クリア演出
+				ClearTransition();
+			}
+		}
 	}
+
 }
 
 void GamePlayScene::Draw()
@@ -525,6 +580,11 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
 		enemy->Draw();
+	}
+	
+	//ボス
+	if (isBoss) {
+		boss->Draw();
 	}
 
 	////地面
@@ -553,6 +613,11 @@ void GamePlayScene::Draw()
 	{
 		enemy->WireDraw();
 	}
+
+	//ボス
+	if (isBoss) {
+		boss->WireDraw();
+	}
 	if (!lineLose) {
 		//縦向きの線
 		for (auto& wireobject : heightWireObjects) {
@@ -579,7 +644,10 @@ void GamePlayScene::Draw()
 		enemy->DebugDraw(dxCommon_->GetCommandlist());
 	}
 
-
+	//ボス
+	if (isBoss) {
+		boss->LineDraw(dxCommon_->GetCommandlist());
+	}
 	//スプライト描画
 	spriteCommon->PreDraw();
 	if (isMenu) {
@@ -602,8 +670,10 @@ void GamePlayScene::Draw()
 	}
 	//遷移演出
 	transitionWhiteSprite->Draw();
-
-	
+	//クリア演出
+	if (boss->GetisDead()) {
+		clearWhiteSprite->Draw();
+	}
 	spriteCommon->PostDraw();
 }
 
@@ -664,6 +734,45 @@ void GamePlayScene::AllCollision()
 		if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), enemy->GetPos(), enemy->GetScale())) {
 			player->SetIsEnemyReticleCol(true);
 			break;
+		}
+		else {
+			player->SetIsEnemyReticleCol(false);
+		}
+	}
+
+	//自キャラとボス弾
+	for (const std::unique_ptr<EnemyBullet>& bossybullet : boss->GetBullet()) {
+		if (player->GetCubeObject()->CheakCollision(bossybullet->GetCubeObject())) {
+			bossybullet->OnCollision();
+			player->OnCollision();
+			Particle(player->GetPosition());
+
+		}
+	}
+
+	//自弾とボス弾
+	for (const std::unique_ptr<EnemyBullet>& bossybullet : boss->GetBullet()) {
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+			if (playerbullet->GetCubeObject()->CheakCollision(bossybullet->GetCubeObject())) {
+				playerbullet->OnCollision();
+				bossybullet->OnCollision();
+			}
+		}
+	}
+
+	//自弾とボスの判定
+	for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+		if (playerbullet->GetCubeObject()->CheakCollision(boss->GetCubeObject())) {
+			playerbullet->OnCollision();
+			boss->OnCollision();
+			EnemyParticle(boss->GetPos());
+		}
+	}
+
+	//レティクルとボスの当たり判定
+	if (isBoss) {
+		if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), boss->GetPos(), boss->GetScale())) {
+			player->SetIsEnemyReticleCol(true);
 		}
 		else {
 			player->SetIsEnemyReticleCol(false);
@@ -874,4 +983,43 @@ void GamePlayScene::OperationGuide()
 	}
 	//アルファ値
 	buttonRTSprite->SetAlpha(buttonRTAlpha);
+}
+
+//クリア演出
+void GamePlayScene::ClearTransition()
+{
+	float startSize = 0.0f;
+	float sizeX = 0.0f;
+	float sizeY = 0.0f;
+	//	遷移中
+	if (clearTime <= clearMaxTime) {
+		//イージング
+		sizeX = (float)easeOutQuad(clearMaxTime, startSize, WinApp::window_width - sizeX, clearTime);
+		sizeY = (float)easeOutQuad(clearMaxTime, startSize, WinApp::window_height - sizeY, clearTime);
+		//座標代入
+		clearWhiteSprite->SetSize(XMFLOAT2(sizeX, sizeY));
+
+		//タイム
+		clearTime++;
+
+	}
+	//遷移後のシーンチェンジの時間
+	else if (clearTime >= clearChangeSceneTime) {
+		//シーンチェンジ
+		//クリアシーン生成
+		BaseScene* changeScene = new ClearScene();
+		sceneManager_->SetNextScene(changeScene);
+
+		isClearBack = true;
+		clearTime = 0;
+	}
+	else {
+		//タイム
+		clearTime++;
+	}
+
+
+
+	clearWhiteSprite->Update();
+
 }

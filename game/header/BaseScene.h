@@ -137,7 +137,6 @@ protected://ゲーム処理(仮の引っ越し)
 	//敵
 	static const int enemysize = 11;
 	std::list<std::unique_ptr<Enemy>>enemys;
-	/*const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets;*/
 	//プレイヤー
 	Player* player = new Player();
 	const float playerSpaceZ = 4.0f;

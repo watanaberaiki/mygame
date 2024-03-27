@@ -23,12 +23,12 @@ void Game::Update()
 	//imgui更新
 	imgui_->Begin();
 	//表示項目
-	//ボタンを押したら
-	if (ImGui::Button("Save")) {
+	////ボタンを押したら
+	//if (ImGui::Button("Save")) {
 
-	}
-	//デモウィンドウ
-	ImGui::ShowDemoWindow();
+	//}
+	////デモウィンドウ
+	//ImGui::ShowDemoWindow();
 
 	imgui_->End();
 }

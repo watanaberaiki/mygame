@@ -3,7 +3,7 @@
 
 class GamePlayScene :public BaseScene
 {
-public:
+public://関数
 	//初期化
 	void Initialize(DirectXCommon* dxCommon, ImguiManager* imgui) override;
 	//終了処理
@@ -22,7 +22,11 @@ public:
 	void EnemyParticle(XMFLOAT3 pos);
 	//操作ガイド
 	void OperationGuide();
-private:
+	//クリア演出
+	void ClearTransition();
+private://変数
+	//ボス戦かどうか
+	bool isBoss = false;
 
 };
 
