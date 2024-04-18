@@ -93,6 +93,7 @@ protected://ゲーム処理(仮の引っ越し)
 	Sprite* stickRSprite = new Sprite();
 	Sprite* stickLSprite = new Sprite();
 	Sprite* buttonRTSprite = new Sprite();
+	Sprite* buttonLTSprite = new Sprite();
 
 
 
@@ -279,12 +280,15 @@ protected://ゲーム処理(仮の引っ越し)
 	int stickRCount = 0;
 	int stickLCount = 0;
 	int buttonRTCount = 0;
+	int buttonLTCount = 0;
 	int stickRNotCount = 0;
 	int stickLNotCount = 0;
 	int buttonRTNotCount = 0;
+	int buttonLTNotCount = 0;
 	float stickRAlpha = 1.0f;
 	float stickLAlpha = 1.0f;
 	float buttonRTAlpha = 1.0f;
+	float buttonLTAlpha = 1.0f;
 	const int maxGuideCount = 30;
 	const int maxGuideNotCount = 240;
 };

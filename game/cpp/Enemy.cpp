@@ -355,7 +355,7 @@ void Enemy::Fire()
 		//ランダム
 		std::random_device ram_dev;
 		std::mt19937 ram(ram_dev());
-		XMFLOAT3 pos;
+		XMFLOAT3 pos;\
 		pos.x= (ram() % 20  -10.0f)/10;
 		pos.y= (ram() % 20 - 10.0f)/10;
 		velocityVec = { pos.x - position.x,pos.y - position.y,player->GetPosition().z - position.z };

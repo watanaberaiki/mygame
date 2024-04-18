@@ -139,7 +139,7 @@ private://メンバ変数
 	LineModel* posLineModel = nullptr;
 	LineObject* posLineObject[4] = {};
 	const float widthSpace = 4.0f;
-	const float downLinePosY = 1.8f;
+	const float downLinePosY = 1.7f;
 	float spaceX = 0.0f;
 	float endSpaceX = 0.2f;
 	float spaceZ = 0.0f;

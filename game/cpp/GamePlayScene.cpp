@@ -76,6 +76,7 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	spriteCommon->LoadTexture(10, "stickR.png");
 	spriteCommon->LoadTexture(11, "stickL.dds");
 	spriteCommon->LoadTexture(12, "buttonRT.png");
+	spriteCommon->LoadTexture(13, "buttonLt.png");
 	//スプライトにテクスチャ割り当て
 	hitSprite->Initialize(spriteCommon, 0);
 	marioSprite->Initialize(spriteCommon, 1);
@@ -90,6 +91,7 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	stickRSprite->Initialize(spriteCommon, 10);
 	stickLSprite->Initialize(spriteCommon, 11);
 	buttonRTSprite->Initialize(spriteCommon, 12);
+	buttonLTSprite->Initialize(spriteCommon, 13);
 
 
 	//スプライト初期位置
@@ -99,13 +101,17 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 
 	//右スティック
 	stickRSprite->SetAnchorPoint(center);
-	stickRSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y / 2 });
-	//左スティック
-	stickLSprite->SetAnchorPoint(center);
-	stickLSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y * 1.5f });
+	stickRSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y / 1.5f });
 	//右トリガー
 	buttonRTSprite->SetAnchorPoint(center);
-	buttonRTSprite->SetPosition({ WinApp::window_width - stickRSprite->GetSize().x / 2,stickRSprite->GetSize().y * 2.5f });
+	buttonRTSprite->SetPosition({ WinApp::window_width - buttonRTSprite->GetSize().x / 2,buttonRTSprite->GetSize().y * 2.0f });
+
+	//左スティック
+	stickLSprite->SetAnchorPoint(center);
+	stickLSprite->SetPosition({ stickLSprite->GetSize().x / 2,stickLSprite->GetSize().y / 1.5f });
+	//左トリガー
+	buttonLTSprite->SetAnchorPoint(center);
+	buttonLTSprite->SetPosition({ buttonLTSprite->GetSize().x / 2,buttonLTSprite->GetSize().y * 2.0f });
 
 	//画面遷移用スプライト
 	transitionWhiteSprite->SetAnchorPoint(center);
@@ -153,10 +159,11 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 			DirectX::XMStoreFloat3(&rot, objectData.rotation);
 			newObject->SetRotation(rot);
 
-			// 座標
+			// サイズ
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scaling);
 			newObject->SetScale(scale);
+
 
 			// 配列に登録
 			objects.push_back(newObject);
@@ -430,7 +437,8 @@ void GamePlayScene::Update()
 		stickLSprite->Update();
 		//右トリガー
 		buttonRTSprite->Update();
-
+		//左トリガー
+		buttonLTSprite->Update();
 		//雑魚敵が生きてる
 		if (isEnemyAlive) {
 			eye.z += 0.05f;
@@ -667,6 +675,9 @@ void GamePlayScene::Draw()
 	}
 	if (buttonRTAlpha > 0) {
 		buttonRTSprite->Draw();
+	}
+	if (buttonLTAlpha > 0) {
+		buttonLTSprite->Draw();
 	}
 	//遷移演出
 	transitionWhiteSprite->Draw();
@@ -983,6 +994,31 @@ void GamePlayScene::OperationGuide()
 	}
 	//アルファ値
 	buttonRTSprite->SetAlpha(buttonRTAlpha);
+
+	//左トリガー
+	if (input_->PushLButton()) {
+		buttonLTCount++;
+		buttonLTNotCount = 0;
+	}//長く触れていない場合
+	else {
+		buttonLTNotCount++;
+		if (maxGuideNotCount <= buttonLTNotCount) {
+			buttonLTNotCount = 0;
+			//だんだんアルファ値をあげていく
+			if (buttonLTAlpha < 1.0f) {
+				buttonLTAlpha += 0.05f;
+			}
+		}
+	}
+	//一定時間触れるとアルファ値を下げていく
+	if (buttonLTCount >= maxGuideCount) {
+		if (buttonLTAlpha > 0) {
+			buttonLTAlpha -= 0.05f;
+		}
+	}
+	//アルファ値
+	buttonLTSprite->SetAlpha(buttonLTAlpha);
+
 }
 
 //クリア演出
