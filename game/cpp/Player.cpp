@@ -306,16 +306,16 @@ void Player::Update()
 		reticleModel->SetImageData(XMFLOAT4(153, 0, 0, 1));
 		reticleLineModel->SetImageData(XMFLOAT4(0, 255, 255, 1));
 		reticleSelectModel->SetImageData(XMFLOAT4(255, 0, 255, 1));
-		reticleShadowModel->SetImageData(XMFLOAT4(153, 0, 0, 0.2f));
-		reticleShadowSelectModel->SetImageData(XMFLOAT4(255, 0, 255, 0.2f));
+		reticleShadowModel->SetImageData(XMFLOAT4(153, 0, 0, 0.5f));
+		reticleShadowSelectModel->SetImageData(XMFLOAT4(255, 0, 255, 0.5f));
 	}
 	else {
 		reticleLineModelStraight->SetImageData(XMFLOAT4(255, 238, 255, 1));
 		reticleModel->SetImageData(XMFLOAT4(255, 238, 255, 1));
 		reticleLineModel->SetImageData(XMFLOAT4(255, 238, 255, 1));
 		reticleSelectModel->SetImageData(XMFLOAT4(197, 0, 13, 1));
-		reticleShadowModel->SetImageData(XMFLOAT4(255, 238, 255, 0.2f));
-		reticleShadowSelectModel->SetImageData(XMFLOAT4(197, 0, 13, 0.2f));
+		reticleShadowModel->SetImageData(XMFLOAT4(255, 238, 255, 0.5f));
+		reticleShadowSelectModel->SetImageData(XMFLOAT4(197, 0, 13, 0.5f));
 	}
 
 	//まっすぐのレティクル

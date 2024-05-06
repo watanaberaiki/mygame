@@ -136,7 +136,7 @@ protected://ゲーム処理(仮の引っ越し)
 
 
 	//敵
-	static const int enemysize = 11;
+	static const int enemysize = 1;
 	std::list<std::unique_ptr<Enemy>>enemys;
 	//プレイヤー
 	Player* player = new Player();

@@ -560,7 +560,6 @@ void GamePlayScene::Update()
 				isGameOver = true;
 			}
 			//ボス更新
-			boss->SetPositionZ(player->GetPosition().z + bossSpaceZ);
 			boss->Update();
 			//判定
 			AllCollision();
