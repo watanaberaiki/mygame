@@ -111,9 +111,6 @@
     <ClCompile Include="app\cpp\Base\Vector3.cpp">
       <Filter>ソースファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="game\cpp\GameScene.cpp">
-      <Filter>ソースファイル\Game</Filter>
-    </ClCompile>
     <ClCompile Include="game\cpp\Boss.cpp">
       <Filter>ソースファイル\Game</Filter>
     </ClCompile>
@@ -137,6 +134,33 @@
     </ClCompile>
     <ClCompile Include="app\cpp\Base\TextureConverter.cpp">
       <Filter>ソースファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\Game.cpp">
+      <Filter>ソースファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\BaseScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\GamePlayScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\GameScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\SceneManager.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\TitleScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\GameOverScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\BossScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cpp\ClearScene.cpp">
+      <Filter>ソースファイル\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +216,12 @@
     </Filter>
     <Filter Include="ヘッダーファイル\Game">
       <UniqueIdentifier>{1821a2bb-84a1-4169-98ce-57bd699155fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソースファイル\Scene">
+      <UniqueIdentifier>{2f701567-8aee-4394-82b5-104b56987213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダーファイル\Scene">
+      <UniqueIdentifier>{5dd98bb6-8c50-415c-8205-79d8186389fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -258,9 +288,6 @@
     <ClInclude Include="app\header\Base\WinApp.h">
       <Filter>ヘッダーファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="game\header\GameScene.h">
-      <Filter>ヘッダーファイル\Game</Filter>
-    </ClInclude>
     <ClInclude Include="game\header\Player.h">
       <Filter>ヘッダーファイル\Game</Filter>
     </ClInclude>
@@ -284,6 +311,33 @@
     </ClInclude>
     <ClInclude Include="app\header\Base\TextureConverter.h">
       <Filter>ヘッダーファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\Game.h">
+      <Filter>ヘッダーファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\BaseScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\SceneManager.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\TitleScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\GamePlayScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\GameScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\BossScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\ClearScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\header\GameOverScene.h">
+      <Filter>ヘッダーファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

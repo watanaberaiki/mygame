@@ -3,7 +3,7 @@
 #include"DirectXCommon.h"
 #include"Camera.h"
 #include"FbxLoader.h"
-#include"GameScene.h"
+#include"Game.h"
 #include"ImGuiManager.h"
 
 #pragma comment (lib,"d3dcompiler.lib")
@@ -75,9 +75,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	ParticleManager::StaticInitialize(dxCommon, winApp->window_width, winApp->window_height);
 
-	GameScene* gamescene = nullptr;
-	gamescene = new GameScene();
-	gamescene->Initialize(dxCommon,imgui);
+	Game* game = nullptr;
+	game = new Game();
+	game->Initialize(dxCommon,imgui);
 
 
 	//最初のシーンの初期化
@@ -92,14 +92,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//入力の更新
 		input->Update();
 		//ゲームシーン更新
-		gamescene->Update();
+		game->Update();
 		
 		//// 4.描画コマンドここから
 
 		dxCommon->PreDraw();
 		
 		//ゲームシーン
-		gamescene->Draw();
+		game->Draw();
 #ifdef _DEBUG
 
 		//imgui
@@ -118,7 +118,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	//DirectX解放
 	delete dxCommon;
 	//GameScene解放
-	delete gamescene;
+	delete game;
 	//カメラ解放
 	/*delete camera;*/
 	FbxLoader::GetInstance()->Finalize();

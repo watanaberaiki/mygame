@@ -20,7 +20,7 @@ void Boss::Initialize()
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
-	cubeModel->CreateBuffers(dxcommon->GetDevice());
+ 	cubeModel->CreateBuffers(dxcommon->GetDevice());
 	cubeModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
 
 	collisionBox = new CubeObject3D();
@@ -30,15 +30,18 @@ void Boss::Initialize()
 
 	//レティクルの位置を横の壁でわかりやすく
 	posLineModel = new LineModel();
-	posLineModel->Initialize(dxcommon->GetDevice(), 0.2f, -0.2f);
+	posLineModel->Initialize(dxcommon->GetDevice(), 0.0f, 0.0f);
 	posLineModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		posLineObject[i] = new LineObject();
 		posLineObject[i]->Initialize();
 		posLineObject[i]->SetModel(posLineModel);
 	}
-	scale = { 0.2f, 0.4f, 0.2f };
-
+	//Z移動先
+	front = distanceZ;
+	frontBack = distanceZ*2;
+	backFront = distanceZ*3;
+	back = distanceZ*4;
 }
 
 void Boss::Update()
@@ -87,40 +90,139 @@ void Boss::Update()
 		{
 			bullet->Update();
 		}
-
-		//動き
-		moveTime++;
-		if (moveTime > moveMaxTime) {
-			//ランダム
-			count = ram() % MOVE::move_end;
-			//変換
-			move = static_cast<MOVE>(count);
-			moveTime = 0;
+		//最初の登場用
+		if (firstDirection==false) {
+			int moveZ = 0;
+			moveZ = ram() % 4;
+			//前(1)
+			if (moveZ == 0) {
+				position.z = player->GetPosition().z + front;
+			}
+			//前の後ろ(2)
+			else if (moveZ == 1) {
+				position.z = player->GetPosition().z + frontBack;
+			}
+			//後ろの前(3)
+			else if (moveZ == 2) {
+				position.z = player->GetPosition().z + backFront;
+			}
+			//後ろ(4)
+			else if (moveZ == 3) {
+				position.z = player->GetPosition().z + back;
+			}
+			isMoveZ = true;
+			isReduction = false;
+			firstDirection = true;
 		}
-		Move();
+		//動き
+		if (isMoveZ == false) {
+			moveTime++;
+			moveZTime++;
+			//Z軸の移動タイマー
+			if (moveZTime >= moveZMaxTime) {
+				isMoveZ = true;
+				isReduction = true;
+			}
+			//XY軸の移動
+			if (moveTime > moveMaxTime) {
+				//ランダム
+				count = ram() % MOVE::move_end;
+				//変換
+				move = static_cast<MOVE>(count);
+				moveTime = 0;
+			}
+			Move();
+		}
+		//Z軸の移動
+		else {
+			int moveZ = 0;
+			directionTime++;
+			//縮小(最初)
+			if (isReduction) {
+				//敵のスケール
+				directionScale.x = (float)easeOutQuad(directionMaxTime, startScale.x, endScale - startScale.x, directionTime);
+				directionScale.y = (float)easeOutQuad(directionMaxTime, startScale.y, endScale - startScale.y, directionTime);
+				directionScale.z = (float)easeOutQuad(directionMaxTime, startScale.z, endScale - startScale.z, directionTime);
+				//縮小の終わり
+				if (directionTime>=directionMaxTime) {
+					isReduction = false;
+					directionTime = 0;
+					moveZ=ram() % 4;
+					//前(1)
+					if (moveZ == 0) {
+						position.z = player->GetPosition().z + front;
+					}
+					//前の後ろ(2)
+					else if (moveZ == 1) {
+						position.z = player->GetPosition().z + frontBack;
+					}
+					//後ろの前(3)
+					else if (moveZ==2) {
+						position.z = player->GetPosition().z + backFront;
+					}
+					//後ろ(4)
+					else if (moveZ == 3) {
+						position.z = player->GetPosition().z + back;
+					}
+				}
 
-		//位置を横に表示
-		for (int i = 0; i < 2; i++) {
-			XMFLOAT3 pos = position;
-			pos.x = 0;
-			pos.y = -0.5;
-			if (i == 0) {
-				pos.x += widthSpace;
 			}
-			else if (i == 1) {
-				pos.x -= widthSpace;
+			//拡大(後半)
+			else {
+				//敵のスケール
+				directionScale.x = (float)easeOutQuad(directionMaxTime, endScale, startScale.x - endScale, directionTime);
+				directionScale.y = (float)easeOutQuad(directionMaxTime, endScale, startScale.y - endScale, directionTime);
+				directionScale.z = (float)easeOutQuad(directionMaxTime, endScale, startScale.z - endScale, directionTime);
+				//拡大の終わり
+				if (directionTime >= directionMaxTime) {
+					isMoveZ = false;
+					directionTime = 0;
+					moveZTime = 0;
+				}
 			}
-			posLineObject[i]->SetStartPosition(pos);
-			posLineObject[i]->Update();
 		}
 	}
+	scale = directionScale;
 	////fbx
 	//enemyfbxobj->SetPosition(position);
 	//enemyfbxobj->SetScale(scale);
 	//enemyfbxobj->SetRotation(rotation);
 	//enemyfbxobj->Update();
+	
+	//位置を下に表示
+	for (int i = 0; i < 4; i++) {
+		XMFLOAT3 pos = position;
+		XMFLOAT3 startpos = {};
+		XMFLOAT3 endpos = {};
 
+		pos.y = -downLinePosY;
+		////簡易的な影
+		if (i == 0) {
+			pos.x += endSpaceX;
+			startpos = { pos.x,pos.y,pos.z - endSpaceZ };
+			endpos = { pos.x,pos.y,pos.z + endSpaceZ };
 
+		}
+		else if (i == 1) {
+			pos.x -= endSpaceX;
+			startpos = { pos.x,pos.y,pos.z - endSpaceZ };
+			endpos = { pos.x,pos.y,pos.z + endSpaceZ };
+		}
+		else if (i == 2) {
+			pos.z += endSpaceZ;
+			startpos = { pos.x - endSpaceX,pos.y,pos.z };
+			endpos = { pos.x + endSpaceX,pos.y,pos.z };
+		}
+		else if (i == 3) {
+			pos.z -= endSpaceZ;
+			startpos = { pos.x - endSpaceX,pos.y,pos.z };
+			endpos = { pos.x + endSpaceX,pos.y,pos.z };
+		}
+		posLineObject[i]->SetStartPosition(startpos);
+		posLineObject[i]->SetEndPosition(endpos);
+		posLineObject[i]->SetModel(posLineModel);
+		posLineObject[i]->Update();
+	}
 	//オブジェクト
 	bossObj->SetPosition(position);
 	bossObj->SetScale(scale);
@@ -136,7 +238,6 @@ void Boss::Update()
 	if (life <= 0) {
 		isdead = true;
 	}
-
 }
 
 void Boss::WireDraw()
@@ -172,7 +273,7 @@ void Boss::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 
 void Boss::LineDraw(ID3D12GraphicsCommandList* cmdList)
 {
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		posLineObject[i]->Draw(cmdList);
 	}
 }
@@ -258,6 +359,14 @@ void Boss::Move()
 	}
 
 
+}
+
+double Boss::easeOutQuad(double time_, double start_, double difference, double totaltime_)
+{
+	double x = totaltime_ / time_;
+	double v = 1 - (1 - x) * (1 - x);
+	double ret = difference * v + start_;
+	return ret;
 }
 
 void Boss::TargetShot()
@@ -534,6 +643,7 @@ void Boss::OnCollision()
 
 void Boss::Reset()
 {
-	life = 10;
+	life = maxLife;
 	isdead = false;
+	firstDirection = false;
 }

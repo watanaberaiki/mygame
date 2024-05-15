@@ -59,6 +59,8 @@ public://メンバ関数
 	void Reset();
 	//動き
 	void Move();
+	//イージング
+	double easeOutQuad(double time_, double start_, double difference, double totaltime_);
 
 public://弾の挙動関係
 	//自機狙い弾関連
@@ -82,6 +84,7 @@ public://ゲッター
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets; }
 	bool GetisDead() { return isdead; }
 	XMFLOAT3 GetPos() { return position; }
+	XMFLOAT3 GetScale() { return scale; }
 
 
 private://静的メンバ変数
@@ -136,7 +139,8 @@ private://メンバ変数
 
 
 	//hp
-	int life = 10;
+	const int maxLife = 30;
+	int life = 30;
 
 	//動き
 	MOVE move = x;
@@ -156,7 +160,35 @@ private://メンバ変数
 
 	//敵の位置を横の壁に表示のライン
 	LineModel* posLineModel = nullptr;
-	LineObject* posLineObject[2] = {};
+	LineObject* posLineObject[4] = {};
 	const float widthSpace = 4.0f;
+	const float linePosY = 0.2f;
+	const float downLinePosY = 1.7f;
+	float spaceDownX = 0.0f;
+	float endSpaceX = 0.2f;
+	float spaceDownZ = 0.0f;
+	float endSpaceZ = 1.0f;
+
+	//最初だけの演出
+	bool firstDirection = false;
+	//Z方向に定期的に移動
+	int moveZTime = 0;
+	const int moveZMaxTime = 300;
+	bool isMoveZ = false;
+	bool isDirectionZ = false;
+	//演出
+	const int directionMaxTime = 30;
+	XMFLOAT3 startScale = { 0.5f, 0.6f, 0.5f };
+	float endScale = 0.0f;
+	XMFLOAT3 directionScale = {0.0f,0.0f,0.0f};
+	int directionTime = 0;
+	//演出縮小拡大
+	bool isReduction = false;
+	//Z軸の移動先
+	float distanceZ = 7.0f;
+	float front = 0.0f;		//一番前
+	float frontBack=0.0f;	//二番目
+	float backFront=0.0f;	//三番目
+	float back=0.0f;		//後ろ
 };
 

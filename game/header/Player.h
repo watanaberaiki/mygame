@@ -18,6 +18,12 @@
 #include"WireObject.h"
 class Player
 {
+	enum Reticle {
+		front,		//一番前
+		frontBack,	//二番目
+		backFront,	//三番目
+		back,		//後ろ
+	};
 public://メンバ関数
 	//初期化
 	void Initialize();
@@ -39,6 +45,8 @@ public://メンバ関数
 	void OnCollision();
 	//リセット
 	void Reset();
+	//レティクルチェンジ
+	void ReticleChange();
 	//セッター
 	void SetPosition(const XMFLOAT3 position_) { this->position = position_; }
 	void SetPositionZ(const float positionz_) { this->position.z = positionz_; }
@@ -70,14 +78,32 @@ private://メンバ変数
 	XMFLOAT3 backFrontReticlepos = { 0,0,0 };
 	XMFLOAT3 backReticlepos = { 0,0,0 };
 
+	//レティクルチェンジ
+	int reticle = front;
 
 	float frontdepth = 0.0f;
 	float backdepth = 0.0f;
 	//レティクル制限
-	const float reticleUpLimit = 7.0f;
-	const float reticleDownLimit = 2.5f;
-	const float reticleLeftLimit = 4.0f;
-	const float reticleRightLimit = 4.0f;
+	//前
+	const float frontReticleUpLimit = 2.0f;
+	const float frontReticleDownLimit = 1.0f;
+	const float frontReticleLeftLimit = 2.0f;
+	const float frontReticleRightLimit = 2.0f;
+	//二番目
+	const float frontBackReticleUpLimit = 3.0f;
+	const float frontBackReticleDownLimit = 1.5f;
+	const float frontBackReticleLeftLimit = 3.0f;
+	const float frontBackReticleRightLimit = 3.0f;
+	//三番目
+	const float backFrontReticleUpLimit = 4.0f;
+	const float backFrontReticleDownLimit = 2.0f;
+	const float backFrontReticleLeftLimit = 3.5f;
+	const float backFrontReticleRightLimit = 3.5f;
+	//後ろ
+	const float backReticleUpLimit = 5.0f;
+	const float backReticleDownLimit = 2.0f;
+	const float backReticleLeftLimit = 4.0f;
+	const float backReticleRightLimit = 4.0f;
 
 
 
@@ -114,6 +140,8 @@ private://メンバ変数
 
 	//レティクル
 	LineModel* reticleModel = nullptr;
+	LineModel* reticleSelectModel = nullptr;
+
 	static const int maxLine = 8;
 	const float linePos = 0.2f;
 	LineObject* reticleObject[maxLine] = {};
@@ -127,6 +155,12 @@ private://メンバ変数
 	LineModel* reticleLineModelStraight = nullptr;
 	LineObject* reticleLineObjectStraight;
 
+	//レティクル影
+	static const int lineShadowNum = 5;
+	LineObject* reticleLineShadowObject[lineShadowNum] = {};
+	float downLinePosY = 1.7f;
+	LineModel* reticleShadowModel = nullptr;
+	LineModel* reticleShadowSelectModel = nullptr;
 	//レティクル用ベクトル
 	Vector3 reticleVec = {};
 	Vector3 frontVec = {};

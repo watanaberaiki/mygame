@@ -16,9 +16,11 @@ void Enemy::Initialize()
 	enemyFbxObj->SetModel(enemyFbxModel);
 
 	//3dオブジェクト
-	enemyModel = resource->LoadObj("redcube");
+	enemyModel[0] = resource->LoadObj("redcube");
+	enemyModel[1] = resource->LoadObj("greencube");
+	enemyModel[2] = resource->LoadObj("bluecube");
 	enemyObj = WireObject::Create();
-	enemyObj->SetModel(enemyModel);
+	enemyObj->SetModel(enemyModel[0]);
 
 	//当たり判定キューブモデル
 	cubeModel = new CubeModel();
@@ -34,7 +36,7 @@ void Enemy::Initialize()
 	posLineModel = new LineModel();
 	posLineModel->Initialize(dxcommon->GetDevice(), 0, 0);
 	posLineModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		posLineObject[i] = new LineObject();
 		posLineObject[i]->Initialize();
 		posLineObject[i]->SetModel(posLineModel);
@@ -43,6 +45,7 @@ void Enemy::Initialize()
 
 void Enemy::Update()
 {
+	//弾の打ち方で間隔変更
 	if (shotType== Target) {
 		MaxTime = targetShot;
 	}
@@ -51,6 +54,34 @@ void Enemy::Update()
 	}
 	else if (shotType==Random) {
 		MaxTime = ramdomShot;
+	}
+
+	//弾の打ち方でモデル変更
+	if (shotType == Target) {
+		//赤
+		enemyObj->SetModel(enemyModel[0]);
+	}
+	else if (shotType == Straight) {
+		//緑
+		enemyObj->SetModel(enemyModel[1]);
+	}
+	else if (shotType == Random) {
+		//青
+		enemyObj->SetModel(enemyModel[2]);
+	}
+
+	//弾の打ち方で影の色変更
+	if (shotType == Target) {
+		//赤
+		posLineModel->SetImageData(XMFLOAT4(255, 0, 0, 1));
+	}
+	else if (shotType == Straight) {
+		//緑
+		posLineModel->SetImageData(XMFLOAT4(0, 255, 0, 1));
+	}
+	else if (shotType == Random) {
+		//青
+		posLineModel->SetImageData(XMFLOAT4(0, 0, 255, 1));
 	}
 
 	//登場演出
@@ -65,7 +96,9 @@ void Enemy::Update()
 			directionScale = (float)easeOutQuad(directionMaxTime, startScale, endScale - startScale, directionTime);
 
 			//ライン
-			linePosY = (float)easeOutQuad(directionMaxTime, startLinePosY, endLinePosY - startLinePosY, directionTime);
+			spaceX = (float)easeOutQuad(directionMaxTime, 0.0f, endSpaceX - 0.0f, directionTime);
+			//ライン
+			spaceZ = (float)easeOutQuad(directionMaxTime, 0.0f, endSpaceZ - 0.0f, directionTime);
 		}
 	}
 	scale = XMFLOAT3(directionScale, directionScale, directionScale);
@@ -108,22 +141,38 @@ void Enemy::Update()
 	{
 		bullet->Update();
 	}
-
-	//位置を横に表示
-	for (int i = 0; i < 2; i++) {
+	//位置を下に表示
+	for (int i = 0; i < 4; i++) {
 		XMFLOAT3 pos = position;
-		pos.x = 0;
-		pos.y = -0.5;
-		if (i == 0) {
-			pos.x += widthSpace;
+		XMFLOAT3 startpos = {};
+		XMFLOAT3 endpos = {};
+
+		pos.y = -downLinePosY;
+		////簡易的な影
+		if (i ==0) {
+			pos.x += spaceX;
+			startpos = { pos.x,pos.y,pos.z- spaceZ };
+			endpos = { pos.x,pos.y,pos.z + spaceZ };
+
 		}
-		else if (i==1) {
-			pos.x -= widthSpace;
+		else if (i == 1) {
+			pos.x -= spaceX;
+			startpos = { pos.x,pos.y,pos.z - spaceZ };
+			endpos = { pos.x,pos.y,pos.z + spaceZ };
 		}
-		posLineObject[i]->SetStartPosition(pos);
-		posLineObject[i]->SetStartPositionY(pos.y-linePosY);
-		posLineObject[i]->SetEndPosition(pos);
-		posLineObject[i]->SetEndPositionY(pos.y + linePosY);
+		else if (i==2) {
+			pos.z += spaceZ;
+			startpos = { pos.x- spaceX,pos.y,pos.z };
+			endpos = { pos.x+ spaceX,pos.y,pos.z};
+		}
+		else if (i==3) {
+			pos.z -= spaceZ;
+			startpos = { pos.x - spaceX,pos.y,pos.z };
+			endpos = { pos.x + spaceX,pos.y,pos.z };
+		}
+		posLineObject[i]->SetStartPosition(startpos);
+		posLineObject[i]->SetEndPosition(endpos);
+		posLineObject[i]->SetModel(posLineModel);
 		posLineObject[i]->Update();
 	}
 
@@ -175,9 +224,10 @@ void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 		bullet->DebugDraw(cmdList);
 	}
 
-	collisionBox->Draw(cmdList);
+	//当たり判定
+	//collisionBox->Draw(cmdList);
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		posLineObject[i]->Draw(cmdList);
 	}
 }
@@ -305,7 +355,7 @@ void Enemy::Fire()
 		//ランダム
 		std::random_device ram_dev;
 		std::mt19937 ram(ram_dev());
-		XMFLOAT3 pos;
+		XMFLOAT3 pos;\
 		pos.x= (ram() % 20  -10.0f)/10;
 		pos.y= (ram() % 20 - 10.0f)/10;
 		velocityVec = { pos.x - position.x,pos.y - position.y,player->GetPosition().z - position.z };

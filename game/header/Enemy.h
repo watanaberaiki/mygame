@@ -83,7 +83,7 @@ private://メンバ変数
 	FbxObject3D* enemyFbxObj = nullptr;
 
 	//3Dモデル
-	Model* enemyModel = nullptr;
+	Model* enemyModel[3];
 	//3Dオブジェクト
 	WireObject* enemyObj = nullptr;
 
@@ -131,14 +131,19 @@ private://メンバ変数
 	bool isAppearance = false;
 	const int directionMaxTime = 20;
 	float startScale = 0.0f;
-	float endScale = 0.2f;
+	float endScale = 0.3f;
 	float directionScale = 0.0f;
 	int directionTime = 0;
 
 	//敵の位置を横の壁に表示のライン
 	LineModel* posLineModel = nullptr;
-	LineObject* posLineObject[2] = {};
+	LineObject* posLineObject[4] = {};
 	const float widthSpace = 4.0f;
+	const float downLinePosY = 1.7f;
+	float spaceX = 0.0f;
+	float endSpaceX = 0.2f;
+	float spaceZ = 0.0f;
+	float endSpaceZ = 1.0f;
 	XMFLOAT3 lineScale = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 startLineScale = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 endLineScale= { 0.01f,1.0f,1.0f };
