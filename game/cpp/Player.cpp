@@ -157,8 +157,6 @@ void Player::Update()
 	//弾の回転用
 	bulletFrontVec = { position.x - position.x,position.y - position.y,backReticlepos.z - position.z };
 
-
-
 	//弾の回転用
 	lengthFrontVec = bulletFrontVec.length();
 	lengthreticleVec = reticleVec.length();
@@ -166,7 +164,7 @@ void Player::Update()
 
 	//正規化
 	reticleVec.normalize();
-	
+
 	//レティクル
 	for (int i = 0; i < maxLine; i++) {
 		XMFLOAT3 reticlePos = {};
