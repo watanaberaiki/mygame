@@ -38,10 +38,10 @@ void Boss::Initialize()
 		posLineObject[i]->SetModel(posLineModel);
 	}
 	//Z移動先
-	front = 6.0f;
-	frontBack = 12.0f;
-	backFront = 18.0f;
-	back = 24.0f;
+	front = distanceZ;
+	frontBack = distanceZ*2;
+	backFront = distanceZ*3;
+	back = distanceZ*4;
 }
 
 void Boss::Update()
@@ -643,7 +643,7 @@ void Boss::OnCollision()
 
 void Boss::Reset()
 {
-	life = 10;
+	life = maxLife;
 	isdead = false;
 	firstDirection = false;
 }

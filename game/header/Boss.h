@@ -139,7 +139,8 @@ private://メンバ変数
 
 
 	//hp
-	int life = 10;
+	const int maxLife = 30;
+	int life = 30;
 
 	//動き
 	MOVE move = x;
@@ -177,13 +178,14 @@ private://メンバ変数
 	bool isDirectionZ = false;
 	//演出
 	const int directionMaxTime = 30;
-	XMFLOAT3 startScale = { 0.2f, 0.4f, 0.2f };
+	XMFLOAT3 startScale = { 0.5f, 0.6f, 0.5f };
 	float endScale = 0.0f;
 	XMFLOAT3 directionScale = {0.0f,0.0f,0.0f};
 	int directionTime = 0;
 	//演出縮小拡大
 	bool isReduction = false;
 	//Z軸の移動先
+	float distanceZ = 7.0f;
 	float front = 0.0f;		//一番前
 	float frontBack=0.0f;	//二番目
 	float backFront=0.0f;	//三番目
