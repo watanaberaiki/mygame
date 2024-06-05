@@ -54,7 +54,8 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 
 	//プレイヤー
 	player->Initialize();
-
+	//プレイヤー
+	player->SetPositionZ(eye.z + playerSpaceZ);
 	//敵
 	Enemy::SetPlayer(player);
 	Enemy::SetDxCommon(dxCommon);
@@ -319,6 +320,7 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 		newObject->SetScale(enemycsv->GetScale(i));
 		newObject->SetType(enemycsv->Getmove(i));
 		newObject->SetShotType(enemycsv->GetShotType(i));
+		newObject->SetAppearanceTime(enemycsv->GetApperaranceTime(i) * 60);
 		newObject->Update();
 		enemys.push_back(std::move(newObject));
 	}
@@ -441,8 +443,6 @@ void GamePlayScene::Update()
 		buttonLTSprite->Update();
 		//雑魚敵が生きてる
 		if (isEnemyAlive) {
-			eye.z += 0.05f;
-			target.z = eye.z + 1;
 
 			camera->SetEye(eye);
 			camera->SetTarget(target);
@@ -481,8 +481,7 @@ void GamePlayScene::Update()
 				}
 			}
 
-			//プレイヤー
-			player->SetPositionZ(eye.z + playerSpaceZ);
+
 			//プレイヤーが動くように判定を送る
 			player->SetIsTitle(isTitle);
 			player->Update();
@@ -588,7 +587,7 @@ void GamePlayScene::Draw()
 	{
 		enemy->Draw();
 	}
-	
+
 	//ボス
 	if (isBoss) {
 		boss->Draw();
@@ -696,9 +695,11 @@ void GamePlayScene::AllCollision()
 	//自キャラと敵の判定
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		if (player->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
-			player->OnCollision();
-			Particle(player->GetPosition());
+		if (enemy->GetIsAppearance()) {
+			if (player->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
+				player->OnCollision();
+				Particle(player->GetPosition());
+			}
 		}
 	}
 
@@ -731,9 +732,11 @@ void GamePlayScene::AllCollision()
 	//自弾と敵の判定
 	for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
 		for (std::unique_ptr<Enemy>& enemy : enemys) {
-			if (playerbullet->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
-				playerbullet->OnCollision();
-				enemy->OnCollision();
+			if (enemy->GetIsAppearance()) {
+				if (playerbullet->GetCubeObject()->CheakCollision(enemy->GetCubeObject())) {
+					playerbullet->OnCollision();
+					enemy->OnCollision();
+				}
 			}
 		}
 	}
@@ -742,8 +745,10 @@ void GamePlayScene::AllCollision()
 	//レティクルと敵の当たり判定
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 		if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), enemy->GetPos(), enemy->GetScale())) {
-			player->SetIsEnemyReticleCol(true);
-			break;
+			if (enemy->GetIsAppearance()) {
+				player->SetIsEnemyReticleCol(true);
+				break;
+			}
 		}
 		else {
 			player->SetIsEnemyReticleCol(false);

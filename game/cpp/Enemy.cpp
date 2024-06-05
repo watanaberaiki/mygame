@@ -45,14 +45,26 @@ void Enemy::Initialize()
 
 void Enemy::Update()
 {
+
+	//登場タイム
+	if (!isAppearance) {
+		if (appearanceTime == 0) {
+			isAppearance = true;
+			isAppearanceDirection = true;
+		}
+		else {
+			appearanceTime--;
+		}
+	}
+
 	//弾の打ち方で間隔変更
-	if (shotType== Target) {
+	if (shotType == Target) {
 		MaxTime = targetShot;
 	}
 	else if (shotType == Straight) {
 		MaxTime = straightShot;
 	}
-	else if (shotType==Random) {
+	else if (shotType == Random) {
 		MaxTime = ramdomShot;
 	}
 
@@ -102,13 +114,13 @@ void Enemy::Update()
 		}
 	}
 	scale = XMFLOAT3(directionScale, directionScale, directionScale);
-	//演出の入る条件
-	if (!isAppearance) {
-		if (position.z - player->GetPosition().z <= 35.0f) {
-			isAppearance = true;
-			isAppearanceDirection = true;
-		}
-	}
+	////演出の入る条件
+	//if (!isAppearance) {
+	//	if (position.z - player->GetPosition().z <= 35.0f) {
+	//		isAppearance = true;
+	//		isAppearanceDirection = true;
+	//	}
+	//}
 
 	//動き
 	Move();
@@ -125,12 +137,11 @@ void Enemy::Update()
 		});
 
 	//弾の発射
-	time++;
-	if (time >= MaxTime) {
-		//プレイヤーの裏に行ったら弾を撃たなくなる
-		if (player->GetPosition().z < position.z) {
-			//距離の差が特定の値を越したら撃ち始める
-			if (position.z - player->GetPosition().z <= 30.0f) {
+	if (isAppearance) {
+		time++;
+		if (time >= MaxTime) {
+			//プレイヤーの裏に行ったら弾を撃たなくなる
+			if (player->GetPosition().z < position.z) {
 				Fire();
 				time = 0;
 			}
@@ -149,9 +160,9 @@ void Enemy::Update()
 
 		pos.y = -downLinePosY;
 		////簡易的な影
-		if (i ==0) {
+		if (i == 0) {
 			pos.x += spaceX;
-			startpos = { pos.x,pos.y,pos.z- spaceZ };
+			startpos = { pos.x,pos.y,pos.z - spaceZ };
 			endpos = { pos.x,pos.y,pos.z + spaceZ };
 
 		}
@@ -160,12 +171,12 @@ void Enemy::Update()
 			startpos = { pos.x,pos.y,pos.z - spaceZ };
 			endpos = { pos.x,pos.y,pos.z + spaceZ };
 		}
-		else if (i==2) {
+		else if (i == 2) {
 			pos.z += spaceZ;
-			startpos = { pos.x- spaceX,pos.y,pos.z };
-			endpos = { pos.x+ spaceX,pos.y,pos.z};
+			startpos = { pos.x - spaceX,pos.y,pos.z };
+			endpos = { pos.x + spaceX,pos.y,pos.z };
 		}
-		else if (i==3) {
+		else if (i == 3) {
 			pos.z -= spaceZ;
 			startpos = { pos.x - spaceX,pos.y,pos.z };
 			endpos = { pos.x + spaceX,pos.y,pos.z };
@@ -192,7 +203,7 @@ void Enemy::Update()
 
 	//判定
 	collisionBox->SetPosition(position);
-	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 2));
+	collisionBox->SetScale(XMFLOAT3(scale.x * 2, scale.y * 2, scale.z * 3));
 	collisionBox->SetRotation(rotation);
 	collisionBox->Update();
 }
@@ -225,7 +236,7 @@ void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	//当たり判定
-	//collisionBox->Draw(cmdList);
+	collisionBox->Draw(cmdList);
 
 	for (int i = 0; i < 4; i++) {
 		posLineObject[i]->Draw(cmdList);
@@ -341,7 +352,7 @@ void Enemy::Fire()
 		bullets.push_back(std::move(newObject));
 	}
 	//まっすぐ
-	else if (shotType==Shot::Straight) {
+	else if (shotType == Shot::Straight) {
 		velocityVec = { position.x,position.y, player->GetPosition().z - position.z };
 		velocityVec.normalize();
 		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
@@ -351,13 +362,13 @@ void Enemy::Fire()
 		bullets.push_back(std::move(newObject));
 	}
 	//ランダム
-	else if (shotType==Shot::Random) {
+	else if (shotType == Shot::Random) {
 		//ランダム
 		std::random_device ram_dev;
 		std::mt19937 ram(ram_dev());
-		XMFLOAT3 pos;\
-		pos.x= (ram() % 20  -10.0f)/10;
-		pos.y= (ram() % 20 - 10.0f)/10;
+		XMFLOAT3 pos; \
+			pos.x = (ram() % 20 - 10.0f) / 10;
+		pos.y = (ram() % 20 - 10.0f) / 10;
 		velocityVec = { pos.x - position.x,pos.y - position.y,player->GetPosition().z - position.z };
 		velocityVec.normalize();
 		velocity = XMFLOAT3(velocityVec.x, velocityVec.y, velocityVec.z);
