@@ -65,11 +65,11 @@ void CSVLoader::LoadCSV(const std::string& fileName)
 			line_stream >> shotType1;
 			shotType.emplace_back(shotType1);
 		}
-		if (key=="appearanceTime")
+		if (key=="wave")
 		{
-			int appearanceTime1;
-			line_stream >> appearanceTime1;
-			appearanceTime.emplace_back(appearanceTime1);
+			int wave1;
+			line_stream >> wave1;
+			wave.emplace_back(wave1);
 		}
 	}
 	//ファイルを閉じる

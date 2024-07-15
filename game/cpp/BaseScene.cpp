@@ -20,7 +20,7 @@ void BaseScene::Finalize()
 	for (WireObject*& wireobject : heightWireObjects) {
 		delete wireobject;
 	}
-	////レベルデータ解放
+	//////レベルデータ解放
 	//delete leveldata;
 	//delete floorobj;
 	//3Dモデル解放

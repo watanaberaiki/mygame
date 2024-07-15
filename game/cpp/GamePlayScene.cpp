@@ -320,8 +320,8 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 		newObject->SetScale(enemycsv->GetScale(i));
 		newObject->SetType(enemycsv->Getmove(i));
 		newObject->SetShotType(enemycsv->GetShotType(i));
-		newObject->SetAppearanceTime(enemycsv->GetApperaranceTime(i) * 60);
-		newObject->Update();
+		newObject->SetWave(enemycsv->GetWave(i));
+		//newObject->Update();
 		enemys.push_back(std::move(newObject));
 	}
 	//白線を元の位置に戻す
@@ -343,6 +343,11 @@ void GamePlayScene::Initialize(DirectXCommon* dxCommon, ImguiManager* imgui)
 	boss->Initialize();
 	boss->SetRotation(XMFLOAT3(0, 0, 0));
 	boss->Reset();
+
+	//ウェーブのカウント
+	waveCount = 1;
+	//ウェーブの判定
+	isWaveEnemyDead = false;
 }
 
 void GamePlayScene::Finalize()
@@ -493,12 +498,32 @@ void GamePlayScene::Update()
 			//敵
 			for (std::unique_ptr<Enemy>& enemy : enemys)
 			{
-				enemy->Update();
+				//現在のwaveと同じ敵を更新
+				if (enemy->GetWave() == waveCount) {
+					enemy->Update();
+				}
 				//死んだ際のパーティクル
 				if (enemy->GetisDead()) {
 					EnemyParticle(enemy->GetPos());
 				}
 			}
+			//wave判定
+			isWaveEnemyDead = true;
+			for (std::unique_ptr<Enemy>& enemy : enemys)
+			{
+				//現在のwaveの敵がいなくなったかの判定
+				if (waveCount == enemy->GetWave()) {
+					isWaveEnemyDead = false;
+				}
+				else {
+					
+				}
+			}
+			//いなくなったらwaveを進める
+			if (isWaveEnemyDead) {
+				waveCount++;
+			}
+
 			//敵の死んだ処理
 			enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
 				return enemy->GetisDead();
@@ -585,7 +610,10 @@ void GamePlayScene::Draw()
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		enemy->Draw();
+		//現在のwaveと同じ敵を更新
+		if (enemy->GetWave() == waveCount) {
+			enemy->Draw();
+		}
 	}
 
 	//ボス
@@ -617,7 +645,10 @@ void GamePlayScene::Draw()
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		enemy->WireDraw();
+		//現在のwaveと同じ敵を更新
+		if (enemy->GetWave() == waveCount) {
+			enemy->WireDraw();
+		}
 	}
 
 	//ボス
@@ -647,7 +678,10 @@ void GamePlayScene::Draw()
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys)
 	{
-		enemy->DebugDraw(dxCommon_->GetCommandlist());
+		//現在のwaveと同じ敵を更新
+		if (enemy->GetWave() == waveCount) {
+			enemy->DebugDraw(dxCommon_->GetCommandlist());
+		}
 	}
 
 	//ボス
@@ -744,10 +778,13 @@ void GamePlayScene::AllCollision()
 
 	//レティクルと敵の当たり判定
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
-		if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), enemy->GetPos(), enemy->GetScale())) {
+		if (EnemyLineCollision(player->GetPosition(), player->GetEndPosition(), enemy->GetPos(), enemy->GetCubeObject()->GetScale())) {
 			if (enemy->GetIsAppearance()) {
-				player->SetIsEnemyReticleCol(true);
-				break;
+				//現在のwaveと同じ敵を更新
+				if (enemy->GetWave() == waveCount) {
+					player->SetIsEnemyReticleCol(true);
+					break;
+				}
 			}
 		}
 		else {
@@ -828,7 +865,7 @@ bool GamePlayScene::EnemyLineCollision(XMFLOAT3 lineStartPos, XMFLOAT3 lineEndPo
 				(closestPoint.z - enemyPos.z) * (closestPoint.z - enemyPos.z);
 
 			// 球の半径の二乗
-			float radiusSq = enemyScale.x * enemyScale.x;
+			float radiusSq = enemyScale.x * enemyScale.x; // enemyScale.x が半径を表していると仮定
 
 			// 距離の二乗が半径の二乗以下ならば交差している
 			return distanceSq <= radiusSq;
@@ -918,7 +955,7 @@ void GamePlayScene::EnemyParticle(XMFLOAT3 pos_)
 		life = rand() % rnd_life + 1;
 		life += 20;
 		//追加
-		redParticles->Add(life, pos, vel, acc, 0.5f, 0.0f, color, true);
+		redParticles->Add(life, pos, vel, acc, 0.8f, 0.0f, color, true);
 	}
 	redParticles->Update();
 }

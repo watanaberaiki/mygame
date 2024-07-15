@@ -27,6 +27,9 @@ public://関数
 private://変数
 	//ボス戦かどうか
 	bool isBoss = false;
-
+	//現在のwave
+	int waveCount = 0;
+	//waveの敵がいるかどうか
+	bool isWaveEnemyDead = false;
 };
 

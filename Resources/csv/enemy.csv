@@ -4,74 +4,67 @@ rotation 0 0 0
 scale 0.1 0.1 0.1
 move 1
 shotType 0
-appearanceTime 1
+wave 1
 (2)
 position 0 0 20
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 2
 shotType 1
-appearanceTime 3
+wave 2
 (3)
 position 0.2 0.6 15 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 1
 shotType 0
-appearanceTime 10
+wave 2
 (4)
 position 1.0 1.0 15
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 2
 shotType 1
-appearanceTime 15
+wave 3
 (5)
 position 0.5 0.5 30 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 3
 shotType 1
-appearanceTime 15
+wave 3
 (6)
 position 1.5 0.5 30 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 3
 shotType 1
-appearanceTime 30
+wave 3
 (7)
 position 1.0 0.5 15 
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 0
 shotType 2
-appearanceTime 35
+wave 4
 (8)
 position 0.5 0.5 15
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 0
 shotType 2
-appearanceTime 40
+wave 4
 (9)
-position 0.0 0.5 10
+position 0.0 0.5 15
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 3
 shotType 2
-appearanceTime 55
+wave 4
 (10)
 position 1.5 -0.5 15
 rotation 0 0 0 
 scale 0.1 0.1 0.1
 move 3
 shotType 2
-appearanceTime 65
-(11)
-position -0.8 -0.9 20
-rotation 0 0 0 
-scale 0.1 0.1 0.1
-move 3
-shotType 2
-appearanceTime 65
+wave 4

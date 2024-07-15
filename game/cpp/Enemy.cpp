@@ -41,21 +41,14 @@ void Enemy::Initialize()
 		posLineObject[i]->Initialize();
 		posLineObject[i]->SetModel(posLineModel);
 	}
+	
+	//登場演出
+	isAppearance = true;
+	isAppearanceDirection = true;
 }
 
 void Enemy::Update()
 {
-
-	//登場タイム
-	if (!isAppearance) {
-		if (appearanceTime == 0) {
-			isAppearance = true;
-			isAppearanceDirection = true;
-		}
-		else {
-			appearanceTime--;
-		}
-	}
 
 	//弾の打ち方で間隔変更
 	if (shotType == Target) {
@@ -213,7 +206,7 @@ void Enemy::WireDraw()
 	//fbx
 	//enemyfbxobj->Draw(cmdList);
 
-	////オブジェクト
+	//オブジェクト
 	enemyObj->Draw();
 
 }
@@ -229,14 +222,14 @@ void Enemy::Draw()
 
 void Enemy::DebugDraw(ID3D12GraphicsCommandList* cmdList)
 {
-	//弾
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets)
-	{
-		bullet->DebugDraw(cmdList);
-	}
+	////弾
+	//for (std::unique_ptr<EnemyBullet>& bullet : bullets)
+	//{
+	//	bullet->DebugDraw(cmdList);
+	//}
 
-	//当たり判定
-	collisionBox->Draw(cmdList);
+	////当たり判定
+	//collisionBox->Draw(cmdList);
 
 	for (int i = 0; i < 4; i++) {
 		posLineObject[i]->Draw(cmdList);
