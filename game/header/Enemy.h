@@ -54,6 +54,8 @@ public://メンバ関数
 	void SetRotation(const XMFLOAT3 rotation_) { this->rotation = rotation_; }
 	void SetType(int type_) { this->type = type_; }
 	void SetShotType(int shotType_) { shotType = static_cast<Shot>(shotType_); }
+	void SetAppearanceTime(int appearanceTime_) { this->appearanceTime = appearanceTime_; }
+	void SetWave(int wave_) { this->wave = wave_; }
 	static void SetDxCommon(DirectXCommon* dxcommon_) { Enemy::dxcommon = dxcommon_; }
 	static void SetPlayer(Player* player_) { Enemy::player = player_; }
 
@@ -64,6 +66,8 @@ public://メンバ関数
 	XMFLOAT3 GetPos() { return position; }
 	XMFLOAT3 GetRotation() { return rotation; }
 	XMFLOAT3 GetScale() { return scale; }
+	bool GetIsAppearance() {return isAppearance;}
+	int GetWave() { return wave; }
 
 
 private://静的メンバ変数
@@ -154,5 +158,10 @@ private://メンバ変数
 	//ショット
 	Shot shotType = Shot::Target;
 
+	//登場のタイム
+	int appearanceTime = 0;
+
+	//wave数
+	int wave = 0;
 };
 

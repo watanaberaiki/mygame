@@ -27,6 +27,7 @@ namespace RaikiEngine {
 		XMFLOAT3 GetScale(int num) { return scale[num]; };
 		int Getmove(int num) { return move[num]; }
 		int GetShotType(int num) { return shotType[num]; }
+		int GetWave(int num) { return wave[num]; }
 
 	private:
 		//読み込むオブジェクトの数
@@ -37,6 +38,7 @@ namespace RaikiEngine {
 		std::vector<XMFLOAT3> scale;
 		std::vector<int> move;
 		std::vector<int> shotType;
+		std::vector<int> wave;
 	};
 }
 using namespace RaikiEngine;
